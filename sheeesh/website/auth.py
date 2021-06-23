@@ -8,6 +8,15 @@ from .models import create_account
 auth = Blueprint('auth', __name__)
 CORS(auth)
 
+@auth.route('/recipe', methods=['GET', 'POST'])
+def recipe():
+    data = request.form
+    print(data)
+    return recipe()
+
+def recipe():
+    return render_template("recipe.html")
+
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     data = request.form
