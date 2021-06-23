@@ -2,3 +2,4 @@ flask
 Flask-SQLAlchemy
 flask-login
 psycopg2
+flask_cors
