@@ -1,8 +1,8 @@
 Week 1
-Set up a group. Complete parts of the user stories, which are created for the criteria and new features.
+Group formed. I completed parts of the user stories, which are created for the criteria and new features.
 
 Week 2
-Write criteria and subtask for each user story.     
+Write some criterias and subtasks for each user story.     
 
 Week 3
 Draw user boards which include "sign-in/up, Newsfeed, Trending Section, and catogery page", and wrote comments for them. 
