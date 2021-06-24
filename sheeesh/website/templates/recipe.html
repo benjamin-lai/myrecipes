@@ -4,13 +4,14 @@
 <form method="POST">
     <h4 align="left">Step 1</h4>
     <div class="form-group">
-      <label for="Recipe Name">Enter Your Recipe Name</label>
+      <label for="Recipe Name" style="color:red;">Enter Your Recipe Name</label>
       <input
         type="Recipe Name"
         class="form-control"
         id="Recipe Name"
         name="Recipe Name"
         placeholder="Enter Recipe Name"
+        style="width:200px; color:black;"
       />
     </div>
     <h4 align="left">Step 2</h4>
@@ -23,30 +24,30 @@
         <option value="3">3</option>
         <option value="4">4</option>
       </select>
-    </div>
+    </div id="parentDiv" class="form-inline">
     <h6 align="left">Add Ingredients</h6>
-    <div class="form-group">
-      <label for="Number">No.</label>
-      <select name="Number" id="Number">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="password2">Password (Confirm)</label>
-      <input
-        type="password"
-        class="form-control"
-        id="password2"
-        name="password2"
-        placeholder="Enter password (Confirm)"
-      />
-    </div>
-    <br />
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
+      <div class="form-inline" id="leftDiv" style="float:left">
+        <label for="Number">No.</label>
+        <select name="Number" id="Number">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </div>
+      <div class="form-inline" id="rightDiv" style="float:left">
+        <label for="password2">Password (Confirm)</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password2"
+          name="password2"
+          placeholder="Enter password (Confirm)"
+        />
+      </div>
+      <br />
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
 
 
 {% endblock %}
