@@ -5,8 +5,8 @@ Week 2
 Write some criterias and subtasks for each user story.     
 
 Week 3
-Draw user boards which include "sign-in/up, Newsfeed, Trending Section, and catogery page", and wrote comments for them. 
+Draw user boards which include "sign-in/up", "Newsfeed", "Trending Section", and "catogery page", and wrote comments for them. 
 
 Week 4
-
+Implement the interface of "create recipe" and "edit recipe". And their http interface. Start parts of the backend for "create recipe" and "edit recipe".
 
