@@ -14,11 +14,13 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://postgres:{DB_PASSWORD}@localhost/{DB_NAME}'
     db.init_app(app)
 
-    from .views import views
+    from .views import views, recipe
     from .auth import auth
+    #from .recipe import recipe
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
+    #app.register_blueprint(recipe, url_prefix='/')
 
     from .models import Users
 

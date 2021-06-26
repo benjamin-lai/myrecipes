@@ -12,6 +12,13 @@ from . import db
 auth = Blueprint('auth', __name__)
 CORS(auth)
 
+@auth.route('/recipe', methods=['GET', 'POST'])
+@login_required
+def recipe():
+    data = request.form
+    print(data)
+    return render_template("recipe.html")
+
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':

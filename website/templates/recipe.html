@@ -1,0 +1,81 @@
+{% extends "base.html" %} {% block title %}Recipe{% endblock %}
+<!-- Overwrites title-->
+{% block content %}
+<form method="POST">
+    <h4 align="left">Step 1</h4>
+    <div class="form-group">
+      <label for="Recipe Name" style="color:red;">Enter Your Recipe Name</label>
+      <input
+        type="Recipe Name"
+        class="form-control"
+        id="Recipe Name"
+        name="Recipe Name"
+        placeholder="Enter Recipe Name"
+        style="width:200px; color:black;"
+      />
+    </div>
+    <h4 align="left">Step 2</h4>
+    <h6 align="left">Choose your servings</h6>
+    <div class="form-group">
+      <label for="Servings">Servings</label>
+      <INPUT TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="0" >
+    </div id="parentDiv" class="form-inline">
+    <h6 align="left" style="color:red;">Add Ingredients</h6>
+      <div class="form-group" id="leftDiv" style="float:left">
+        <label for="Number">No.</label>
+        <INPUT TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="0" class="form-control">
+      </div>
+      <div class="form-group" id="rightDiv" style="float:left">
+        <label for="unit" style="margin-left:20px;">Unit</label>
+        <INPUT TYPE="NUMBER" 
+                MIN="0" 
+                MAX="10" 
+                STEP="1" 
+                VALUE="0" 
+                SIZE="0" 
+                class="form-control" 
+                style="margin-left:20px">
+      </div>
+      <div class="form-group" id="rightDiv">
+        <label for="unit_name" style="margin-left:40px" style="float:left">Unit Name</label>
+        <input
+        type="Unit Name"
+        class="form-control"
+        id="Unit Name"
+        name="Unit Name"
+        placeholder="Ingredient Units"
+        style="width:200px; color:black; margin-left:240px"
+        />
+      </div>
+      <div class="form-group" id="rightDiv">
+        <label for="unit_name">Ingredients</label>
+        <input
+        type="Unit Name"
+        class="form-control"
+        id="Unit Name"
+        name="Unit Name"
+        placeholder="Ingredient Name"
+        style="width:200px; color:black; "
+        />
+      </div>
+      <button type="add" class="btn btn-primary">Add</button>
+      <h4 align="left" style = "margin-top:30px">Step 3</h4>
+    <h6 align="left" style="color:red;">Upload photos and discriptions for your recipe</h6>
+    <div class="form-group">
+      <label for="step_number">Step No</label>
+      <INPUT TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="0" >
+    </div id="parentDiv" class="form-inline">
+    <h6 align="left" style="color:red;">Add Discriptions</h6>
+   
+
+    <div  align="left" style="color:blue;">discriptions<br> <textarea name="textfield3" cols="30" rows="3"></textarea></div>
+    <div align="left" > </div> <input type="reset" name="Submit2" value="Clear" style="float:left; margin-left:0px"> </div>
+    <div align="left" class="form-group"> <input type="submit" name="Submit" value="Add" style="float:left; margin-left:145px"></div>
+    <div class="form-group" align="left">
+        <button type="add" class="btn btn-primary">Add</button>   
+    </div>
+    <br />
+</form>
+
+
+{% endblock %}
