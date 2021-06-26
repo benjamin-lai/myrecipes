@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block title %}Recipe{% endblock %}
 <!-- Overwrites title-->
 {% block content %}
-<form method="POST">
+<form method="POST" name="part1_part2" id="part1_part2">
     <h4 align="left">Step 1</h4>
     <div class="form-group">
       <label for="Recipe Name" style="color:red;">Enter Your Recipe Name</label>
@@ -18,16 +18,18 @@
     <h6 align="left">Choose your servings</h6>
     <div class="form-group">
       <label for="Servings">Servings</label>
-      <INPUT TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="0" >
+      <INPUT id="Servings" name="Servings" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="0" >
     </div id="parentDiv" class="form-inline">
     <h6 align="left" style="color:red;">Add Ingredients</h6>
       <div class="form-group" id="leftDiv" style="float:left">
         <label for="Number">No.</label>
-        <INPUT TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="0" class="form-control">
+        <INPUT id="No." name="No." TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="0" class="form-control">
       </div>
       <div class="form-group" id="rightDiv" style="float:left">
         <label for="unit" style="margin-left:20px;">Unit</label>
-        <INPUT TYPE="NUMBER" 
+        <INPUT  id="unit" 
+                name="unit"
+                TYPE="NUMBER" 
                 MIN="0" 
                 MAX="10" 
                 STEP="1" 
@@ -50,32 +52,50 @@
       <div class="form-group" id="rightDiv">
         <label for="unit_name">Ingredients</label>
         <input
-        type="Unit Name"
+        type="Ingredient Name"
         class="form-control"
-        id="Unit Name"
-        name="Unit Name"
+        id="Ingredient Name"
+        name="Ingredient Name"
         placeholder="Ingredient Name"
         style="width:200px; color:black; "
         />
       </div>
-      <button type="add" class="btn btn-primary">Add</button>
+      <button name="button1" type="add" class="btn btn-primary">Add</button>
+    <br />
+</form> 
+<hr>
+<form method="POST" name="part3" id="part3">
       <h4 align="left" style = "margin-top:30px">Step 3</h4>
     <h6 align="left" style="color:red;">Upload photos and discriptions for your recipe</h6>
     <div class="form-group">
       <label for="step_number">Step No</label>
-      <INPUT TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="0" >
+      <INPUT id="step_number" name="step_number" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="0" >
     </div id="parentDiv" class="form-inline">
     <h6 align="left" style="color:red;">Add Discriptions</h6>
    
 
-    <div  align="left" style="color:blue;">discriptions<br> <textarea name="textfield3" cols="30" rows="3"></textarea></div>
+    <div align="left" style="color:blue;">discriptions<br> <textarea name="discriptions" cols="30" rows="3"></textarea></div>
     <div align="left" > </div> <input type="reset" name="Submit2" value="Clear" style="float:left; margin-left:0px"> </div>
-    <div align="left" class="form-group"> <input type="submit" name="Submit" value="Add" style="float:left; margin-left:145px"></div>
-    <div class="form-group" align="left">
-        <button type="add" class="btn btn-primary">Add</button>   
-    </div>
+    <div align="left" class="form-group"> <input name="button2" type="submit" name="Submit" value="Add" style="float:left; margin-left:145px"></div>
+  
     <br />
 </form>
 
+<!doctype html>
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+    <form method=post enctype=multipart/form-data>
+      <input type=file name=file>
+      <input type=submit value=Upload>
+    </form>
 
+<script>
+  function submit_preferences(){
+      document.getElementById("part3").submit();
+      }
+  function submit_personal(){
+      document.getElementById("part1_part2").submit();
+      }
+  
+  </script>
 {% endblock %}

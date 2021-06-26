@@ -4,9 +4,10 @@ from flask_cors import CORS
 
 recipe = Blueprint('recipe', __name__)
 CORS(recipe)
-
+'''
 @recipe.route('/recipe', methods=['GET', 'POST'])
 @login_required
 def recipe():
     return render_template("recipe.html", user=current_user)
+'''
 
