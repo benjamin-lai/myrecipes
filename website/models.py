@@ -11,7 +11,10 @@ class Users(db.Model, UserMixin):
     username = db.Column(db.String(150))
     password = db.Column(db.String(150))
     email = db.Column(db.String(150), unique=True)
-
+    profile = db.relationship('Profiles', backref='users', lazy=True)
+    recipe = db.relationship('Recipes', backref='users', lazy=True)
+    
+    
 # owns is user.id = profile.id, in theory as when the user is made
 # the profile should be made at the same time, meaning the ids should be the same 
 class Profiles(db.Model, UserMixin):
@@ -22,19 +25,29 @@ class Profiles(db.Model, UserMixin):
     profile_pic = db.Column(db.String(150))
     bio = db.Column(db.String(150))
     owns = db.Column(db.Integer, ForeignKey('users.id'))
-    users = relationship("Users", backref=backref("users", uselist=False))
+    
     
     
 class Recipes(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150))
-    ingredients = db.Column(db.String(150))
-    method = db.Column(db.String(150))
-    meal_types = db.Column(db.String(150))
     description = db.Column(db.String(150))
     photo = db.Column(db.String(150))
     creates = db.Column(db.Integer, ForeignKey('users.id'))
-    users = relationship("Users", backref=backref("users", uselist=False))
+   
+class Ingredient(db.Model, UserMixin):
+     recipe_id = db.Column(db.Integer, primary_key=True)
+     ingredient = db.Column(db.String(150), primary_key=True)
+     
+     
+class Method(db.Model, UserMixin):
+     recipe_id = db.Column(db.Integer, primary_key=True)
+     method = db.Column(db.String(150), primary_key=True)
+
+
+class Meal_Type(db.Model, UserMixin):
+     recipe_id = db.Column(db.Integer, primary_key=True)
+     meal_type = db.Column(db.String(150), primary_key=True)
 
 
 #contains is profiles.id 
