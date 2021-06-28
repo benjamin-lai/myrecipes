@@ -21,7 +21,8 @@ class Profiles(db.Model, UserMixin):
     display_name = db.Column(db.String(150))
     profile_pic = db.Column(db.String(150))
     bio = db.Column(db.String(150))
-    owns = db.Column(db.Integer)
+    owns = db.Column(db.Integer, ForeignKey('users.id'))
+    users = relationship("Users", backref=backref("users", uselist=False))
     
     
 class Recipes(db.Model, UserMixin):
@@ -32,7 +33,8 @@ class Recipes(db.Model, UserMixin):
     meal_types = db.Column(db.String(150))
     description = db.Column(db.String(150))
     photo = db.Column(db.String(150))
-    creates = db.Column(db.Integer)
+    creates = db.Column(db.Integer, ForeignKey('users.id'))
+    users = relationship("Users", backref=backref("users", uselist=False))
 
 
 #contains is profiles.id 

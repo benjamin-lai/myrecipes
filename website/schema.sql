@@ -19,13 +19,30 @@ create table Profiles (
 create table Recipes (
     id              serial      primary key,
     name            text        not null,
-    ingredients     text        not null,
-    method          text        not null,
-    meal_types      text        not null,
+    method          text        not null,   --
+    meal_types      text        not null,   --
     description     text        not null,
     photo           text        not null,
     creates         integer     not null,
     foreign key (creates) references Users(id)     -- users.id
+);
+
+create table Ingredient (
+    recipe_id integer references Recipes(id),
+    ingredient     text,
+    primary key(recipe_id, ingredient)
+);
+
+create table Method (
+    recipe_id integer references Recipes(id),
+    method     text,
+    primary key(recipe_id, method)
+);
+
+create table Meal_Type (
+    recipe_id integer references Recipes(id),
+    meal_type     text,
+    primary key(recipe_id, meal_type)
 );
 
 
