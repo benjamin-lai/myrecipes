@@ -19,8 +19,6 @@ create table Profiles (
 create table Recipes (
     id              serial      primary key,
     name            text        not null,
-    method          text        not null,   --
-    meal_types      text        not null,   --
     description     text        not null,
     photo           text        not null,
     creates         integer     not null,
