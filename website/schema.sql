@@ -2,8 +2,7 @@ create table Users (
     id              serial      primary key,
     username        text        not null unique,
 	password 	    text 		check (length(password) > 5) not null,  -- or check through python code?
-    email           text 		check (email ~* '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$') not null unique,
-    DoB             date        not null
+    email           text 		check (email ~* '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$') not null unique
 );
 
 create table Profiles (
@@ -12,10 +11,23 @@ create table Profiles (
     last_name       text        not null,
     display_name    text        not null,
     profile_pic     text        not null,   --default blank or something
-    user_bio        text,
+    bio             text,
     owns            integer     not null,   -- user.id  = profile.id =  owns? may be redundant, just mapping how its shown through 3311
     foreign key (owns) references Users(id) -- or just change owns to profile_id or something as use that as the relation.
 );
+
+create table Recipes (
+    id              serial      primary key,
+    name            text        not null,
+    ingredients     text        not null,
+    method          text        not null,
+    meal_types      text        not null,
+    description     text        not null,
+    photo           text        not null,
+    creates         integer     not null,
+    foreign key (creates) references Users(id)     -- users.id
+);
+
 
 -- list of people that are subscribed to the profile (contains)
 create table Subscriber_Lists (
@@ -38,7 +50,7 @@ create table CookBooks_Lists (
     recipe_id       integer      not null,
     contains        integer     not null,   -- contains is profile_id
     primary key (cookbook_id, recipe_id, contains),   -- duplicate recipes cant be put into the same cookbook for a given user
-    foreign key (contains) references Profiles(profile_id)
+    foreign key (contains) references Profiles(profile_id),
     foreign key (recipe_id) references Recipes(id)      -- added this line, but not sure if necessary, will just check if the id exists in recipes
 );
 
@@ -46,7 +58,7 @@ create table History_Lists (
     recipe_id       integer      not null,
     contains        integer     not null,   -- contains is profile_id
     primary key (recipe_id, contains),
-    foreign key (contains) references Profiles(profile_id)
+    foreign key (contains) references Profiles(profile_id),
     foreign key (recipe_id) references Recipes(id)      -- added this line, but not sure if necessary, will just check if the id exists in recipes
 );
 
@@ -54,21 +66,10 @@ create table Starred_Recipes (
     recipe_id       integer      not null,
     contains        integer     not null,   -- contains is profile_id
     primary key (recipe_id, contains),
-    foreign key (contains) references Profiles(profile_id)
+    foreign key (contains) references Profiles(profile_id),
     foreign key (recipe_id) references Recipes(id)      -- added this line, but not sure if necessary, will just check if the id exists in recipes
 );
 
-create table Recipes (
-    id              serial      primary key,
-    name            text        not null,
-    ingredients     text        not null,
-    method          text        not null,
-    meal_types      text        not null,
-    description     text        not null,
-    photo           text        not null,
-    creates         integer     not null,
-    foreign key (creates) references Users(id)     -- users.id
-);
 
 create table Comments (
     comment_id      serial      primary key,
@@ -85,5 +86,6 @@ create table Likes (
     has             integer     not null,      -- = recipes.id
     foreign key (has) references Recipes(id)
 );
+
 
 
