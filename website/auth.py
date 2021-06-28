@@ -29,10 +29,7 @@ def login_fn(email, password):
             flash('Logged in successfully!', category='success')
             login_user(user, remember=True)
             return True
-        else:
-            flash('Incorrect password, try again.', category='error')
-    else:
-        flash('Email does not exist.', category='error')
+    flash('Invalid Email or Password. Please try again', category='error')
     return False
 
 
@@ -61,7 +58,7 @@ def sign_up_fn(email, first_name, password1, password2):
     # print(f"{email}, {first_name}, {password1}, {password2}")
 
     # Checks if email already exists
-    # Similar to select email from users where email = %s
+    # Similar to    select email from users where email = %s
     user = Users.query.filter_by(email=email).first()       
     if user:
         flash('Email already exists.', category='error')
@@ -74,7 +71,8 @@ def sign_up_fn(email, first_name, password1, password2):
     elif len(password1) < 1:        # Remember to change limit
         flash('Password must be at least 7 characters.', category='error')
     else:
-        new_user = Users(email=email, first_name=first_name, password=generate_password_hash(password1, method='sha256'))
+        bio = "testing testing"
+        new_user = Users(email=email, first_name=first_name, password=generate_password_hash(password1, method='sha256'), bio=bio)
         db.session.add(new_user)        # Adds to our database
         db.session.commit()             # Commits changes
         login_user(new_user, remember=True)
