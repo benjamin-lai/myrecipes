@@ -24,7 +24,7 @@ class Profiles(db.Model, UserMixin):
     display_name = db.Column(db.String(150))
     profile_pic = db.Column(db.String(150))
     bio = db.Column(db.String(150))
-    owns = db.Column(db.Integer, ForeignKey('users.id'))
+    owns = db.Column(db.Integer, db.ForeignKey('users.id'))
     
     
     
@@ -33,20 +33,24 @@ class Recipes(db.Model, UserMixin):
     name = db.Column(db.String(150))
     description = db.Column(db.String(150))
     photo = db.Column(db.String(150))
-    creates = db.Column(db.Integer, ForeignKey('users.id'))
-   
+    creates = db.Column(db.Integer, db.ForeignKey('users.id'))
+    ingredients = db.relationship('Ingredient', backref='users', lazy=True)
+    methods = db.relationship('Method', backref='users', lazy=True)
+    meal_types = db.relationship('Meal_Type', backref='users', lazy=True)
+
+    
 class Ingredient(db.Model, UserMixin):
-     recipe_id = db.Column(db.Integer, primary_key=True)
+     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
      ingredient = db.Column(db.String(150), primary_key=True)
      
      
 class Method(db.Model, UserMixin):
-     recipe_id = db.Column(db.Integer, primary_key=True)
+     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
      method = db.Column(db.String(150), primary_key=True)
 
 
 class Meal_Type(db.Model, UserMixin):
-     recipe_id = db.Column(db.Integer, primary_key=True)
+     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
      meal_type = db.Column(db.String(150), primary_key=True)
 
 
