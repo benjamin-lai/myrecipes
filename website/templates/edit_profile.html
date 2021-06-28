@@ -46,14 +46,23 @@
       />
     </div>
     <!--User Bio info: need to store in database-->
-    <div class="mb-3">
-        <label for="user_bio" class="form-label">Personal Bio</label>
-        <textarea class="form-control" id="user_bio" rows="5" placeholder = "Tell us something about yourself"></textarea>
+
+    <div class="form-group">
+        <label for="user_bio">Personal Bio</label>
+        <input
+          type="text"
+          class="form-control"
+          id="user_bio"
+          name="user_bio"
+          rows="5"
+          value={{current_user.bio}}
+        />
       </div>
-    <br />
+
+
 
     <button type="submit" class="btn btn-primary">Submit</button>
-    <form action= '/my' method='GET'>
+    <form action= '/my' method='GET' value='back'>
         <button class ='btn btn-secondary' type='submit'>
             Cancel
         </button>

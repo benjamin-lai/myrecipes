@@ -16,13 +16,11 @@
         <header>
           
             <!-- Background image -->
-
             <form action= 'my/edit' method='GET'>
                 <button class ='btn btn-success pull-right' type='submit'>
                     Edit Profile
                 </button>
             </form>
-
             <div      
               class="p-5 text-center bg-image"
               style="
@@ -33,10 +31,13 @@
               <div class="mask" style="background-color: rgba(48, 48, 48, 0.6);">
                 <div class="d-flex justify-content-center align-items-center h-100">
                   <div class="text-white">
+                    <!--Profile picture here-->
                     <img class="rounded-circle account-img" src="{{image_file}}" width="200" height="200">
+                    <!-- Account info-->
                     <h1 class="mb-3">{{current_user.first_name}}
                         <small class='text-muted'>#{{current_user.id}}</small>
                     </h1>
+                    <!-- Subscriber count: Need to create a list and link-->
                     <h4 class="text-info">Subscribers: X</h4>
                   </div>
                 </div>      
@@ -54,8 +55,13 @@
     <small class='text-muted'>#{{current_user.id}}</small>
 </h1>
 <p class="text-secondary">{{current_user.email}}</p>
-<p class="lead">
-    Not much is known about this person... Encourage them to setup their user bio!
-</p>
+
+<!-- User Bio-->
+<div class="form-group purple-border">
+    <label for="exampleFormControlTextarea4">Personal Bio</label>
+    <textarea class="form-control" id="exampleFormControlTextarea4" rows="3" readonly="">{{current_user.bio}}</textarea>
+  </div>
+ <!-- User Bio--> 
+
 
 {% endblock %}

@@ -74,7 +74,8 @@ def sign_up_fn(email, first_name, password1, password2):
     elif len(password1) < 1:        # Remember to change limit
         flash('Password must be at least 7 characters.', category='error')
     else:
-        new_user = Users(email=email, first_name=first_name, password=generate_password_hash(password1, method='sha256'))
+        bio='Not much is known about this user... Encourage them to setup their user bio!'
+        new_user = Users(email=email, first_name=first_name, password=generate_password_hash(password1, method='sha256'), bio=bio)
         db.session.add(new_user)        # Adds to our database
         db.session.commit()             # Commits changes
         login_user(new_user, remember=True)
