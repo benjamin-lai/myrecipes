@@ -4,3 +4,10 @@ create table Users (
     email       text 		not null 	unique,
 	password 	text 		not null
 );
+
+CREATE TABLE Images(  
+    id          Serial      Primary key,  
+    image_name  text        not null,
+    image_data  bytea       not null,
+    username    text        not null       
+);

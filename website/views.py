@@ -12,6 +12,20 @@ from tkinter import messagebox
 import ctypes 
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
+from .models import Images
+from . import db
+
+import psycopg2
+
+'''
+t_host = "127.0.0.1:5000"
+t_port = "5432"
+t_dbname = "rec"
+t_name_user = "user name"
+t_password = 'huzhibo8294'
+#data_conn = psycopg2.connect(host=t_host, port=t_port, dbname=t_dbname, user=t_name_user, password=t_password)
+#data_cursor = data_conn.cursor()
+'''
 
 UPLOAD_FOLDER = 'C:\comp3900\project_data'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
@@ -56,6 +70,7 @@ def recipe():
             #messagebox.showwarning(title="lalala", message="lalala")
             #ctypes.windll.user32.MessageBoxW(0, "Your text", "Your title", 1)
             print(button2)
+            return render_template("recipe_main.html", user=current_user)
         #if label == 1:
             #Mbox('Your title', 'Your text', 1)
 
@@ -87,6 +102,19 @@ def recipe():
 
             #return redirect(url_for('uploaded_file',
             #                        filename=filename))
+            ##################
+            #id_item = 52
+            # Pass both item ID and image file data to a function
+            #SaveToDatabase(id_item, file)
+            newFile=Images(
+                image_name=filename,
+                username="User 1",
+                image_data=file.read()
+            )
+            db.session.add(newFile)
+            db.session.commit()
+            ##################
+
             return redirect(request.url)
         print("file")
     return render_template("create_recipe.html", user=current_user)
@@ -98,3 +126,18 @@ def allowed_file(filename):
 
 def Mbox(title, text, style):
     return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+
+
+def SaveToDatabase(id_item, FileImage):
+    s = ""
+    s += "INSERT INTO Images"
+    s += "("
+    s += "id_item"
+    s += ", blob_file"
+    s += ") VALUES ("
+    s += "(%id_item)"
+    s += ", '(%FileImage)'"
+    s += ")"
+    # We recommend adding TRY here to trap errors.
+    #data_cursor.execute(s, [id_item, FileImage])
+    # Use commit here if you do not have auto-commits turned on in PostgreSQL.

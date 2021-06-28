@@ -11,3 +11,9 @@ class Users(db.Model, UserMixin):
     first_name = db.Column(db.String(150))
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
+
+class Images(db.Model, UserMixin):
+    id = db.Column(db.Integer,primary_key=True)
+    image_name = db.Column(db.String(300))
+    image_data = db.Column(db.BLOB)
+    username = db.Column(db.String(15))
