@@ -12,10 +12,10 @@ from tkinter import messagebox
 import ctypes 
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
-from .models import Images
+from .models import Images, Users
 from . import db
 
-import psycopg2
+import base64
 
 '''
 t_host = "127.0.0.1:5000"
@@ -39,9 +39,24 @@ CORS(views)
 def home():
     return render_template("home.html", user=current_user)
 
+@views.route('/recipe', methods = ['GET','POST'])
+def recipe():
+    file_data = Images.query.filter_by(username="User 4").first()
+    image = base64.b64encode(file_data.image_data).decode('ascii')
+    #image = base64.b64encode(file_data.image_data)
+    #user = Users.query.filter_by(email=email).first()
+    ##file_data = Images.query.filter_by(username="User 1").first()
+    #print(file_data.image_name)
+    #print(file_data.image_data)
+    print("a")
+    print("k")
+    print(image)
+    return render_template("recipe.html", user=current_user, data=list, image=image)
+
+
 @views.route('/Create recipe', methods=['GET', 'POST'])
 @login_required
-def recipe():
+def create_recipe():
     if request.method == 'POST':
         recipe_name = request.form.get('Recipe Name')
         print(recipe_name)
@@ -70,7 +85,7 @@ def recipe():
             #messagebox.showwarning(title="lalala", message="lalala")
             #ctypes.windll.user32.MessageBoxW(0, "Your text", "Your title", 1)
             print(button2)
-            return render_template("recipe_main.html", user=current_user)
+            #return render_template("recipe.html", user=current_user)
         #if label == 1:
             #Mbox('Your title', 'Your text', 1)
 
@@ -98,7 +113,7 @@ def recipe():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            #file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
             #return redirect(url_for('uploaded_file',
             #                        filename=filename))
@@ -106,17 +121,36 @@ def recipe():
             #id_item = 52
             # Pass both item ID and image file data to a function
             #SaveToDatabase(id_item, file)
+            print("print file below")
+            ##print(file.read())
+            print("print file above")
             newFile=Images(
                 image_name=filename,
-                username="User 1",
+                username="User 4",
                 image_data=file.read()
             )
             db.session.add(newFile)
             db.session.commit()
-            ##################
 
-            return redirect(request.url)
-        print("file")
+            ##################
+            #return render_template("recipe.html", user=current_user)
+
+    
+    button3 = request.form.get('button3')
+    label = 0
+    if button3 != None:
+        label = 1
+        #print(button3)
+        #file_data = Images.query.filter_by(username="User 3").first()
+        image = base64.b64encode(file.read()).decode('ascii')
+        print("a")
+        print("k")
+        #print(image)
+        return render_template("recipe.html", user=current_user, data=list, image=image)
+
+
+        #return render_template("recipe.html", user=current_user)
+    
     return render_template("create_recipe.html", user=current_user)
 
 def allowed_file(filename):

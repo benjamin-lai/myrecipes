@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %}Recipe{% endblock %}
+{% extends "base.html" %} {% block title %}Create Recipe{% endblock %}
 <!-- Overwrites title-->
 {% block content %}
 <form method="POST" name="part1_part2" id="part1_part2">
@@ -64,7 +64,7 @@
     <br />
 </form> 
 <hr>
-<form method="POST" name="part3" id="part3">
+<form method="POST" name="part3" id="part3" enctype=multipart/form-data>
       <h4 align="left" style = "margin-top:30px">Step 3</h4>
     <h6 align="left" style="color:red;">Upload photos and discriptions for your recipe</h6>
     <div class="form-group">
@@ -78,32 +78,12 @@
     <div align="left" > </div> <input type="reset" name="Submit2" value="Clear" style="float:left; margin-left:0px"> </div>
     <div align="left" class="form-group"> <input name="button2" type="submit" name="Submit" value="Add" style="float:left; margin-left:145px"></div>
   
+    <h4 align="left" style = "margin-top:30px; margin-left:80px">Upload new File</h4>
+    <input style = "margin-left:80px" type=file name=file>
+    <input name = "button3" type=submit value=Upload>
+
     <br />
 </form>
-
-
-<title>Upload new File</title>
-<h1>Upload new File</h1>
-<form method=post enctype=multipart/form-data>
-  <input type=file name=file>
-  <input type=submit value=Upload>
-</form>
-
-<form id="form1" runat="server">
-  <diiv>
-    Roll No.  
-      <asp:TextBox ID="txtrollno" runat="server">  
-      </asp:TextBox>  
-    <br />   
-    Select File  
-    <asp:FileUpload ID="FileUpload1" runat="server" />               
-    <br />   
-    <asp:Button ID="Button1" runat="server"  
-      Text="Convert" OnClick="Button1_Click" /> 
-  </diiv>
-</form>
-
-  
 
 <script>
   function submit_preferences(){

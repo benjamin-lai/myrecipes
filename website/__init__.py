@@ -14,7 +14,7 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://postgres:{DB_PASSWORD}@localhost/{DB_NAME}'
     db.init_app(app)
 
-    from .views import views, recipe
+    from .views import views
     from .auth import auth
     #from .recipe import recipe
 
