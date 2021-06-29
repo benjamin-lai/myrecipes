@@ -35,8 +35,9 @@ def update_profile():
         user_bio = request.form.get('user_bio')
         
         # add login validation here may need to do another validation for username
+        # QOL: If users don't change their email or leave password blank it will keep their current settings
         user = Users.query.filter_by(email=email).first()       
-        if user:
+        if user and user!=current_user:
             flash('Email already exists.', category='error')
         elif validate_email(email) is False:
             flash('Email provided is not valid.', category='error')
@@ -44,12 +45,13 @@ def update_profile():
             flash('First name must be greater than 1 character.', category='error')
         elif password1 != password2:
             flash('Passwords don\'t match.', category='error')
-        elif len(password1) < 1:        # Remember to change limit
+        elif 0 < len(password1) < 1:        # Remember to change limit
             flash('Password must be at least 7 characters.', category='error')
         else:
             current_user.email = email        
             current_user.first_name = first_name
-            current_user.password = password1     
+            if len(password1) > 0:
+                current_user.password = password1     
             current_user.bio = user_bio
             db.session.commit()
             Profile()
