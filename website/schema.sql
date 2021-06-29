@@ -11,3 +11,26 @@ CREATE TABLE Images(
     image_data  bytea       not null,
     username    text        not null       
 );
+
+create table recipe(
+    id          serial      primary key,
+    name        text        not null,
+    description text        not null,
+    image       bytea       not null,
+    creates     integer     not null,
+    foreign     key (creates) references Users(id) 
+);
+
+create table Ingredient (
+    recipe_id integer references Recipes(id),
+    ingredient        text,
+    primary key(recipe_id, ingredient)
+);
+
+create table RecipeStep(
+    recipe_id        integer references Recipes(id),
+    step_no          int     not null,
+    step_comment     text    not null, 
+    primary key(recipe_id, step_no)
+);
+

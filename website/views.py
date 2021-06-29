@@ -12,7 +12,7 @@ from tkinter import messagebox
 import ctypes 
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
-from .models import Images, Users
+from .models import Images, Users, Recipe
 from . import db
 
 import base64
@@ -49,8 +49,8 @@ def recipe():
     #print(file_data.image_name)
     #print(file_data.image_data)
     print("a")
-    print("k")
-    print(image)
+    print("b")
+    #print(image)
     return render_template("recipe.html", user=current_user, data=list, image=image)
 
 
@@ -59,7 +59,8 @@ def recipe():
 def create_recipe():
     if request.method == 'POST':
         recipe_name = request.form.get('Recipe Name')
-        print(recipe_name)
+        #print(recipe_name)
+        
         serving = request.form.get('Servings')
         print(serving)
         Number = request.form.get('No.')
@@ -74,6 +75,8 @@ def create_recipe():
         print(Step_number)
         discriptions = request.form.get('discriptions')
         print(discriptions)
+
+        
 
         button1 = request.form.get('button1')
         if button1 != None:
@@ -124,14 +127,26 @@ def create_recipe():
             print("print file below")
             ##print(file.read())
             print("print file above")
-            newFile=Images(
+            image_datas=file.read()
+            image_newFile=Images(
                 image_name=filename,
                 username="User 4",
-                image_data=file.read()
+                image_data=image_datas
             )
-            db.session.add(newFile)
+            db.session.add(image_newFile)
             db.session.commit()
 
+            '''
+            recipe_newFile=Recipe(
+                name = recipe_name,
+                description = discriptions,
+                image = file.read(),
+                creates = serving
+            )
+            
+            db.session.add(recipe_newFile)
+            db.session.commit()
+            '''
             ##################
             #return render_template("recipe.html", user=current_user)
 
@@ -142,11 +157,12 @@ def create_recipe():
         label = 1
         #print(button3)
         #file_data = Images.query.filter_by(username="User 3").first()
-        image = base64.b64encode(file.read()).decode('ascii')
+        image = base64.b64encode(image_datas).decode('ascii')
+
         print("a")
         print("k")
         #print(image)
-        return render_template("recipe.html", user=current_user, data=list, image=image)
+        return render_template("recipe.html", user=current_user, data=list, image=image, text=discriptions)
 
 
         #return render_template("recipe.html", user=current_user)
