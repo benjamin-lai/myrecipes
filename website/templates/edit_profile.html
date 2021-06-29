@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block title %}Edit Profile{% endblock %}
 <!-- Overwrites title-->
-<!-- Will user a form similar to sign-up, need to think of a way to retain old info-->
+<!-- TODO: add containers to better group the forms to make them more aesthetic e.g. account, personal details etc-->
 {% block content %}
 <form method="POST">
 
@@ -16,15 +16,35 @@
       />
     </div>
     <div class="form-group">
-      <label for="first_name">First Name</label>
+      <label for="username">Username</label>
       <input
         type="text"
         class="form-control"
-        id="first_name"
-        name="first_name"
-        value={{current_user.first_name}}
+        id="username"
+        name="username"
+        value="{{profile.display_name}}"
       />
     </div>
+    <div class="form-group">
+        <label for="first_name">First name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="first_name"
+          name="first_name"
+          value="{{profile.first_name}}"
+        />
+      </div>
+      <div class="form-group">
+        <label for="last_name">Last name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="last_name"
+          name="last_name"
+          value="{{profile.last_name}}"
+        />
+      </div>
     <div class="form-group">
       <label for="password1">New Password</label>
       <input
@@ -55,18 +75,14 @@
           id="user_bio"
           name="user_bio"
           rows="5"
-          value={{current_user.bio}}
+          value={{profile.bio}}
         />
       </div>
 
 
 
     <button type="submit" class="btn btn-primary">Submit</button>
-    <form action= '/my' method='GET' value='back'>
-        <button class ='btn btn-secondary' type='submit'>
-            Cancel
-        </button>
-    </form>
+    <a class="btn btn-secondary" href="http://127.0.0.1:5000/profile/my" role="button">Cancel</a>
   </form>
 
 
