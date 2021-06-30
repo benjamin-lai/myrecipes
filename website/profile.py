@@ -37,12 +37,9 @@ def update_profile():
         # add login validation here may need to do another validation for username
         # QOL: If users don't change their email or leave password blank it will keep their current settings
         # Note change display_name to username don't make it confusing
-        email_check = Users.query.filter_by(email=email).first()
-        username_check = Users.query.filter_by(username=username).first()
+        email_check = Users.query.filter_by(email=email).first()      
         if email_check and email_check!=current_user:
             flash('Email already exists.', category='error')
-        elif username_check and username_check!=current_user:
-            flash('Username already exists.', category='error')
         elif validate_email(email) is False:
             flash('Email provided is not valid.', category='error')
         elif len(username) < 2:

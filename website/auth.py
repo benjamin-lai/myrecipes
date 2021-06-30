@@ -69,7 +69,7 @@ def sign_up_fn(email, first_name, last_name, password1, password2):
         flash('First name must be greater than 1 character.', category='error')
     elif password1 != password2:
         flash('Passwords don\'t match.', category='error')
-    elif len(password1) < 1:        # Remember to change limit
+    elif len(password1) < 7:        # Remember to change limit
         flash('Password must be at least 7 characters.', category='error')
     else:
         # Register new user
@@ -77,12 +77,12 @@ def sign_up_fn(email, first_name, last_name, password1, password2):
         db.session.add(new_user)        # Adds to our database
         db.session.commit()             # Commits changes
 
-        bio='Not much is known about this user... Encourage them to setup their user bio!'
+        bio="Not much is known about this user... Encourage them to setup their user bio!"
         # static default image hardcoded
         image_file = url_for('static', filename='default_user.jpg')      
 
         # Create default profile for new user
-        new_profile = Profiles(first_name="", last_name="", display_name=first_name + ' ' +  last_name, profile_pic=image_file, bio=bio, owns=new_user.id)
+        new_profile = Profiles(first_name=first_name, last_name=last_name, display_name=first_name + ' ' +  last_name, profile_pic=image_file, bio=bio, owns=new_user.id)
 
         db.session.add(new_profile)
         db.session.commit()             # Commits changes
