@@ -16,15 +16,8 @@ from .models import Images, Users, Recipes, IngredientList, Ingredient
 from . import db
 
 import base64
-'''
-t_host = "127.0.0.1:5000"
-t_port = "5432"
-t_dbname = "rec"
-t_name_user = "user name"
-t_password = 'huzhibo8294'
-#data_conn = psycopg2.connect(host=t_host, port=t_port, dbname=t_dbname, user=t_name_user, password=t_password)
-#data_cursor = data_conn.cursor()
-'''
+
+
 
 UPLOAD_FOLDER = 'C:\comp3900\project_data'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
@@ -52,27 +45,126 @@ def home():
 
 @views.route('/recipe', methods = ['GET','POST'])
 def recipe():
-    file_data = Images.query.filter_by(username="User 4").first()
-    image = base64.b64encode(file_data.image_data).decode('ascii')
-    #image = base64.b64encode(file_data.image_data)
-    #user = Users.query.filter_by(email=email).first()
-    ##file_data = Images.query.filter_by(username="User 1").first()
-    #print(file_data.image_name)
-    #print(file_data.image_data)
-    print("a")
-    print("b")
-    #print(image)
-    return render_template("recipe.html", user=current_user, data=list, image=image)
+    recipe_data = Recipes.query.filter_by(name="6").first()
+    print(recipe_data.id)
+    image = base64.b64encode(recipe_data.photo).decode('ascii')
+    ingredient_data = Ingredient.query.filter_by(recipe_id=recipe_data.id).first()
+    print("haha")
+    
+    button1 = request.form.get('edit_recipe')
+    print(button1)
+    if button1 != None:
+        print("nana")
+        print(button1)
 
+        return render_template("edit_recipe.html", user=current_user)
+    print("return recipe")
+    return render_template("recipe.html", user=current_user, name="6", data=list, image=image, Descriptions=recipe_data.description, RecipeName = 1, MyIngredient = ingredient_data.ingredient)
+
+
+@views.route('/edit recipe', methods = ['GET','POST'])
+def edit_recipe():
+    if request.method == 'POST':
+        print("in edit recipe")
+        button1 = request.form.get('button1')
+        if button1 != None:
+            print(button1)
+            RecipeName = request.form.get('Recipe Name')
+            print(RecipeName)
+        
+            Serving = request.form.get('Servings')
+            print(Serving)
+            Number = request.form.get('No.')
+            print(Number)
+            Dosage = request.form.get('unit')
+            print(Dosage)
+            UnitName = request.form.get('Unit Name')
+            print(UnitName)
+            MyIngredient = request.form.get('Ingredient Name')
+            print(MyIngredient)
+            Step_number = request.form.get('step_number')
+            print(Step_number)
+            
+            Savelist["Serving"] = Serving
+            Savelist["RecipeName"] = RecipeName
+            Savelist["Number"] = Number
+            Savelist["Dosage"] = Dosage
+            Savelist["UnitName"] = UnitName
+            Savelist["MyIngredient"] = MyIngredient
+
+        button2 = request.form.get('button2')
+            
+        label = 0
+        if button2 != None:
+            label = 1
+            #messagebox.showwarning(title="lalala", message="lalala")
+            #ctypes.windll.user32.MessageBoxW(0, "Your text", "Your title", 1)
+            print(button2)
+            #return render_template("recipe.html", user=current_user)
+        #if label == 1:
+            #Mbox('Your title', 'Your text', 1)
+
+            print(Savelist["Serving"])
+            print(Savelist["Number"])
+            print(Savelist["Dosage"])
+            Description = request.form.get('discriptions')
+            print(Description)
+            Savelist["Description"] = Description
+
+    if request.method == 'POST':
+        # check if the post request has the file part
+        
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            
+            print("print file below")
+            ##print(file.read())
+            print("print file above")
+            image_datas=file.read()
+            Savelist["image_datas"] = image_datas
+
+            
+        button3 = request.form.get('button3')
+
+        if button3 != None:
+            recipe = Recipes.query.filter_by(name= Savelist["RecipeName"]).first()
+            #check not empty, create recipe
+            if Savelist["RecipeName"]:
+                recipe.name = Savelist["RecipeName"]
+            if Savelist["Description"]:
+                recipe.description = Savelist["Description"]
+            if Savelist["Serving"]:
+                recipe.serving = Savelist["Serving"]
+            if Savelist["image_datas"]:
+                recipe.photo = Savelist["image_datas"]
+                
+            ingredient = Ingredient.query.filter_by(recipe_id= recipe.id).first()
+            if Savelist["Dosage"]:
+                ingredient.dosage = Savelist["Dosage"]
+            if Savelist["UnitName"]:
+                ingredient.unit_name = Savelist["UnitName"]
+            if Savelist["MyIngredient"]:
+                ingredient.ingredient = Savelist["MyIngredient"]
+                
+            image = base64.b64encode(recipe.photo).decode('ascii')
+
+            return render_template("recipe.html", user=current_user, data=list, image=image, Descriptions= recipe.description, RecipeName = recipe.name, MyIngredient = ingredient.unit_name)
+    return render_template("edit_recipe.html", user=current_user)
 
 @views.route('/Create recipe', methods=['GET', 'POST'])
-@login_required
 def create_recipe():
     if request.method == 'POST':
-
-
-        
-
+        print("in create recipe")
         button1 = request.form.get('button1')
         if button1 != None:
             print(button1)
@@ -179,7 +271,10 @@ def create_recipe():
     button3 = request.form.get('button3')
     label = 0
     if button3 != None:
-        
+        recipe = Recipes.query.filter_by(name= Savelist["RecipeName"]).first()
+        if recipe == None:
+
+
             #messagebox.showwarning(title="lalala", message="lalala")
             #ctypes.windll.user32.MessageBoxW(0, "Your text", "Your title", 1)
             
@@ -192,28 +287,54 @@ def create_recipe():
         #file_data = Images.query.filter_by(username="User 3").first()
 
           #check not empty, create recipe
-        if Savelist["RecipeName"] and Savelist["Description"] and Savelist["Serving"] and Savelist["image_datas"]:
-            create_recipe(Savelist["RecipeName"],Savelist["Description"],Savelist["Serving"],Savelist["image_datas"])
-            #once click submit, add all from IngredientList to db and assign a recipe id
-            add_ingredient_to_db()
-        elif Savelist["Dosage"] and Savelist["UnitName"] and Savelist["MyIngredient"]:
-            #add ingredients
-            add_ingredients_to_list(Savelist["Dosage"],Savelist["UnitName"],Savelist["MyIngredient"])
+            if Savelist["RecipeName"] and Savelist["Description"] and Savelist["Serving"] and Savelist["image_datas"]:
+                create_recipe(Savelist["RecipeName"],Savelist["Description"],Savelist["Serving"],Savelist["image_datas"])
+                #once click submit, add all from IngredientList to db and assign a recipe id
+                recipe_id = Recipes.query.filter_by(name= Savelist["RecipeName"]).first().id
+                #add_ingredient_to_db(recipe_id)
+                new_ingredient = Ingredient(recipe_id = recipe_id, dosage = Savelist["Dosage"], unit_name = Savelist["UnitName"],
+                ingredient = Savelist["MyIngredient"])
+                db.session.add(new_ingredient)
+                db.session.commit()   
+            if Savelist["Dosage"] and Savelist["UnitName"] and Savelist["MyIngredient"]:
+                #add ingredients
+                add_ingredients_to_list(Savelist["Dosage"],Savelist["UnitName"],Savelist["MyIngredient"])
+                
+            
+
+
+
+            image = base64.b64encode(image_datas).decode('ascii')
+
+
+            print(Savelist["Serving"])
+            print(Savelist["Number"])
+            print(Savelist["Dosage"])
+            print(Savelist["Description"])
+            return render_template("recipe.html", user=current_user, data=list, image=image, Descriptions=Savelist["Description"], RecipeName = Savelist["RecipeName"], MyIngredient = Savelist["MyIngredient"], Step_number = Savelist["Step_number"])
         else:
-            print("empty!")        
-        
+            if Savelist["RecipeName"]:
+                recipe.name = Savelist["RecipeName"]
+            if Savelist["Description"]:
+                recipe.description = Savelist["Description"]
+            if Savelist["Serving"]:
+                recipe.serving = Savelist["Serving"]
+            if Savelist["image_datas"]:
+                recipe.photo = Savelist["image_datas"]
+                
+            ingredient = Ingredient.query.filter_by(recipe_id= recipe.id).first()
+            
+            if Savelist["Dosage"]:
+                ingredient.dosage = Savelist["Dosage"]
+            if Savelist["UnitName"]:
+                ingredient.unit_name = Savelist["UnitName"]
+            if Savelist["MyIngredient"]:
+                ingredient.ingredient = Savelist["MyIngredient"]
+                
+            image = base64.b64encode(recipe.photo).decode('ascii')
 
-
-
-        image = base64.b64encode(image_datas).decode('ascii')
-
-
-        print(Savelist["Serving"])
-        print(Savelist["Number"])
-        print(Savelist["Dosage"])
-        print(Savelist["Description"])
-        return render_template("recipe.html", user=current_user, data=list, image=image, Descriptions=Savelist["Description"], RecipeName = Savelist["RecipeName"], MyIngredient = Savelist["MyIngredient"], Step_number = Savelist["Step_number"])
-
+            return render_template("recipe.html", user=current_user, data=list, image=image, Descriptions= recipe.description, RecipeName = recipe.name, MyIngredient = ingredient.unit_name)
+    
 
         #return render_template("recipe.html", user=current_user)
     
@@ -239,6 +360,7 @@ def create_recipe (RecipeName, Description, Serving, Photo):
     db.session.add(new_recipe)
     db.session.commit()             # Commits changes
     print("added successful")
+    
 
 #add ingredients to IngredientList
 def add_ingredients_to_list(Dosage,UnitName,MyIngredient):
@@ -247,7 +369,7 @@ def add_ingredients_to_list(Dosage,UnitName,MyIngredient):
     IngredientList.append(Dict)
     print(IngredientList)
 
-def add_ingredient_to_db():
+def add_ingredient_to_db(recipe_id):
     for item in IngredientList:
         Dosage = item.get('Dosage')
         UnitName = item.get('UnitName')
@@ -255,7 +377,7 @@ def add_ingredient_to_db():
         print(Dosage)
         print(UnitName)
         print(MyIngredient)
-        new_ingredient = Ingredient(recipe_id = 1, dosage = Dosage, unit_name = UnitName,
+        new_ingredient = Ingredient(recipe_id = recipe_id, dosage = Dosage, unit_name = UnitName,
             ingredient = MyIngredient)
         db.session.add(new_ingredient)
         db.session.commit()             # Commits changes
