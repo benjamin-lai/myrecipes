@@ -36,6 +36,16 @@ CORS(views)
 
 Savelist = {}
 
+Savelist["Serving"] = None
+Savelist["RecipeName"] = None
+Savelist["Number"] = None
+Savelist["Dosage"] = None
+Savelist["UnitName"] = None
+Savelist["MyIngredient"] = None
+Savelist["Description"] = None
+Savelist["image_datas"] = None
+Savelist["Step_number"] = None
+
 @views.route('/', methods=['GET', 'POST'])
 def home():
     return render_template("home.html", user=current_user)
@@ -61,14 +71,7 @@ def create_recipe():
     if request.method == 'POST':
 
 
-        Savelist["Serving"] = None
-        Savelist["RecipeName"] = None
-        Savelist["Number"] = None
-        Savelist["Dosage"] = None
-        Savelist["UnitName"] = None
-        Savelist["MyIngredient"] = None
-        Savelist["Description"] = None
-        Savelist["image_datas"] = None
+        
 
         button1 = request.form.get('button1')
         if button1 != None:
@@ -94,7 +97,7 @@ def create_recipe():
             Savelist["Number"] = Number
             Savelist["Dosage"] = Dosage
             Savelist["UnitName"] = UnitName
-            
+            Savelist["MyIngredient"] = MyIngredient
 
         button2 = request.form.get('button2')
             
@@ -176,7 +179,15 @@ def create_recipe():
     button3 = request.form.get('button3')
     label = 0
     if button3 != None:
-        label = 1
+        
+            #messagebox.showwarning(title="lalala", message="lalala")
+            #ctypes.windll.user32.MessageBoxW(0, "Your text", "Your title", 1)
+            
+            #return render_template("recipe.html", user=current_user)
+        #if label == 1:
+            #Mbox('Your title', 'Your text', 1)
+
+
         #print(button3)
         #file_data = Images.query.filter_by(username="User 3").first()
 
@@ -196,8 +207,12 @@ def create_recipe():
 
         image = base64.b64encode(image_datas).decode('ascii')
 
-        
-        return render_template("recipe.html", user=current_user, data=list, image=image, text=Savelist["Description"])
+
+        print(Savelist["Serving"])
+        print(Savelist["Number"])
+        print(Savelist["Dosage"])
+        print(Savelist["Description"])
+        return render_template("recipe.html", user=current_user, data=list, image=image, Descriptions=Savelist["Description"], RecipeName = Savelist["RecipeName"], MyIngredient = Savelist["MyIngredient"], Step_number = Savelist["Step_number"])
 
 
         #return render_template("recipe.html", user=current_user)
@@ -211,21 +226,6 @@ def allowed_file(filename):
 
 def Mbox(title, text, style):
     return ctypes.windll.user32.MessageBoxW(0, text, title, style)
-
-
-def SaveToDatabase(id_item, FileImage):
-    s = ""
-    s += "INSERT INTO Images"
-    s += "("
-    s += "id_item"
-    s += ", blob_file"
-    s += ") VALUES ("
-    s += "(%id_item)"
-    s += ", '(%FileImage)'"
-    s += ")"
-    # We recommend adding TRY here to trap errors.
-    #data_cursor.execute(s, [id_item, FileImage])
-    # Use commit here if you do not have auto-commits turned on in PostgreSQL.
 
 
 def create_recipe (RecipeName, Description, Serving, Photo):

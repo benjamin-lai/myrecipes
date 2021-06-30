@@ -1,122 +1,112 @@
-<!DOCTYPE html>
-<html>
-    {% extends "base.html" %} 
-    <!-- Overwrites title-->
-    {% block title %}KongBao Chicken{% endblock %}
-    {% block content %}
-    <head>
-        <script src="{{ url_for('static',filename = 'Recipe/Like.js')}}"></script>
-    </head>
-    <!--content of recipe-->
-    
-    <body>
-        <div class="jumbotron">
-            <div class="container">
-              <h1>KongBao Chicken</h1>
-              <p>
-                The way of doing kongBao Chicken is really hard, would you like to try
-              </p>
-              <br />
-              <p>
-                <a class="btn btn-primary btn-lg" href="#" role="button">I do not want to try</a>
-                <a class="btn btn-primary btn-lg" href="#" role="button">I want to try</a>
-              </p>
+
+{% extends "base.html" %} 
+<!-- Overwrites title-->
+{% block title %}KongBao Chicken{% endblock %}
+{% block content %}
+<head>
+    <script src="{{ url_for('static',filename = 'Recipe/Like.js')}}"></script>
+</head>
+<!--content of recipe-->
+
+<body>
+    <div class="jumbotron">
+        <div class="container">
+          <h1>KongBao Chicken</h1>
+          <p>
+            The way of doing kongBao Chicken is really hard, would you like to try
+          </p>
+          <br />
+          <p>
+            <a class="btn btn-primary btn-lg" href="#" role="button">I do not want to try</a>
+            <a class="btn btn-primary btn-lg" href="#" role="button">I want to try</a>
+          </p>
+        </div>
+      </div>
+      <div class="row"></div>
+      <div class="row">
+        <div class="col-md-6"></div>
+        <div class="col-md-6"></div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <p class="text-secondary" style="color:red;">{{RecipeName}}</p>
+            
+            <img src="data:image;base64,{{image}}" width="200" height="200"/>
+            <h2>Star Rating</h2>
+            
+            <link href=.rating-list li {
+              float: right;
+              color: #ddd;
+              padding: 10px 5px;
+            }
+            
+            .rating-list li:hover,
+            .rating-list li:hover ~ li {
+              color: #ffd700;
+            }
+            
+            .rating-list {
+              display: inline-block;
+              list-style: none;
+            } rel="stylesheet" />
+            
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star"></span>
+            <span class="fa fa-star"></span>
+            
+            <html>
+              <head>
+              <!-- Font Awesome Icon Library -->
+                <style>
+              .checked {
+                color: orange;
+              }
+              </style>
+              </head>
+              <body>
+              
+              
+
+              </body>
+              </html>
+          </div>
+          <div class="col-md-4">
+            <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+            <div class="form-group" id="rightDiv">
+              <h3 style="margin-top:40px" style="float:left">Descriptions</h3>
+              <p class="text-secondary">{{Descriptions}}</p>
             </div>
-          </div>
-          <div class="row"></div>
-          <div class="row">
-            <div class="col-md-6"></div>
-            <div class="col-md-6"></div>
-          </div>
-          <div class="container">
-            <div class="row">
-              <div class="col-md-4">
-                <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>
-                <img src="data:image;base64,{{image}}" width="200" height="200"/>
-                <h2>Star Rating</h2>
-                
-                <link href=.rating-list li {
-                  float: right;
-                  color: #ddd;
-                  padding: 10px 5px;
-                }
-                
-                .rating-list li:hover,
-                .rating-list li:hover ~ li {
-                  color: #ffd700;
-                }
-                
-                .rating-list {
-                  display: inline-block;
-                  list-style: none;
-                } rel="stylesheet" />
-                
-                <ul class="list-inline rating-list">
-                  <li><i class="fa fa-star" title="Rate 5"></i></li>
-                  <li><i class="fa fa-star" title="Rate 4"></i></li>
-                  <li><i class="fa fa-star" title="Rate 3"></i></li>
-                  <li><i class="fa fa-star" title="Rate 2"></i></li>
-                  <li><i class="fa fa-star" title="Rate 1"></i></li>
-                </ul>
-                <p>
-                  anything here
-
-                </p>
-                <html>
-                  <head>
-                  <!-- Font Awesome Icon Library -->
-                   <style>
-                  .checked {
-                    color: orange;
-                  }
-                  </style>
-                  </head>
-                  <body>
-                  
-                  
-
-                  </body>
-                  </html>
-              </div>
-              <div class="col-md-4">
-                <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
-                <div class="form-group" id="rightDiv">
-                  <label for="unit_name" style="margin-left:40px" style="float:left">Descriptions</label>
-                  <text src="data:text;{{description}}" width="200" height="200"/>
-                </div>
-                <div class="form-group" id="rightDiv">
-                
-                </div>
-
-                <h3>Descriptions</h3>
-                <p>anything here</p>
-              </div>
-              <div class="col-md-4">
-                <span class="glyphicon glyphicon-console" aria-hidden="true"></span>
-                <h3>Step XX</h3>
-                <p>
-                  anything here
-                </p>
-              </div>
+            <div class="form-group" id="rightDiv">
+            
             </div>
-          </div>
-          <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+
           
-    </body>
+          </div>
+          <div> 
+            <h3 style="margin-top:40px">Ingredients</h3>
+            <p class="text-secondary">{{MyIngredient}}</p>
+          </div>
+        </div>
+      </div>
+      <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+      
+</body>
 
-    <view >
-        <view style="font-size:12px;color:#aaa;text-align:center;margin-top:5px;">User Name</view>        
-    </view>
-    
-    <br>
-        <image src = "{{ url_for('static',filename = 'images/2_02.png')}}">
-        <p>user's information is here</p>
-    </br >
+<view >
+    <view style="font-size:12px;color:#aaa;text-align:center;margin-top:5px;">User Name</view>        
+</view>
+
+<br>
+    <image src = "{{ url_for('static',filename = 'images/2_02.png')}}">
+    <p>user's information is here</p>
+</br >
 
 
-    
 
-    {% endblock %}
+
+
+{% endblock %}
     
-    
-</html>
