@@ -1,0 +1,17 @@
+Week 1.
+Formed Group. Joined both the Jira & Github Accounts. Introduced myself and got to know others in the group.
+Talked about plans for next week, such as figuring at three features that will help improve the website.
+
+Week 2.
+Made plans for this week and next week. All agreed that we should focus on the proposal.
+I created google docs account for user stories. And we all managed to finish user stories and background during this week.
+
+Week 3.
+This week was focused on storyboards, I created a balsmiq project that everyone could use. We finished sprints, 
+software architecture and everything else. My job for this week was cleaning up the proposal.
+The goal was to submit the proposal Sunday night, which we did.
+
+Week 4.
+This week I worked on the environment by watching tutorials and reading a bunch of resources online. During this process I managed
+to set up the database, back-end and front-end. A tiring process which was rewarding as I've never done this before. 
+The goal before the progressive demo is to create a minimal viable product, which i believe our sprint 1 will be good for.

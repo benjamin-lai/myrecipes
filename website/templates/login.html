@@ -3,29 +3,46 @@
 <!-- Overrides tab name-->
 {% block title %}Login{% endblock %} {% block content%}
 <!-- Display login related content, will change later card form -->
-<form method="POST">
-  <h3 align="center">Login</h3>
-  <div class="form-group">
-    <label for="email">Email Address</label>
-    <input
-      type="email"
-      class="form-control"
-      id="email"
-      name="email"
-      placeholder="Enter email"
-    />
-  </div>
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input
-      type="password"
-      class="form-control"
-      id="password"
-      name="password"
-      placeholder="Enter password"
-    />
-  </div>
-  <br />
-  <button type="submit" class="btn btn-primary">Login</button>
-</form>
+<br />
+<section class="container-fluid">
+  <section class="row justify-content-center">
+    <div class="shadow p-3 mb-5 bg-white rounded" style="width: 45rem">
+      <div class="card-body">
+        <h3 align="center">MyRecipe</h3>
+        <h5 align="center">
+          Not a member? <a href="/sign-up" class="link-primary">Sign Up</a>
+        </h5>
+        <br />
+
+        <form method="POST">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              placeholder="Enter email"
+            />
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              placeholder="Enter password"
+            />
+          </div>
+          <br />
+          <a href="#" class="link-primary">Forgot Password?</a>
+          <div align="right">
+            <button type="submit" class="btn btn-primary">Login</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</section>
 {% endblock %}

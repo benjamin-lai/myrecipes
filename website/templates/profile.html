@@ -3,67 +3,70 @@
 
 {% block content %}
 
-
-
-
-
 <!--<h1 align=center>Profile</h1>-->
 <!-- Later on need to add tabs to access other pages from profile-->
 <!-- Top of the profile page (profile pic, background banner image, subscribe function)-->
 <div class="content-section">
-    <div class="media">
-      <div class="media-body" align=left>
-        <header>
-          
-            <!-- Background image hardcoded-->
-            <form action= 'my/edit' method='GET'>
-                <button class ='btn btn-success pull-right' type='submit'>
-                    Edit Profile
-                </button>
-            </form>
-            <div      
-              class="p-5 text-center bg-image"
-              style="
+  <div class="media">
+    <div class="media-body" align="left">
+      <header>
+        <!-- Background image hardcoded-->
+        <form action="my/edit" method="GET">
+          <button class="btn btn-success pull-right" type="submit">
+            Edit Profile
+          </button>
+        </form>
+        <div
+          class="p-5 text-center bg-image"
+          style="
                 background-image: url({{backdrop_image}});
                 height: 400px;
               "
-            >
-              <div class="mask" style="background-color: rgba(48, 48, 48, 0.6);">
-                <div class="d-flex justify-content-center align-items-center h-100">
-                  <div class="text-white">
-                    <!--Profile picture here-->
-                    <img class="rounded-circle account-img" src="{{profile.profile_pic}}" width="200" height="200">
-                    <!-- Account info-->
-                    <h1 class="mb-3">{{profile.display_name}}
-                        <small class='text-muted'>#{{profile.profile_id}}</small>
-                    </h1>
-                    <!-- Subscriber count: Need to create a list and link-->
-                    <h4 class="text-info">Subscribers: X</h4>
-                  </div>
-                </div>      
+        >
+          <div class="mask" style="background-color: rgba(48, 48, 48, 0.6)">
+            <div class="d-flex justify-content-center align-items-center h-100">
+              <div class="text-white">
+                <!--Profile picture here-->
+                <img
+                  class="rounded-circle account-img"
+                  src="{{profile.profile_pic}}"
+                  width="200"
+                  height="200"
+                />
+                <!-- Account info-->
+                <h1 class="mb-3">
+                  {{profile.display_name}}
+                  <small class="text-muted">#{{profile.profile_id}}</small>
+                </h1>
+                <!-- Subscriber count: Need to create a list and link-->
+                <h4 class="text-info">Subscribers: X</h4>
               </div>
             </div>
-            <!-- Background image -->
-
-          </header>
-      </div>
+          </div>
+        </div>
+        <!-- Background image -->
+      </header>
     </div>
-    <!-- FORM HERE -->
   </div>
+  <!-- FORM HERE -->
+</div>
 
-<h1 class="account-heading">
-    {{profile.first_name}} {{profile.last_name}} 
-
-</h1>
+<h1 class="account-heading">{{profile.first_name}} {{profile.last_name}}</h1>
 <p class="text-secondary">{{user.email}}</p>
 
-<p class=lead>Any additional info here...</p>
+<p class="lead">Any additional info here...</p>
 <!-- User Bio-->
 <div class="form-group purple-border">
-    <label for="exampleFormControlTextarea4">Personal Bio</label>
-    <textarea class="form-control" id="exampleFormControlTextarea4" rows="3" readonly="">{{profile.bio}}</textarea>
-  </div>
- <!-- User Bio--> 
-
+  <label for="exampleFormControlTextarea4">Personal Bio</label>
+  <textarea
+    class="form-control"
+    id="exampleFormControlTextarea4"
+    rows="3"
+    readonly=""
+  >
+{{profile.bio}}</textarea
+  >
+</div>
+<!-- User Bio-->
 
 {% endblock %}

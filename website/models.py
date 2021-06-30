@@ -8,7 +8,6 @@ from . import db
 # Refer to schema.sql to compare Users for sqlalchemy and Users for postgresql
 class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150))
     password = db.Column(db.String(150))
     email = db.Column(db.String(150), unique=True)
     profile = db.relationship('Profiles', backref='users', lazy=True)
@@ -61,3 +60,7 @@ class Subscriber_Lists(db.Model, UserMixin):
 class Subscribed_To_Lists(db.Model, UserMixin):
     subscribed_id = db.Column(db.Integer, primary_key=True)
     contains = db.Column(db.Integer, primary_key=True)
+
+
+    
+    
