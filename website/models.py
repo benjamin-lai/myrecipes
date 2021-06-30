@@ -11,4 +11,3 @@ class Users(db.Model, UserMixin):
     first_name = db.Column(db.String(150))
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
-    bio = db.Column(db.String(150))
