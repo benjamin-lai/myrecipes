@@ -12,11 +12,10 @@ from tkinter import messagebox
 import ctypes 
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
-from .models import Images, Users, Recipe
+from .models import Images, Users, Recipes, IngredientList, Ingredient
 from . import db
 
 import base64
-
 '''
 t_host = "127.0.0.1:5000"
 t_port = "5432"
@@ -34,6 +33,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 views = Blueprint('views', __name__)
 CORS(views)
+
+Savelist = {}
 
 @views.route('/', methods=['GET', 'POST'])
 def home():
@@ -58,30 +59,45 @@ def recipe():
 @login_required
 def create_recipe():
     if request.method == 'POST':
-        recipe_name = request.form.get('Recipe Name')
-        #print(recipe_name)
-        
-        serving = request.form.get('Servings')
-        print(serving)
-        Number = request.form.get('No.')
-        print(Number)
-        unit = request.form.get('unit')
-        print(unit)
-        unit_name = request.form.get('Unit Name')
-        print(unit_name)
-        ingredient_name = request.form.get('Ingredient Name')
-        print(ingredient_name)
-        Step_number = request.form.get('step_number')
-        print(Step_number)
-        discriptions = request.form.get('discriptions')
-        print(discriptions)
 
-        
+
+        Savelist["Serving"] = None
+        Savelist["RecipeName"] = None
+        Savelist["Number"] = None
+        Savelist["Dosage"] = None
+        Savelist["UnitName"] = None
+        Savelist["MyIngredient"] = None
+        Savelist["Description"] = None
+        Savelist["image_datas"] = None
 
         button1 = request.form.get('button1')
         if button1 != None:
             print(button1)
+            RecipeName = request.form.get('Recipe Name')
+            print(RecipeName)
+        
+            Serving = request.form.get('Servings')
+            print(Serving)
+            Number = request.form.get('No.')
+            print(Number)
+            Dosage = request.form.get('unit')
+            print(Dosage)
+            UnitName = request.form.get('Unit Name')
+            print(UnitName)
+            MyIngredient = request.form.get('Ingredient Name')
+            print(MyIngredient)
+            Step_number = request.form.get('step_number')
+            print(Step_number)
+            
+            Savelist["Serving"] = Serving
+            Savelist["RecipeName"] = RecipeName
+            Savelist["Number"] = Number
+            Savelist["Dosage"] = Dosage
+            Savelist["UnitName"] = UnitName
+            
+
         button2 = request.form.get('button2')
+            
         label = 0
         if button2 != None:
             label = 1
@@ -92,6 +108,12 @@ def create_recipe():
         #if label == 1:
             #Mbox('Your title', 'Your text', 1)
 
+            print(Savelist["Serving"])
+            print(Savelist["Number"])
+            print(Savelist["Dosage"])
+            Description = request.form.get('discriptions')
+            print(Description)
+            Savelist["Description"] = Description
 
 
 
@@ -120,14 +142,15 @@ def create_recipe():
 
             #return redirect(url_for('uploaded_file',
             #                        filename=filename))
-            ##################
-            #id_item = 52
             # Pass both item ID and image file data to a function
             #SaveToDatabase(id_item, file)
             print("print file below")
             ##print(file.read())
             print("print file above")
             image_datas=file.read()
+            Savelist["image_datas"] = image_datas
+
+            '''
             image_newFile=Images(
                 image_name=filename,
                 username="User 4",
@@ -136,7 +159,6 @@ def create_recipe():
             db.session.add(image_newFile)
             db.session.commit()
 
-            '''
             recipe_newFile=Recipe(
                 name = recipe_name,
                 description = discriptions,
@@ -157,12 +179,25 @@ def create_recipe():
         label = 1
         #print(button3)
         #file_data = Images.query.filter_by(username="User 3").first()
+
+          #check not empty, create recipe
+        if Savelist["RecipeName"] and Savelist["Description"] and Savelist["Serving"] and Savelist["image_datas"]:
+            create_recipe(Savelist["RecipeName"],Savelist["Description"],Savelist["Serving"],Savelist["image_datas"])
+            #once click submit, add all from IngredientList to db and assign a recipe id
+            add_ingredient_to_db()
+        elif Savelist["Dosage"] and Savelist["UnitName"] and Savelist["MyIngredient"]:
+            #add ingredients
+            add_ingredients_to_list(Savelist["Dosage"],Savelist["UnitName"],Savelist["MyIngredient"])
+        else:
+            print("empty!")        
+        
+
+
+
         image = base64.b64encode(image_datas).decode('ascii')
 
-        print("a")
-        print("k")
-        #print(image)
-        return render_template("recipe.html", user=current_user, data=list, image=image, text=discriptions)
+        
+        return render_template("recipe.html", user=current_user, data=list, image=image, text=Savelist["Description"])
 
 
         #return render_template("recipe.html", user=current_user)
@@ -191,3 +226,38 @@ def SaveToDatabase(id_item, FileImage):
     # We recommend adding TRY here to trap errors.
     #data_cursor.execute(s, [id_item, FileImage])
     # Use commit here if you do not have auto-commits turned on in PostgreSQL.
+
+
+def create_recipe (RecipeName, Description, Serving, Photo):
+    print(RecipeName)
+    print(Description)
+    print(Serving)
+    #add name and description to db
+    print("Begin to add to recipe table")
+    new_recipe = Recipes(name = RecipeName, description = Description, photo = Photo, #example only
+        serving = Serving, creates = 1)
+    db.session.add(new_recipe)
+    db.session.commit()             # Commits changes
+    print("added successful")
+
+#add ingredients to IngredientList
+def add_ingredients_to_list(Dosage,UnitName,MyIngredient):
+    #put in a dictionary temporary, after the recipe create add the recipe id
+    Dict = dict({'Dosage' : Dosage, 'UnitName' : UnitName, 'Ingredient' : MyIngredient})
+    IngredientList.append(Dict)
+    print(IngredientList)
+
+def add_ingredient_to_db():
+    for item in IngredientList:
+        Dosage = item.get('Dosage')
+        UnitName = item.get('UnitName')
+        MyIngredient = item.get('Ingredient')
+        print(Dosage)
+        print(UnitName)
+        print(MyIngredient)
+        new_ingredient = Ingredient(recipe_id = 1, dosage = Dosage, unit_name = UnitName,
+            ingredient = MyIngredient)
+        db.session.add(new_ingredient)
+        db.session.commit()             # Commits changes
+        print("added successful")
+        print(IngredientList)

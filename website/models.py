@@ -18,9 +18,42 @@ class Images(db.Model, UserMixin):
     image_data = db.Column(db.BLOB)
     username = db.Column(db.String(15))
 
+'''
 class Recipe(db.Model, UserMixin):
     id = db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String(300))
     description = db.Column(db.String(300))
     image = db.Column(db.BLOB)
     creates = db.Column(db.Integer)
+'''
+
+class Recipes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150))
+    description = db.Column(db.String(150))
+    photo = db.Column(db.BLOB)
+    serving = db.Column(db.Integer)
+    creates = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    def __init__(self,name,description,photo,serving,creates):
+        self.name = name
+        self.description = description
+        self.photo = photo
+        self.serving = serving
+        self.creates = creates
+
+
+#Ingredient temp dictionary
+IngredientList = []
+
+class Ingredient(db.Model):
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
+    dosage = db.Column(db.Integer)
+    unit_name = db.Column(db.String(150))
+    ingredient = db.Column(db.String(150), primary_key=True)
+
+    def __init__(self,recipe_id,dosage,unit_name,ingredient):
+        self.recipe_id = recipe_id
+        self.dosage = dosage
+        self.unit_name = unit_name
+        self.ingredient = ingredient
