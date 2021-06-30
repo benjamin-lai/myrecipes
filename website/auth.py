@@ -91,3 +91,5 @@ def sign_up_fn(email, first_name, last_name, password1, password2):
         flash('Account created!', category='success')
         return True
     return False
+
+

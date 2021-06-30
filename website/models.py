@@ -22,6 +22,7 @@ class Profiles(db.Model, UserMixin):
     last_name = db.Column(db.String(150))
     display_name = db.Column(db.String(150))
     profile_pic = db.Column(db.String(150))
+    temp_pic = db.Column(db.String(150))
     bio = db.Column(db.String(150))
     owns = db.Column(db.Integer, db.ForeignKey('users.id'))
     

@@ -1,6 +1,5 @@
 create table Users (
     id              serial      primary key,
-    username        text        not null unique,
 	password 	    text 		check (length(password) > 5) not null,  -- or check through python code?
     email           text 		check (email ~* '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$') not null unique
 );
@@ -11,6 +10,7 @@ create table Profiles (
     last_name       text        not null,
     display_name    text        not null,
     profile_pic     text        not null,   --default blank or something
+    temp_pic        text,
     bio             text,
     owns            integer     not null,   -- user.id  = profile.id =  owns? may be redundant, just mapping how its shown through 3311
     foreign key (owns) references Users(id) -- or just change owns to profile_id or something as use that as the relation.
