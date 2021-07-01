@@ -62,7 +62,7 @@ def recipe():
     return render_template("recipe.html", user=current_user, name="6", data=list, image=image, Descriptions=recipe_data.description, RecipeName = 1, MyIngredient = ingredient_data.ingredient)
 
 
-@views.route('/edit recipe', methods = ['GET','POST'])
+@views.route('/edit recipe', methods = ['GET', 'POST'])
 def edit_recipe():
     if request.method == 'POST':
         print("in edit recipe")
