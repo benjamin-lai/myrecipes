@@ -17,6 +17,15 @@ from . import db
 
 import base64
 
+import boto3
+
+s3 = boto3.client('s3',
+                    aws_access_key_id='AKIAQNR7WVADC7MX2ZEW',
+                    aws_secret_access_key= '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'
+                     )
+BUCKET_NAME='comp3900-w18b-sheeesh'
+
+
 
 
 UPLOAD_FOLDER = 'C:\comp3900\project_data'
