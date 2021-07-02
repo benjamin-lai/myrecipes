@@ -1,6 +1,5 @@
 create table Users (
     id              serial      primary key,
-    username        text        not null unique,
 	password 	    text 		check (length(password) > 5) not null,  -- or check through python code?
     email           text 		check (email ~* '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$') not null unique
 );
