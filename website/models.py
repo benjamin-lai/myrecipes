@@ -12,39 +12,24 @@ class Users(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
 
-class Images(db.Model, UserMixin):
-    id = db.Column(db.Integer,primary_key=True)
-    image_name = db.Column(db.String(300))
-    image_data = db.Column(db.BLOB)
-    username = db.Column(db.String(15))
-
-'''
-class Recipe(db.Model, UserMixin):
-    id = db.Column(db.Integer,primary_key=True)
-    name = db.Column(db.String(300))
-    description = db.Column(db.String(300))
-    image = db.Column(db.BLOB)
-    creates = db.Column(db.Integer)
-'''
 
 class Recipes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150))
     description = db.Column(db.String(150))
-    photo = db.Column(db.BLOB)
     serving = db.Column(db.Integer)
     creates = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self,name,description,photo,serving,creates):
+    def __init__(self,name,description,serving,creates):
         self.name = name
         self.description = description
-        self.photo = photo
         self.serving = serving
         self.creates = creates
 
 
 #Ingredient temp dictionary
 IngredientList = []
+Contents = "empty"
 
 class Ingredient(db.Model):
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
@@ -57,3 +42,14 @@ class Ingredient(db.Model):
         self.dosage = dosage
         self.unit_name = unit_name
         self.ingredient = ingredient
+
+
+class Recipestep(db.Model):
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
+    step_no = db.Column(db.Integer, primary_key=True)
+    step_comment = db.Column(db.String(150))
+
+    def __init__(self,recipe_id,step_no,step_comment):
+        self.recipe_id = recipe_id
+        self.step_no = step_no
+        self.step_comment = step_comment
