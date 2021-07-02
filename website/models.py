@@ -31,7 +31,7 @@ class Recipes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150))
     description = db.Column(db.String(150))
-    photo = db.Column(db.BLOB)
+    photo = db.Column(db.String(150))
     serving = db.Column(db.Integer)
     creates = db.Column(db.Integer, db.ForeignKey('users.id'))
 

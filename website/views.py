@@ -54,25 +54,18 @@ def home():
 
 @views.route('/recipe', methods = ['GET','POST'])
 def recipe():
-    recipe_data = Recipes.query.filter_by(name="6").first()
+    recipe_data = Recipes.query.filter_by(name="x").first()
     print(recipe_data.id)
-    image = s3.generate_presigned_url('get_object',
-                                                    Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe_data.photo})
+    print(recipe_data.photo)
+    image = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe_data.photo})
 
-
+    print(image)
     #image = base64.b64encode(recipe_data.photo).decode('ascii')
     ingredient_data = Ingredient.query.filter_by(recipe_id=recipe_data.id).first()
     print("haha")
     
-    button1 = request.form.get('edit_recipe')
-    print(button1)
-    if button1 != None:
-        print("nana")
-        print(button1)
-
-        return render_template("edit_recipe.html", user=current_user)
-    print("return recipe")
-    return render_template("recipe.html", user=current_user, name="6", data=list, image=image, Descriptions=recipe_data.description, RecipeName = 1, MyIngredient = ingredient_data.ingredient)
+    
+    return render_template("recipe.html", user=current_user, name="x", data=list, image=image, Descriptions=recipe_data.description, RecipeName = "x", MyIngredient = ingredient_data.ingredient)
 
 
 @views.route('/edit recipe', methods = ['GET', 'POST'])
@@ -234,16 +227,14 @@ def create_recipe():
         file = request.files['file']
         # if user does not select file, browser also
         # submit an empty part without filename
+        file2 = file
+        #image_datas=file2.read()
         if file.filename == '':
             flash('Continue to craete recipe')
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            print("print file below")
-            ##print(file.read())
-            print("print file above")
-            #image_datas=file.read()
-            #Savelist["image_datas"] = image_datas
+           
 
             file.save(filename)
             s3.upload_file(
@@ -253,6 +244,7 @@ def create_recipe():
             )
             
             Savelist["image_datas"] = filename
+            #image_datas=file.read()
 
     button3 = request.form.get('button3')
     label = 0
@@ -278,7 +270,10 @@ def create_recipe():
             print(Savelist["Number"])
             print(Savelist["Dosage"])
             print(Savelist["Description"])
-            return render_template("recipe.html", user=current_user, data=list, image=file, Descriptions=Savelist["Description"], RecipeName = Savelist["RecipeName"], MyIngredient = Savelist["MyIngredient"], Step_number = Savelist["Step_number"])
+            image_datas=file2.read()
+            image = base64.b64encode(image_datas).decode('ascii')
+            print(image)
+            return render_template("recipe.html", user=current_user, data=list, image=image, Descriptions=Savelist["Description"], RecipeName = Savelist["RecipeName"], MyIngredient = Savelist["MyIngredient"], Step_number = Savelist["Step_number"])
         else:
             if Savelist["RecipeName"]:
                 recipe.name = Savelist["RecipeName"]
@@ -317,11 +312,10 @@ def Mbox(title, text, style):
 
 
 def create_recipe (RecipeName, Description, Serving, Photo):
-    print(RecipeName)
-    print(Description)
-    print(Serving)
+   
     #add name and description to db
     print("Begin to add to recipe table")
+    print(Photo)
     new_recipe = Recipes(name = RecipeName, description = Description, photo = Photo, #example only
         serving = Serving, creates = 1)
     db.session.add(new_recipe)
