@@ -56,7 +56,11 @@ def home():
 def recipe():
     recipe_data = Recipes.query.filter_by(name="6").first()
     print(recipe_data.id)
-    image = base64.b64encode(recipe_data.photo).decode('ascii')
+    image = s3.generate_presigned_url('get_object',
+                                                    Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe_data.photo})
+
+
+    #image = base64.b64encode(recipe_data.photo).decode('ascii')
     ingredient_data = Ingredient.query.filter_by(recipe_id=recipe_data.id).first()
     print("haha")
     
@@ -219,14 +223,7 @@ def create_recipe():
             print(Description)
             Savelist["Description"] = Description
 
-
-
-        #root = tkinter.Tk()
-        #root.withdraw()
-
-        # Message Box
-        #messagebox.showinfo("Title", "Message")
-    #file = request.form.get('file')
+    
     if request.method == 'POST':
         # check if the post request has the file part
         
@@ -238,62 +235,30 @@ def create_recipe():
         # if user does not select file, browser also
         # submit an empty part without filename
         if file.filename == '':
-            flash('No selected file')
+            flash('Continue to craete recipe')
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            #file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-            #return redirect(url_for('uploaded_file',
-            #                        filename=filename))
-            # Pass both item ID and image file data to a function
-            #SaveToDatabase(id_item, file)
             print("print file below")
             ##print(file.read())
             print("print file above")
-            image_datas=file.read()
-            Savelist["image_datas"] = image_datas
+            #image_datas=file.read()
+            #Savelist["image_datas"] = image_datas
 
-            '''
-            image_newFile=Images(
-                image_name=filename,
-                username="User 4",
-                image_data=image_datas
-            )
-            db.session.add(image_newFile)
-            db.session.commit()
-
-            recipe_newFile=Recipe(
-                name = recipe_name,
-                description = discriptions,
-                image = file.read(),
-                creates = serving
+            file.save(filename)
+            s3.upload_file(
+                Bucket = 'comp3900-w18b-sheeesh',
+                Filename=filename,
+                Key = filename
             )
             
-            db.session.add(recipe_newFile)
-            db.session.commit()
-            '''
-            ##################
-            #return render_template("recipe.html", user=current_user)
+            Savelist["image_datas"] = filename
 
-    
     button3 = request.form.get('button3')
     label = 0
     if button3 != None:
         recipe = Recipes.query.filter_by(name= Savelist["RecipeName"]).first()
         if recipe == None:
-
-
-            #messagebox.showwarning(title="lalala", message="lalala")
-            #ctypes.windll.user32.MessageBoxW(0, "Your text", "Your title", 1)
-            
-            #return render_template("recipe.html", user=current_user)
-        #if label == 1:
-            #Mbox('Your title', 'Your text', 1)
-
-
-        #print(button3)
-        #file_data = Images.query.filter_by(username="User 3").first()
 
           #check not empty, create recipe
             if Savelist["RecipeName"] and Savelist["Description"] and Savelist["Serving"] and Savelist["image_datas"]:
@@ -308,19 +273,12 @@ def create_recipe():
             if Savelist["Dosage"] and Savelist["UnitName"] and Savelist["MyIngredient"]:
                 #add ingredients
                 add_ingredients_to_list(Savelist["Dosage"],Savelist["UnitName"],Savelist["MyIngredient"])
-                
-            
-
-
-
-            image = base64.b64encode(image_datas).decode('ascii')
-
-
+            #image = base64.b64encode(image_datas).decode('ascii')
             print(Savelist["Serving"])
             print(Savelist["Number"])
             print(Savelist["Dosage"])
             print(Savelist["Description"])
-            return render_template("recipe.html", user=current_user, data=list, image=image, Descriptions=Savelist["Description"], RecipeName = Savelist["RecipeName"], MyIngredient = Savelist["MyIngredient"], Step_number = Savelist["Step_number"])
+            return render_template("recipe.html", user=current_user, data=list, image=file, Descriptions=Savelist["Description"], RecipeName = Savelist["RecipeName"], MyIngredient = Savelist["MyIngredient"], Step_number = Savelist["Step_number"])
         else:
             if Savelist["RecipeName"]:
                 recipe.name = Savelist["RecipeName"]

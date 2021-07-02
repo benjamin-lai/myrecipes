@@ -16,7 +16,7 @@ create table Recipes (
     id              serial      primary key,
     name            text        not null,
     description     text        not null,
-    photo           bytea       not null,
+    photo           text       not null,
     serving         int         not null,
     creates         integer     not null,   -- users.id
     foreign key (creates) references Users(id)     
@@ -34,6 +34,6 @@ create table RecipeStep(
     recipe_id       integer references Recipes(id),
     step_no         int     not null,
     step_comment    text    not null,
-    photo           bytea,
+    photo           text,
     primary key(recipe_id, step_no)
 );
