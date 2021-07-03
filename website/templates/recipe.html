@@ -32,7 +32,12 @@
           <div class="col-md-4">
             <h1>{{RecipeName}}</h1>
             
-            <img src="data:image;base64,{{image}}" width="200" height="200"/>
+            <img
+                  class="rounded-circle account-img"
+                  src="{{image1}}"
+                  width="200"
+                  height="200"
+                />
             <h2>Star Rating</h2>
             
             <link href=.rating-list li {
@@ -77,7 +82,34 @@
             <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
             <div class="form-group" id="rightDiv">
               <h3 style="margin-top:40px" style="float:left">Descriptions</h3>
-              <p class="text-secondary">{{Descriptions}}</p>
+              <p class="text-secondary">{{Step1}}</p>
+              <img
+                  class="rounded-circle account-img"
+                  src="{{image2}}"
+                  width="200"
+                  height="200"
+              />
+              <p class="text-secondary">{{Step2}}</p>
+              <img
+                  class="rounded-circle account-img"
+                  src="{{image3}}"
+                  width="200"
+                  height="200"
+              />
+              <p class="text-secondary">{{Step3}}</p>
+              <img
+                  class="rounded-circle account-img"
+                  src="{{image4}}"
+                  width="200"
+                  height="200"
+              />
+              <p class="text-secondary">{{Step4}}</p>
+              <img
+                  class="rounded-circle account-img"
+                  src="{{image5}}"
+                  width="200"
+                  height="200"
+              />
             </div>
             <div class="form-group" id="rightDiv">
             
@@ -104,7 +136,7 @@
     <p>user's information is here</p>
 </br >
 
-<form action="edit recipe" method="POST">
+<form action="edit recipe.{{recipe_id}}" method="POST">
   <button class="btn btn-success pull-right" type="submit">Edit</button>
 </form> 
 

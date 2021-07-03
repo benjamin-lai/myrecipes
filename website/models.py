@@ -17,12 +17,14 @@ class Recipes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150))
     description = db.Column(db.String(150))
+    photo = db.Column(db.String(150))
     serving = db.Column(db.Integer)
     creates = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __init__(self,name,description,serving,creates):
         self.name = name
         self.description = description
+        self.photo = None
         self.serving = serving
         self.creates = creates
 
@@ -48,8 +50,10 @@ class Recipestep(db.Model):
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
     step_no = db.Column(db.Integer, primary_key=True)
     step_comment = db.Column(db.String(150))
+    photo = db.Column(db.String(150))
 
-    def __init__(self,recipe_id,step_no,step_comment):
+    def __init__(self,recipe_id,step_no,step_comment,photo):
         self.recipe_id = recipe_id
         self.step_no = step_no
         self.step_comment = step_comment
+        self.photo = photo

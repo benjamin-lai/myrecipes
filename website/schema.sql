@@ -5,10 +5,18 @@ create table Users (
 	password 	text 		not null
 );
 
+CREATE TABLE Images(  
+    id          Serial      Primary key,  
+    image_name  text        not null,
+    image_data  bytea       not null,
+    username    text        not null       
+);
+
 create table Recipes (
     id              serial      primary key,
     name            text        not null,
     description     text        not null,
+    photo           text,
     serving         int         not null,
     creates         integer     not null,   -- users.id
     foreign key (creates) references Users(id)     
@@ -22,9 +30,10 @@ create table Ingredient (
     primary key(recipe_id, ingredient)
 );
 
-create table Recipestep(
+create table RecipeStep(
     recipe_id       integer references Recipes(id),
     step_no         int     not null,
     step_comment    text    not null,
+    photo           text,
     primary key(recipe_id, step_no)
 );

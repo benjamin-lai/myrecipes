@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block title %}Create Recipe{% endblock %}
 <!-- Overwrites title-->
 {% block content %}
-<form method="POST" name="part1_part2" id="part1_part2">
+<form method="POST" name="part1_part2" id="part1_part2" enctype=multipart/form-data>
     <h4 align="left">Step 1</h4>
     <div class="form-group">
       <label for="Recipe Name" style="color:red;">Enter Your Recipe Name</label>
@@ -32,9 +32,9 @@
       <label for="Servings">Servings</label>
       <INPUT id="Servings" name="Servings" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="0" >
     </div id="parentDiv" class="form-inline">
-    <button name="cretae" type="add" class="btn btn-primary">Create</button>
+    <button name="create" type="add" class="btn btn-primary">Create</button>
     <h4 style = "margin-top:30px; margin-left:1px">Upload recipe Page photo</h4>
-    <input style = "margin-left:1px" type=file name=file>
+    <input style = "margin-left:1px" type=file name=file1>
     <input name = "button3" type=submit value=Upload>
     <hr>
     <h4 align="left">Step 2</h4>
@@ -85,21 +85,21 @@
     <h6 align="left" style="color:red;">Upload photos and discriptions for your recipe</h6>
     <div class="form-group">
       <label for="step_number">Step No</label>
-      <INPUT id="step_number" name="step_number" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="0" >
+      <INPUT id="step_number" name="step_number" value={{Step_Number}} TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="0" >
     </div id="parentDiv" class="form-inline">
     <h6 align="left" style="color:red;">Add Discriptions</h6>
    
     
     <div align="left" style="color:blue;">discriptions<br> <textarea name="discriptions" cols="30" rows="3"></textarea></div>
     <div align="left" > </div> <input type="reset" name="Submit2" value="Clear" style="float:left; margin-left:0px"> </div>
-    <div align="left" class="form-group"> <input name="button2" type="submit" name="Submit" value="Add" style="float:left; margin-left:145px"></div>
+    
 
-    <h4 align="left" style = "margin-top:130px; margin-left:590px">Upload Step photos</h4>
-    <input style = "margin-left:590px" type=file name=file>
-    <input name = "button3" type=submit value=Upload>
+    <h4 align="left" style = "margin-top:0px; margin-left:0px">Upload Step photos</h4>
+    <input style = "margin-left:0px" type=file name=file2>
+    <input name = "button4" type=submit value=Upload>
 
     <br />
-    <button  style = "margin-top:130px; margin-left:1590px" name="Submit" type="add" class="btn btn-primary">Submit Recipe</button>
+    <button  style = "margin-top:0px; margin-left:0px" name="Submit" type="add" class="btn btn-primary">Submit Recipe</button>
 </form>
 
 <script>
