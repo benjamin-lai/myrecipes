@@ -12,6 +12,7 @@ create table Profiles (
     profile_pic     text        not null,   --default blank or something
     temp_pic        text,
     bio             text,
+    custom_url      text,
     owns            integer     not null,   -- user.id  = profile.id =  owns? may be redundant, just mapping how its shown through 3311
     foreign key (owns) references Users(id) -- or just change owns to profile_id or something as use that as the relation.
 );
