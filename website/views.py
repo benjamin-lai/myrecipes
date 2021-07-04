@@ -215,6 +215,10 @@ def edit_recipe(recipe_id):
 
 
 
+
+
+
+
 @views.route('/Create recipe', methods=['GET', 'POST'])
 def create_recipe():
     #Contents = take_ingredientList_into_str()
@@ -427,13 +431,66 @@ def create_recipe():
         return render_template("create_recipe.html", user=current_user, IngreContents = Contents, Step_Number = (Step_Number+1))
         #return render_template("create_recipe.html", user=current_user)
 
+
+#for specific recipe have a unique url that public viewable
+@views.route('/<recipeName>/<int:recipeId>', methods=['GET', 'POST'])
+def view_recipe(recipeName, recipeId):
+    try:
+        recipe = Recipes.query.filter_by(id=recipeId)[recipeName]
+        print(recipe)
+    except:
+        flash("No recipe exists with this name and id.", category="error")
+        return redirect(url_for('views.home'))
+    
+    #find recipe success
+    Contents = generate_ingreStr_by_recipeId(recipe.id)
+    RecipeImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe.photo})
+    #fetch steps from db
+    Steps = ""
+    obj = Recipestep.query.filter_by(recipe_id = recipe.id).all()
+
+    step_list = []
+    image_list = []
+    for o in obj:
+        Steps = f"Step.{o.step_no} --> {o.step_comment}  \n"
+        step_list.append(Steps)
+        image_temp = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': o.photo})
+        image_list.append(image_temp)
+    length1 = len(step_list)
+    while length1 < 4:
+        step_list.append(f"Step.{length1}  \n")
+        image_list.append(None)
+        length1 += 1
+    Savelist["RecipeId"] = recipe.id
+    return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
+    recipe_id = recipe.id,image1 = RecipeImage,
+    Step1 = step_list[0], Step2 = step_list[1], Step3 = step_list[2], Step4 = step_list[3],
+            image2 = image_list[0], image3 = image_list[1], image4 = image_list[2], image5 = image_list[3])
+        
+
+
+
 @views.route('/Delete recipe', methods=['GET', 'POST'])
 def delete_recipe():
     #delete the recipe using recipeId
-    #recipe_id = request.form.get('recipe_id')
-    #Name = Recipes.query.filter_by(id = recipe_id).first().name
-    print(f"recipeeeee   idddd is  ")
-    print(Savelist["RecipeId"])
+    recipe_id = Savelist["RecipeId"]
+    #delete ingredient
+    ingre = Ingredient.query.filter_by(recipe_id=recipe_id).all()
+    for i in ingre:
+        if i.recipe_id == recipe_id:
+            db.session.delete(i)
+    db.session.commit()
+    #delete steps
+    steps = Recipestep.query.filter_by(recipe_id=recipe_id).all()
+    for s in steps:
+        if s.recipe_id == recipe_id:
+            db.session.delete(s)
+    db.session.commit()
+    #delete recipe
+    recipe = Recipes.query.filter_by(id=recipe_id).first()
+    print(recipe.id)
+    db.session.delete(recipe)
+    db.session.commit()
     return render_template("delete_recipe.html",user = current_user)
 
 
@@ -505,3 +562,17 @@ def check_create(RecipeName,userid):
     if obj != None:
         return True
     return False
+
+#find all ingredient relate to recipeId in db, generate a Str
+def generate_ingreStr_by_recipeId(recipeId):
+    Contents = ""
+    counter = 1
+    ingre = Ingredient.query.filter_by(recipe_id=recipeId).all()
+    for item in ingre:
+        Dosage = item.dosage
+        UnitName = item.unit_name
+        MyIngredient = item.ingredient
+        Contents += (f"{counter}. --> {Dosage} {UnitName} {MyIngredient}.     "
+                    f" ")
+        counter += 1
+    return Contents

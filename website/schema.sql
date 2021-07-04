@@ -5,13 +5,6 @@ create table Users (
 	password 	text 		not null
 );
 
-CREATE TABLE Images(  
-    id          Serial      Primary key,  
-    image_name  text        not null,
-    image_data  bytea       not null,
-    username    text        not null       
-);
-
 create table Recipes (
     id              serial      primary key,
     name            text        not null,
