@@ -29,22 +29,49 @@ class Profiles(db.Model, UserMixin):
     
     
     
-class Recipes(db.Model, UserMixin):
+class Recipes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150))
     description = db.Column(db.String(150))
     photo = db.Column(db.String(150))
+    serving = db.Column(db.Integer)
     creates = db.Column(db.Integer, db.ForeignKey('users.id'))
-    ingredients = db.relationship('Ingredient', backref='users', lazy=True)
-    methods = db.relationship('Method', backref='users', lazy=True)
-    meal_types = db.relationship('Meal_Type', backref='users', lazy=True)
 
-    
-class Ingredient(db.Model, UserMixin):
-     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
-     ingredient = db.Column(db.String(150), primary_key=True)
-     
-     
+    def __init__(self,name,description,serving,creates):
+        self.name = name
+        self.description = description
+        self.photo = None
+        self.serving = serving
+        self.creates = creates
+
+#Ingredient temp dictionary
+IngredientList = []
+Contents = "empty"
+
+class Ingredient(db.Model):
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
+    dosage = db.Column(db.Integer)
+    unit_name = db.Column(db.String(150))
+    ingredient = db.Column(db.String(150), primary_key=True)
+
+    def __init__(self,recipe_id,dosage,unit_name,ingredient):
+        self.recipe_id = recipe_id
+        self.dosage = dosage
+        self.unit_name = unit_name
+        self.ingredient = ingredient
+   
+class Recipestep(db.Model):
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
+    step_no = db.Column(db.Integer, primary_key=True)
+    step_comment = db.Column(db.String(150))
+    photo = db.Column(db.String(150))
+
+    def __init__(self,recipe_id,step_no,step_comment,photo):
+        self.recipe_id = recipe_id
+        self.step_no = step_no
+        self.step_comment = step_comment
+        self.photo = photo
+
 class Method(db.Model, UserMixin):
      recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
      method = db.Column(db.String(150), primary_key=True)
@@ -62,7 +89,3 @@ class Subscriber_Lists(db.Model, UserMixin):
 class Subscribed_To_Lists(db.Model, UserMixin):
     subscribed_id = db.Column(db.Integer, primary_key=True)
     contains = db.Column(db.Integer, primary_key=True)
-
-
-    
-    

@@ -21,15 +21,26 @@ create table Recipes (
     id              serial      primary key,
     name            text        not null,
     description     text        not null,
-    photo           text        not null,
-    creates         integer     not null,
-    foreign key (creates) references Users(id)     -- users.id
+    photo           text,
+    serving         int         not null,
+    creates         integer     not null,   -- users.id
+    foreign key (creates) references Users(id)     
 );
 
 create table Ingredient (
+    id              serial      primary key,
     recipe_id integer references Recipes(id),
-    ingredient     text,
-    primary key(recipe_id, ingredient)
+    ingredient      text,
+    dosage          int,
+    unit_name       text      
+);
+
+create table RecipeStep(
+    recipe_id       integer references Recipes(id),
+    step_no         int     not null,
+    step_comment    text    not null,
+    photo           text,
+    primary key(recipe_id, step_no)
 );
 
 create table Method (

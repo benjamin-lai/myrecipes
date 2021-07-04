@@ -1,0 +1,149 @@
+
+{% extends "base.html" %} 
+<!-- Overwrites title-->
+{% block title %}KongBao Chicken{% endblock %}
+{% block content %}
+<head>
+    <script src="{{ url_for('static',filename = 'Recipe/Like.js')}}"></script>
+</head>
+<!--content of recipe-->
+<body>
+    <div class="jumbotron">
+        <div class="container">
+          <h1>KongBao Chicken</h1>
+          <p>{{recipe_id}}</p>
+          <p>
+            The way of doing kongBao Chicken is really hard, would you like to try
+          </p>
+          <br />
+          <p>
+            <a class="btn btn-primary btn-lg" href="#" role="button">I do not want to try</a>
+            <a class="btn btn-primary btn-lg" href="#" role="button">I want to try</a>
+          </p>
+        </div>
+      </div>
+      <div class="row"></div>
+      <div class="row">
+        <div class="col-md-6"></div>
+        <div class="col-md-6"></div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h1>{{RecipeName}}</h1>
+            
+            <img
+                  class="rounded-circle account-img"
+                  src="{{image1}}"
+                  width="200"
+                  height="200"
+                />
+            <h2>Star Rating</h2>
+            
+            <link href=.rating-list li {
+              float: right;
+              color: #ddd;
+              padding: 10px 5px;
+            }
+            
+            .rating-list li:hover,
+            .rating-list li:hover ~ li {
+              color: #ffd700;
+            }
+            
+            .rating-list {
+              display: inline-block;
+              list-style: none;
+            } rel="stylesheet" />
+            
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star"></span>
+            <span class="fa fa-star"></span>
+            
+            <html>
+              <head>
+              <!-- Font Awesome Icon Library -->
+                <style>
+              .checked {
+                color: orange;
+              }
+              </style>
+              </head>
+              <body>
+              
+              
+
+              </body>
+              </html>
+          </div>
+          <div class="col-md-4">
+            <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+            <div class="form-group" id="rightDiv">
+              <h3 style="margin-top:40px" style="float:left">Descriptions</h3>
+              <p class="text-secondary">{{Step1}}</p>
+              <img
+                  class="rounded-circle account-img"
+                  src="{{image2}}"
+                  width="200"
+                  height="200"
+              />
+              <p class="text-secondary">{{Step2}}</p>
+              <img
+                  class="rounded-circle account-img"
+                  src="{{image3}}"
+                  width="200"
+                  height="200"
+              />
+              <p class="text-secondary">{{Step3}}</p>
+              <img
+                  class="rounded-circle account-img"
+                  src="{{image4}}"
+                  width="200"
+                  height="200"
+              />
+              <p class="text-secondary">{{Step4}}</p>
+              <img
+                  class="rounded-circle account-img"
+                  src="{{image5}}"
+                  width="200"
+                  height="200"
+              />
+            </div>
+            <div class="form-group" id="rightDiv">
+            
+            </div>
+
+          
+          </div>
+          <div> 
+            <h3 style="margin-top:40px">Ingredients</h3>
+            <p class="text-secondary">{{MyIngredient}}</p>
+          </div>
+        </div>
+      </div>
+      <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+      
+</body>
+
+<view >
+    <view style="font-size:12px;color:#aaa;text-align:center;margin-top:5px;">User Name</view>        
+</view>
+
+<br>
+    <image src = "{{ url_for('static',filename = 'images/2_09.png')}}">
+    <p>user's information is here</p>
+</br >
+
+<form action="edit recipe" method="POST">
+  <button class="btn btn-success pull-right" type="submit">Edit</button>
+</form> 
+
+<form action="Delete recipe " method="POST">
+  <button class="btn btn-success pull-right" type="submit">Delete</button>
+</form> 
+
+<button name="Delete recipe" type="add" class="btn btn-primary">Delete recipe</button>
+{% endblock %}
+    
