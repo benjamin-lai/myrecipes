@@ -433,15 +433,13 @@ def create_recipe():
 
 
 #for specific recipe have a unique url that public viewable
-@views.route('/<recipeName>/<int:recipeId>', methods=['GET', 'POST'])
+@views.route('/<recipeName>.<int:recipeId>', methods=['GET', 'POST'])
 def view_recipe(recipeName, recipeId):
-    try:
-        recipe = Recipes.query.filter_by(id=recipeId)[recipeName]
-        print(recipe)
-    except:
+    recipe = Recipes.query.filter_by(id=recipeId).first()
+    if recipe is None:
         flash("No recipe exists with this name and id.", category="error")
         return redirect(url_for('views.home'))
-    
+
     #find recipe success
     Contents = generate_ingreStr_by_recipeId(recipe.id)
     RecipeImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe.photo})
