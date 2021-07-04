@@ -50,6 +50,7 @@ Savelist["Step_number"] = -1   #step number can't be None
 Savelist["Step_Des"] = None
 Savelist["image_name2"] = None
 Savelist["image_name1"] = None
+Savelist["edit_ingredient"] = False
 
 
 
@@ -113,108 +114,226 @@ def edit_recipe():
 """
 
 
-@views.route('/edit_recipe.<recipe_id>', methods = ['GET', 'POST'])
-def edit_recipe(recipe_id):
+@views.route('/edit recipe', methods = ['GET', 'POST'])
+def edit_recipe():
+    recipe_id = Savelist["RecipeId"]
     print(recipe_id)
+    recipe = Recipes.query.filter_by(id=recipe_id).first()
+        
+        #find recipe success
+    Contents = generate_ingreStr_by_recipeId(recipe.id)
+    #RecipeImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe.photo})
+    #fetch steps from db
+    Steps = ""
+    obj = Recipestep.query.filter_by(recipe_id = recipe.id).all()
     if request.method == 'POST':
         print("in edit recipe")
-        button1 = request.form.get('button1')
-        if button1 != None:
-            print(button1)
-            RecipeName = request.form.get('Recipe Name')
-            print(RecipeName)
         
-            Serving = request.form.get('Servings')
-            print(Serving)
-            Number = request.form.get('No.')
-            print(Number)
-            Dosage = request.form.get('unit')
-            print(Dosage)
-            UnitName = request.form.get('Unit Name')
-            print(UnitName)
-            MyIngredient = request.form.get('Ingredient Name')
-            print(MyIngredient)
-            Step_number = request.form.get('step_number')
-            print(Step_number)
-            
+        
+    
+        RecipeName = request.form.get('Recipe Name')
+        Description = request.form.get('Recipe Des')
+        Serving = request.form.get('Servings')
+        Dosage = request.form.get('dosage')
+        UnitName = request.form.get('Unit Name')
+        MyIngredient = request.form.get('Ingredient Name')
+        StepNo = request.form.get('step_number')
+        StepDes = request.form.get('discriptions')
+
+
+        button_create = request.form.get('create')
+        if button_create != None:
+            '''
             Savelist["Serving"] = Serving
             Savelist["RecipeName"] = RecipeName
             Savelist["Number"] = Number
             Savelist["Dosage"] = Dosage
             Savelist["UnitName"] = UnitName
             Savelist["MyIngredient"] = MyIngredient
-
-        button2 = request.form.get('button2')
-            
-        label = 0
-        if button2 != None:
-            label = 1
-            #messagebox.showwarning(title="lalala", message="lalala")
-            #ctypes.windll.user32.MessageBoxW(0, "Your text", "Your title", 1)
-            print(button2)
-            #return render_template("recipe.html", user=current_user)
-        #if label == 1:
-            #Mbox('Your title', 'Your text', 1)
-
-            print(Savelist["Serving"])
-            print(Savelist["Number"])
-            print(Savelist["Dosage"])
-            Description = request.form.get('discriptions')
-            print(Description)
-            Savelist["Description"] = Description
-
-    if request.method == 'POST':
-        # check if the post request has the file part
-        
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit an empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            
-            print("print file below")
-            ##print(file.read())
-            print("print file above")
-            image_datas=file.read()
-            Savelist["image_datas"] = image_datas
-
-            
+            '''
+            if RecipeName:
+                recipe.name = RecipeName
+            if Description:
+                recipe.description = Description
+            if Serving:
+                recipe.serving = Serving
+            db.session.commit()
+            flash(f"Recipe name updated Successfully!")
+             
         button3 = request.form.get('button3')
-
         if button3 != None:
-            recipe = Recipes.query.filter_by(name= Savelist["RecipeName"]).first()
-            #check not empty, create recipe
-            if Savelist["RecipeName"]:
-                recipe.name = Savelist["RecipeName"]
-            if Savelist["Description"]:
-                recipe.description = Savelist["Description"]
-            if Savelist["Serving"]:
-                recipe.serving = Savelist["Serving"]
-            if Savelist["image_datas"]:
-                recipe.photo = Savelist["image_datas"]
+            file1 = request.files['file1']
+            # if user does not select file, browser also
+            # submit an empty part without filename
+            if file1 != None:
+                if file1.filename == '':
+                    flash('Continue to create recipe')
+                    return redirect(request.url)
+                if file1 and allowed_file(file1.filename):
+                    filename = secure_filename(file1.filename)
+                    recipe_data = Recipes.query.filter_by(id=Savelist["RecipeId"]).first()
+                    recipe_data.photo = filename
+
+                    file1.save(filename)
+                    s3.upload_file(
+                        Bucket = 'comp3900-w18b-sheeesh',
+                        Filename=filename,
+                        Key = filename
+                    )
+                    db.session.commit()
+
+                    Savelist["image_name1"] = filename
+                    
+                    if recipe_data.photo != None:
+                        flash(f"Recipe photo updated Successfully!")
+
+        button1 = request.form.get('button1')
+        if button1 != None:
+            if Savelist["edit_ingredient"] == False:
+                ingre = Ingredient.query.filter_by(recipe_id=recipe_id).all()
+                for i in ingre:
+                    if i.recipe_id == recipe_id:
+                        db.session.delete(i)
+                db.session.commit()
+                Savelist["edit_ingredient"] = True
+                IngredientList.clear()
                 
-            ingredient = Ingredient.query.filter_by(recipe_id= recipe.id).first()
-            if Savelist["Dosage"]:
-                ingredient.dosage = Savelist["Dosage"]
-            if Savelist["UnitName"]:
-                ingredient.unit_name = Savelist["UnitName"]
-            if Savelist["MyIngredient"]:
-                ingredient.ingredient = Savelist["MyIngredient"]
+            #ingre = Ingredient.query.filter_by(recipe_id=recipeId, dosage=Dosage, unit_name=UnitName, ingredient=MyIngredient).first()
+            if Dosage and UnitName and MyIngredient:
+                #we can begin to add ingredients
+                add_ingredients_to_list(Dosage,UnitName,MyIngredient)
+                Contents = take_ingredientList_into_str()
+
+                flash(f"Update ingredient {MyIngredient} successfully!")
+
+        button4 = request.form.get('button4')
+        if button4 != None:
+            file2 = request.files['file2']
+            if file2 != None:
+                file_data = file2
+                #Savelist["image_datas2"] = file_data
+
+                if file2.filename == '':
+                    flash('Continue to create recipe')
+                    return redirect(request.url)
+                if file2 and allowed_file(file2.filename):
+                    filename = secure_filename(file2.filename)
                 
-            image = base64.b64encode(recipe.photo).decode('ascii')
 
-            return render_template("recipe.html", user=current_user, data=list, image=image, Descriptions= recipe.description, RecipeName = recipe.name, MyIngredient = ingredient.unit_name)
-    return render_template("edit_recipe.html", user=current_user, rname = "chicken", rdes = "no", servingValue = "2")
+                    file2.save(filename)
+                    s3.upload_file(
+                        Bucket = 'comp3900-w18b-sheeesh',
+                        Filename=filename,
+                        Key = filename
+                    )
+                    image_datas2_read = file_data.read()
+                    image2 = base64.b64encode(image_datas2_read).decode('ascii')
+                    image_datas2 = image2
+                    Savelist["image_name2"] = filename
 
+                    Savelist["Step_number"] = StepNo
+                    Savelist["Step_Des"] = StepDes
+            no_list = []
+            obj = Recipestep.query.filter_by(recipe_id = Savelist["RecipeId"]).all()
+            for o in obj:
+                no_list.append(int(o.step_no))
+                if int(Savelist["Step_number"]) == int(o.step_no):
+                    if StepNo:
+                        o.step_no = StepNo
+                    if StepDes:
+                        o.step_comment = StepDes
+                    if Savelist["image_name2"]:
+                        o.photo = Savelist["image_name2"]
+                    db.session.commit()
 
+            print(no_list)
+            if int(Savelist["Step_number"]) not in no_list:
+                if StepNo and StepDes and Savelist["image_name2"]:
+                    # we can begin to add steps
+                    print(f"step + {StepDes}, No. + {StepNo}")
+                    #get the latest id of this recipeName
+                    #obj = Recipes.query.filter_by(name = Savelist["RecipeId"]).all()
+                    recipe_id = Savelist["RecipeId"]
+                    print("begin to add to db")
+                    print(f"Step des {StepDes}")
+                    new_step = Recipestep(recipe_id = recipe_id, step_no = StepNo, step_comment = StepDes, photo = Savelist["image_name2"])
+                    db.session.add(new_step)
+                    db.session.commit()             # Commits changes
+                    flash(f"Added comment at Step.{StepNo}!")
 
+        Submit = request.form.get('Submit')
+        if Submit != None:
+
+            #recipe_id = Savelist["RecipeId"]
+            print(Savelist["RecipeId"])
+            add_ingredient_to_db(recipe_id)
+            #fetch description from db
+            Description = Recipes.query.filter_by(id = recipe_id).first().description
+            #fetch steps from db
+            Steps = ""
+            obj = Recipestep.query.filter_by(recipe_id = recipe_id).all()
+
+            step_list = []
+            image_list = []
+            for o in obj:
+                Steps = f"Step.{o.step_no} --> {o.step_comment}  \n"
+                step_list.append(Steps)
+                image_temp = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': o.photo})
+                image_list.append(image_temp)
+            length1 = len(step_list)
+            while length1 < 4:
+                step_list.append(f"Step.{length1}  \n")
+                image_list.append(None)
+                length1 += 1
+            print(step_list)
+            print(image_list)
+            print("Yeeeeeea")
+            recipe_data = Recipes.query.filter_by(id = recipe_id).first()
+            print(recipe_data.photo)
+            image1 = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe_data.photo})
+            print(image1)
+
+            Contents = take_ingredientList_into_str()
+        
+            return render_template("recipe.html", user=current_user, Descriptions=Description, 
+                RecipeName = recipe_data.name, MyIngredient = Contents,IngreContents = Contents, 
+                Step1 = step_list[0], Step2 = step_list[1], Step3 = step_list[2], Step4 = step_list[3],
+                image2 = image_list[0], image3 = image_list[1], image4 = image_list[2], image5 = image_list[3], 
+                recipe_id = recipe_data.id, image1=image1)
+        else:
+            #get the latest id of this recipeName
+            print("NOooooo")
+            Step_No = None
+            Step_Number = 0
+            if Savelist["RecipeId"]:
+                Step_No = db.session.query(func.max(Recipestep.step_no)).filter_by(recipe_id = Savelist["RecipeId"]).first()
+            print("Step_No:")
+            print(Step_No)
+            if Step_No != None:
+                if Step_No[0] != None:
+                    Step_Number = Step_No[0]
+                else:
+                    Step_Number = 0
+            else:
+                Step_Number = 0
+            return render_template("edit_recipe.html", user=current_user, IngreContents = Contents, Step_Number = (Step_Number+1))
+
+    else:
+        Step_No = None
+        Step_Number = 0
+        if Savelist["RecipeId"]:
+            Step_No = db.session.query(func.max(Recipestep.step_no)).filter_by(recipe_id = Savelist["RecipeId"]).first()
+        print("Step_No:")
+        print(Step_No)
+        if Step_No != None:
+            if Step_No[0] != None:
+                Step_Number = Step_No[0]
+            else:
+                Step_Number = 0
+        else:
+            Step_Number = 0
+        return render_template("edit_recipe.html", user=current_user, IngreContents = Contents, Step_Number = (Step_Number+1))
+        #return render_template("create_recipe.html", user=current_user)
 
 
 
@@ -433,14 +552,15 @@ def create_recipe():
 
 
 #for specific recipe have a unique url that public viewable
-@views.route('/<recipeName>/<int:recipeId>', methods=['GET', 'POST'])
-def view_recipe(recipeName, recipeId):
-    try:
-        recipe = Recipes.query.filter_by(id=recipeId)[recipeName]
-        print(recipe)
-    except:
-        flash("No recipe exists with this name and id.", category="error")
-        return redirect(url_for('views.home'))
+@views.route('/<int:recipeId>', methods=['GET', 'POST'])
+def view_recipe(recipeId):
+    #try:
+    Savelist["edit_ingredient"] = False
+    recipe = Recipes.query.filter_by(id=recipeId).first()
+    print(recipe)
+    #except:
+    #    flash("No recipe exists with this name and id.", category="error")
+    #    return redirect(url_for('views.home'))
     
     #find recipe success
     Contents = generate_ingreStr_by_recipeId(recipe.id)

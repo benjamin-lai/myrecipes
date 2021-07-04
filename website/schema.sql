@@ -16,11 +16,11 @@ create table Recipes (
 );
 
 create table Ingredient (
+    id              serial      primary key,
     recipe_id integer references Recipes(id),
     ingredient      text,
     dosage          int,
-    unit_name       text,       
-    primary key(recipe_id, ingredient)
+    unit_name       text      
 );
 
 create table RecipeStep(
