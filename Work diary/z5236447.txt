@@ -10,3 +10,6 @@ Draw user boards which include "sign-in/up", "Newsfeed", "Trending Section", and
 Week 4
 Implement the interface of "create recipe" and "edit recipe". And their http interface. Start parts of the backend for "create recipe" and "edit recipe".
 
+Week5
+Complete recipe create, edit backend code and improve the recipe create page and recipe page frontend. Start the recipe rating work.
+
