@@ -17,11 +17,20 @@
       crossorigin="anonymous"
     />
 
+    <!-- When hovering over dropdown menu display content (I dont know how to connect css file) -->
+    <style type="text/css">
+      .dropdown:hover .dropdown-menu {
+        display: block;
+      }
+    </style>
+
     <title>{% block title %}Home{% endblock %}</title>
   </head>
   <body>
     <!-- Our navbar, caters for desktop and mobile -->
+    <!-- Nav bar that has a dark bg, and changes when the screen is no longer small-->
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <!-- Creates a button for navbar when the screen is small.-->
       <button
         class="navbar-toggler"
         type="button"
@@ -30,37 +39,55 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbar">
-        <!-- Displays certain tabs when the user is logged in. Useful for later -->
-        <!-- Useful for testing to check if user is logged in. -->
-        <div class="navbar-nav w-100 justify-content-center">
-          <a class="navbar-brand d-flex w-50 me-auto" href="/">MyRecipe</a>
-          {% if current_user.is_authenticated %}
-          <a class="nav-item nav-link" id="#" href="#">Recipe Stuff</a>
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              id="navbarDropdownMenuLink"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              #
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" id="profile" href="/profile/my"
-                >Profile</a
-              >
-              <a class="dropdown-item" id="#" href="#">Newsletters</a>
-              <a class="dropdown-item" id="logout" href="/logout">Logout</a>
-            </div>
-          </li>
 
-          {% else %}
-          <a class="nav-item nav-link" id="login" href="/login">Login</a>
-          <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
-          {% endif %}
+      <!-- Container to hold content in the middle-->
+      <div class="container">
+        <!-- Wrapper for toggle (mobile) and desktop view-->
+        <div class="collapse navbar-collapse" id="navbar">
+          <!-- First nav bar to hold content to the left-->
+          <div class="navbar-nav">
+            <a class="navbar-brand" href="/">MyRecipe</a>
+          </div>
+
+          <!-- Second navbar to move content to the right-->
+          <div class="navbar-nav ml-auto">
+            <!-- Viewing condition for logged in and logged out users-->
+            {% if current_user.is_authenticated %}
+
+            <!-- Recipe creation stuff  -->
+            <a class="nav-item nav-link" id="#" href="#">Recipe Stuff</a>
+
+            <!-- Dropdown -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdownMenuLink"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Placeholder
+              </a>
+              <div
+                class="dropdown-menu"
+                aria-labelledby="navbarDropdownMenuLink"
+              >
+                <a class="dropdown-item" id="profile" href="/profile/my"
+                  >Profile</a
+                >
+                <a class="dropdown-item" id="#" href="#">Newsletters</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" id="logout" href="/logout">Logout</a>
+              </div>
+            </li>
+
+            {% else %}
+            <!-- ATM only authentication methods avaliable -->
+            <a class="nav-item nav-link" id="login" href="/login">Login</a>
+            <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
+            {% endif %}
+          </div>
         </div>
       </div>
     </nav>

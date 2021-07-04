@@ -15,3 +15,4 @@ Week 4.
 This week I worked on the environment by watching tutorials and reading a bunch of resources online. During this process I managed
 to set up the database, back-end and front-end. A tiring process which was rewarding as I've never done this before. 
 The goal before the progressive demo is to create a minimal viable product, which i believe our sprint 1 will be good for.
+After, the demo we discussed about the retrospectives, and also talked about the next sprint, in that who is responsibile for which parts.

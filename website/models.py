@@ -24,6 +24,7 @@ class Profiles(db.Model, UserMixin):
     profile_pic = db.Column(db.String(150))
     temp_pic = db.Column(db.String(150))
     bio = db.Column(db.String(150))
+    custom_url = db.Column(db.String(150))
     owns = db.Column(db.Integer, db.ForeignKey('users.id'))
     
     
@@ -54,7 +55,7 @@ class Meal_Type(db.Model, UserMixin):
 
 #contains is profiles.id 
 class Subscriber_Lists(db.Model, UserMixin):
-    subscriber_id = db.Column(db.Integer, primary_key=True)
+    subscriber_id = db.Column(db.Integer, primary_key=True) #initialise to subscriber's id
     contains = db.Column(db.Integer, primary_key=True)
     
     

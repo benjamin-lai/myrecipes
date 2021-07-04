@@ -19,12 +19,10 @@ s3 = boto3.client('s3',
                      )
 BUCKET_NAME='comp3900-w18b-sheeesh'
 
-
 # Current user's personal profile (Logged in)
 @profile.route('/my', methods=['GET', 'POST'])
 @login_required
 def Profile():
-
     # backdrop hardcoded, add to database later for additional feature
     profile = Profiles.query.filter_by(profile_id=current_user.id).first() 
     # this removes any temp_pics incase they cancelled or went back a page after uploading the pic
@@ -40,6 +38,7 @@ def Profile():
                                                     Params={'Bucket': 'comp3900-w18b-sheeesh','Key': profile.profile_pic})
         backdrop_image = url_for('static', filename='default_backdrop.png')
     return render_template("profile.html", profile=profile, user=current_user, image_file=image_file, backdrop_image=backdrop_image)
+
 
 @profile.route('/my/edit', methods=['GET', 'POST'])
 def update_profile():
@@ -107,16 +106,66 @@ def update_profile():
 
     return render_template("edit_profile.html", user=current_user, profile=profile)
 
-@profile.route('/<id>') # public view of profile #id (same as profile but without edit option)
+
+@profile.route('/<username>') # public view of profile based off name (displays the first user)
+def view_profile1(username):
+    public_profile = Profiles.query.filter_by(display_name=username).first()
+    public_user = Users.query.filter_by(id=public_profile.profile_id).first()
+
+    # backdrop hardcoded -> when backdrop image is added to edit profile we can remove this
+    # as this generates a public profile based off w/e is in the database
+    backdrop_image = url_for('static', filename='default_backdrop.png')
+
+    if public_user:
+        if public_profile.profile_pic == "/static/default_user.jpg":
+            image_file = url_for('static', filename='default_user.jpg') 
+        else:
+            image_file = s3.generate_presigned_url('get_object',
+                                                        Params={'Bucket': 'comp3900-w18b-sheeesh','Key': public_profile.profile_pic})
+
+        return render_template("public_profile.html", profile=public_profile, user=public_user, image_file=image_file, backdrop_image=backdrop_image)
+    else:
+        flash("No user exists with this id.", category="error")
+        return redirect(url_for('views.home'))
+
+    
+@profile.route('/<username>.<int:id>') # public view of profile based off name and id
+
+def view_profile2(username, id):
+    try:
+        public_profile = Profiles.query.filter_by(display_name=username)[id]
+    except:
+        flash("No user exists with this username or id.", category="error")
+        return redirect(url_for('views.home'))
+    
+    public_user = Users.query.filter_by(id=public_profile.profile_id).first()
+
+    # backdrop hardcoded -> when backdrop image is added to edit profile we can remove this
+    # as this generates a public profile based off w/e is in the database
+    backdrop_image = url_for('static', filename='default_backdrop.png')
+
+    if public_user:
+        if public_profile.profile_pic == "/static/default_user.jpg":
+            image_file = url_for('static', filename='default_user.jpg') 
+        else:
+            image_file = s3.generate_presigned_url('get_object',
+                                                        Params={'Bucket': 'comp3900-w18b-sheeesh','Key': public_profile.profile_pic})
+
+        return render_template("public_profile.html", profile=public_profile, user=public_user, image_file=image_file, backdrop_image=backdrop_image)
+    else:
+        flash("No user exists with this id.", category="error")
+        return redirect(url_for('views.home'))
+
+'''
+@profile.route('/<id>') # public view of profile based off id 
 def view_profile(id):
-# Possible change is to use username instead of id for the route but we would have to add an underscore instead of spaces
-# for usernames that include spaces
     if not id.isdigit():
         flash("No user exists with this id.", category="error")
         return redirect(url_for('views.home'))
 
     public_user = Users.query.filter_by(id=id).first()
     public_profile = Profiles.query.filter_by(profile_id=id).first()
+    print(public_profile.profile_id)
     
     # backdrop hardcoded -> when backdrop image is added to edit profile we can remove this
     # as this generates a public profile based off w/e is in the database
@@ -127,15 +176,11 @@ def view_profile(id):
     else:
         flash("No user exists with this id.", category="error")
         return redirect(url_for('views.home'))
-
-
-
+'''
 
 # todo:
-# 2) BUG: logged out users appear logged in 
-# 3) upload and store images
-# 4) View other users profile
-# 5) recipes function
+# 1) recipes function
+#
 
 # profile check
 # 1) Display Name (Do we want to differentiate between username/displayname and first name?)
@@ -149,4 +194,5 @@ def view_profile(id):
 # 9) any additional info
 
 # Quality improvements
-# 1) profile and update profile may be able to be combined but I want two separate routes.
+# 1) Fix up code for view public profile, try/except the whole thing
+# 2) add a button to personal profile page that allows them to check how their profile looks in public (similar to facebook)

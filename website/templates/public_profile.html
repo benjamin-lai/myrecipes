@@ -1,17 +1,17 @@
-{% extends "base.html" %} {% block title %}{{profile.display_name}}{% endblock %}
+{% extends "base.html" %} {% block title %}{{profile.display_name}}{% endblock
+%}
 <!-- Overwrites title-->
 
 {% block content %}
 
 <div class="content-section">
-    <div class="media">
-      <div class="media-body" align=left>
-        <header>
-          
-            <!-- Background image hardcoded-->
-            <div      
-              class="p-5 text-center bg-image"
-              style="
+  <div class="media">
+    <div class="media-body" align="left">
+      <header>
+        <!-- Background image hardcoded-->
+        <div
+          class="p-5 text-center bg-image"
+          style="
                 background-image: url({{backdrop_image}});
                 height: 400px;
               "
@@ -20,7 +20,7 @@
                 <div class="d-flex justify-content-center align-items-center h-100">
                   <div class="text-white">
                     <!--Profile picture here-->
-                    <img class="rounded-circle account-img" src="{{profile.profile_pic}}" width="200" height="200">
+                    <img class="rounded-circle account-img" src="{{image_file}}" width="200" height="200">
                     <!-- Account info-->
                     <h1 class="mb-3">{{profile.display_name}}
                         <small class='text-muted'>#{{profile.profile_id}}</small>
@@ -31,26 +31,34 @@
                 </div>      
               </div>
             </div>
-            <!-- Background image -->
-
-          </header>
-      </div>
+          </div>
+        </div>
+        <!-- Background image -->
+      </header>
     </div>
-    <!-- FORM HERE -->
   </div>
+  <!-- FORM HERE -->
+</div>
 
-<h1 class="account-heading">{{profile.display_name}} 
-    <small class='text-muted'>#{{profile.profile_id}}</small>
+<h1 class="account-heading">
+  {{profile.display_name}}
+  <small class="text-muted">#{{profile.profile_id}}</small>
 </h1>
 <p class="text-secondary">{{user.email}}</p>
 
-<p class=lead>{{profile.first_name}} {{profile.last_name}}</p>
+<p class="lead">{{profile.first_name}} {{profile.last_name}}</p>
 <!-- User Bio-->
 <div class="form-group purple-border">
-    <label for="exampleFormControlTextarea4">Personal Bio</label>
-    <textarea class="form-control" id="exampleFormControlTextarea4" rows="3" readonly="">{{profile.bio}}</textarea>
-  </div>
- <!-- User Bio--> 
-
+  <label for="exampleFormControlTextarea4">Personal Bio</label>
+  <textarea
+    class="form-control"
+    id="exampleFormControlTextarea4"
+    rows="3"
+    readonly=""
+  >
+{{profile.bio}}</textarea
+  >
+</div>
+<!-- User Bio-->
 
 {% endblock %}

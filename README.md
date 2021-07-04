@@ -1,39 +1,18 @@
-**_ dependencies _**
+MyRecipes
+A website designed for user's on the platform to share their recipes to other users on the platform. This project should give users the ability to create/edit/delete recipes. Generate profiles for users on login, and giving them the ability to modify it. Being able o subscribe and unsubscribe to users which will display their recipes on a personalised newsfeed for recipes. On the recipe page users can review the recipe by commenting or liking/dislike, and on the same page a recommendation tab will display a list of recipes that is "similar" to the current recipe.
 
-1. flask
+**_ How to install your project _**
+First, need to setup database.
 
-- Web framework that we are using competes with django
+- Name database rec, and change password in **init**.py accordingly.
+- To connect to database use:
+  psql -h localhost -p 5432 -U postgres rec
+- Copy schema.sql into database.
 
-2. flask-login
+Second, install dependencies
 
-- Provides user session management;
-- logging in/out and remembering users sessions
-- Stores user's id in the session and lets them log out easily.
-- Requires sqlalchemy (super important)
-
-3. flask-sqlalchemy
-
-- Caters for all databases, don't really need sql knowledge
-
-4. flask-cors
-
-- Security
-
-5. psycopg2
-   -For our database
-
-**_ Front end _**
-Bootstrap
-
-- CSS framework for developing responsive and mobile websites.
-- https://getbootstrap.com/docs/5.0/getting-started/introduction/
-
-Reactjs
-
-- JS library used for building user interfaces or UI components
-
-**_ Running database _**
-psql -h localhost -p 5432 -U postgres rec
+- Using the following line, installs all of the libraries inside requirements.md
+- pip install -r requirements.txt
 
 **_ Running the application _**
 python main.py
