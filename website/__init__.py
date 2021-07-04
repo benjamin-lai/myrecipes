@@ -4,7 +4,7 @@ from flask_login import LoginManager
 
 db = SQLAlchemy()
 DB_NAME = "rec"
-DB_PASSWORD = 'aa'
+DB_PASSWORD = 'huzhibo8294'
 
 def create_app():
     app = Flask(__name__)
@@ -16,19 +16,11 @@ def create_app():
 
     from .views import views
     from .auth import auth
-<<<<<<< HEAD
     from .profile import profile
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(profile, url_prefix='/profile')
-=======
-    #from .recipe import recipe
-
-    app.register_blueprint(views, url_prefix='/')
-    app.register_blueprint(auth, url_prefix='/')
-    #app.register_blueprint(recipe, url_prefix='/')
->>>>>>> recipeFinal
 
     from .models import Users
 

@@ -294,12 +294,12 @@ def edit_recipe():
             print(image1)
 
             Contents = take_ingredientList_into_str()
-        
-            return render_template("recipe.html", user=current_user, Descriptions=Description, 
+            return redirect(url_for('views.view_recipe',recipeName = recipe_data.name,recipeId = recipe_data.id ))
+            """return render_template("recipe.html", user=current_user, Descriptions=Description, 
                 RecipeName = recipe_data.name, MyIngredient = Contents,IngreContents = Contents, 
                 Step1 = step_list[0], Step2 = step_list[1], Step3 = step_list[2], Step4 = step_list[3],
                 image2 = image_list[0], image3 = image_list[1], image4 = image_list[2], image5 = image_list[3], 
-                recipe_id = recipe_data.id, image1=image1)
+                recipe_id = recipe_data.id, image1=image1)"""
         else:
             #get the latest id of this recipeName
             print("NOooooo")
@@ -508,12 +508,12 @@ def create_recipe():
 
             Contents = take_ingredientList_into_str()
                 
-
-            return render_template("recipe.html", user=current_user, Descriptions=Description, 
+            return redirect(url_for('views.view_recipe',recipeName = recipe_data.name,recipeId = recipe_data.id ))
+            """return render_template("recipe.html", user=current_user, Descriptions=Description, 
                 RecipeName = Savelist["RecipeName"], MyIngredient = Contents,IngreContents = Contents, 
                 Step1 = step_list[0], Step2 = step_list[1], Step3 = step_list[2], Step4 = step_list[3],
                 image2 = image_list[0], image3 = image_list[1], image4 = image_list[2], image5 = image_list[3], 
-                recipe_id = recipe_id, image1=image1)
+                recipe_id = recipe_id, image1=image1)"""
         else:
             #get the latest id of this recipeName
             
