@@ -14,22 +14,22 @@ First, need to setup database.
 
 - Name database rec, and change password in **init**.py accordingly.
 - To connect to database use:
-  '''bash
+  ```bash
   psql -h localhost -p 5432 -U postgres rec
-  '''
+  ```
 - Copy schema.sql into database.
 
 Second, install dependencies
 
 - Using the following line, installs all of the libraries inside requirements.md
-  '''bash
+  ```bash
   pip install -r requirements.txt
-  '''
+  ```
 
 ## Running the application
 
-'''bash
+```bash
 python main.py
-'''
+```
 
 - Go to `http://127.0.0.1:5000`
