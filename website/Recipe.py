@@ -13,6 +13,7 @@ import ctypes
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
 from .models import Users, Recipes, IngredientList, Ingredient, Contents, Recipestep, Profiles
+from .review import create_comment, retrieve_comments
 from . import db
 from sqlalchemy import desc
 from sqlalchemy import func
@@ -545,6 +546,9 @@ def edit_recipe():
     
 @recipes.route('/<recipeName>.<int:recipeId>', methods=['GET', 'POST'])
 def view_recipe(recipeName, recipeId):
+    if request.method == 'POST':
+        create_comment(recipeId)
+
     Savelist["edit_ingredient"] = False
     recipe = Recipes.query.filter_by(id=recipeId).first()
     print(recipe)
@@ -573,8 +577,11 @@ def view_recipe(recipeName, recipeId):
         length1 += 1
     Savelist["RecipeId"] = recipe.id
     obj = Recipestep.query.filter_by(recipe_id = recipe.id).all()
+    comments = retrieve_comments(recipe.id)
+    
+    
     return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
-    recipe_id = recipe.id,image1 = RecipeImage, query = obj, type="recent")
+    recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, type="recent")
         
 
 

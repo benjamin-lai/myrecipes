@@ -103,8 +103,9 @@ create table Comments (
     comment_id      serial      primary key,
     comment         text        not null,       -- comment being added cant be nothing
     has             integer     not null,      -- = recipes.id
+    -- owns            integer     not null,
     foreign key (has) references Recipes(id)
-
+    -- foreign key (owns) references User(id)
 
 );
 

@@ -74,9 +74,14 @@ class Recipestep(db.Model):
         self.step_comment = step_comment
         self.photo = photo
 
+class Comments(db.Model):
+    comment_id = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.String(10000))
+    has = db.Column(db.Integer, db.ForeignKey('recipes.id'))
+
 class Method(db.Model, UserMixin):
-     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
-     method = db.Column(db.String(150), primary_key=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
+    method = db.Column(db.String(150), primary_key=True)
 
 class Meal_Type(db.Model, UserMixin):
      recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
