@@ -35,7 +35,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 recipes = Blueprint('recipes', __name__)
 CORS(recipes)
 
-
+IngredientList = []
 Savelist = {}
 Savelist["Serving"] = None
 Savelist["RecipeName"] = None
@@ -110,6 +110,8 @@ def recipe():
 def create_recipe():
     #Contents = take_ingredientList_into_str()
     Contents = ""
+    IngredientList = []#reset
+    print("reset1")
     print(IngredientList)
     #image_datas1 = None
     #image_datas2 = None
@@ -168,9 +170,11 @@ def create_recipe():
             
             if Dosage and UnitName and MyIngredient:
                 #we can begin to add ingredients
+                print(f"before {IngredientList}")
                 add_ingredients_to_list(Dosage,UnitName,MyIngredient)
+                print(IngredientList)
                 Contents = take_ingredientList_into_str()
-
+                print(f"after {IngredientList}")
                 flash(f"added ingredient {MyIngredient} successfully!")
             
             button4 = request.form.get('button4')
@@ -275,7 +279,9 @@ def create_recipe():
             print(image1)
 
             Contents = take_ingredientList_into_str()
-                
+            IngredientList = []#reset
+            print("reset2")
+            print(IngredientList)
             return redirect(url_for('recipes.view_recipe',recipeName = recipe_data.name,recipeId = recipe_data.id ))
             """return render_template("recipe.html", user=current_user, Descriptions=Description, 
                 RecipeName = Savelist["RecipeName"], MyIngredient = Contents,IngreContents = Contents, 
@@ -664,7 +670,7 @@ def take_ingredientList_into_str():
         Dosage = item.get('Dosage')
         UnitName = item.get('UnitName')
         MyIngredient = item.get('Ingredient')
-        Contents += (f"{counter}. --> {Dosage} {UnitName} {MyIngredient}.     "
+        Contents += (f"{counter}) --> {Dosage} {UnitName} {MyIngredient}.     "
                     f" ")
         counter += 1
     return Contents
