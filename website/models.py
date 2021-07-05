@@ -24,7 +24,7 @@ class Profiles(db.Model, UserMixin):
     profile_pic = db.Column(db.String(150))
     temp_pic = db.Column(db.String(150))
     bio = db.Column(db.String(150))
-    custom_url = db.Column(db.String(150))
+    custom_url = db.Column(db.String(150), unique=True)
     owns = db.Column(db.Integer, db.ForeignKey('users.id'))
     
     

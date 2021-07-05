@@ -61,8 +61,9 @@ def update_profile():
     
     if request.method == 'POST':
         if request.form['button'] == "Submit":
-            email = request.form.get('email')
             username = request.form.get('username')
+            email = request.form.get('email')
+            custom_url = request.form.get('custom_url')
             first_name = request.form.get('first_name')
             last_name = request.form.get('last_name')
             password1 = request.form.get('password1')
@@ -73,7 +74,8 @@ def update_profile():
             # add login validation here may need to do another validation for username
             # QOL: If users don't change their email or leave password blank it will keep their current settings
             # Note change display_name to username don't make it confusing
-            email_check = Users.query.filter_by(email=email).first()      
+            email_check = Users.query.filter_by(email=email).first()    
+            url_check = Profiles.query.filter_by(custom_url=custom_url).first()  
             if email_check and email_check!=current_user:
                 flash('Email already exists.', category='error')
             elif validate_email(email) is False:
@@ -84,15 +86,24 @@ def update_profile():
                 flash('Passwords don\'t match.', category='error')
             elif 0 < len(password1) < 1:        # Remember to change limit
                 flash('Password must be at least 7 characters.', category='error')
+            elif url_check and url_check.profile_id!=current_user.id and len(url_check.custom_url)>0:
+                flash('The specified profile URL is already in use', category='error')
+            elif custom_url.isdigit():
+                flash('Your custom URL cannot be made up of numbers only', category='error')
             else:
                 current_user.email = email        
                 current_user.username = username
                 if len(password1) > 0:
                     current_user.password = password1     
                 profile.display_name = username
+                if custom_url != "":
+                    profile.custom_url = custom_url
+                else:
+                    profile.custom_url = None
                 profile.first_name = first_name
                 profile.last_name = last_name
                 profile.bio = user_bio
+                print("BIO IS " + profile.bio)
                 
                 if profile.temp_pic is not None:
                     profile.profile_pic = profile.temp_pic
@@ -106,12 +117,15 @@ def update_profile():
 
     return render_template("edit_profile.html", user=current_user, profile=profile)
 
-
-@profile.route('/<username>') # public view of profile based off name (displays the first user)
-def view_profile1(username):
-    public_profile = Profiles.query.filter_by(display_name=username).first()
-    public_user = Users.query.filter_by(id=public_profile.profile_id).first()
-
+@profile.route('/<custom_url>') # public view of profile based off a url set by the user
+def view_profile1(custom_url):
+    # maybe try no digit
+    try:
+        public_profile = Profiles.query.filter_by(custom_url=custom_url).first()
+        public_user = Users.query.filter_by(id=public_profile.profile_id).first()
+    except:
+        flash("No user exists with this username or id.", category="error")
+        return redirect(url_for('views.home'))
     # backdrop hardcoded -> when backdrop image is added to edit profile we can remove this
     # as this generates a public profile based off w/e is in the database
     backdrop_image = url_for('static', filename='default_backdrop.png')
@@ -128,7 +142,9 @@ def view_profile1(username):
         flash("No user exists with this id.", category="error")
         return redirect(url_for('views.home'))
 
-    
+#potential bug if user sets custom url to a number then when a new user signs up at that number theres a url conflict.
+
+'''    
 @profile.route('/<username>.<int:id>') # public view of profile based off name and id
 
 def view_profile2(username, id):
@@ -157,28 +173,38 @@ def view_profile2(username, id):
         return redirect(url_for('views.home'))
 
 '''
-@profile.route('/<id>') # public view of profile based off id 
+@profile.route('/<int:id>') # public view of profile based off id 
 def view_profile(id):
-    if not id.isdigit():
+    try:
+        public_user = Users.query.filter_by(id=id).first()
+        public_profile = Profiles.query.filter_by(profile_id=id).first()
+    except:
         flash("No user exists with this id.", category="error")
         return redirect(url_for('views.home'))
-
-    public_user = Users.query.filter_by(id=id).first()
-    public_profile = Profiles.query.filter_by(profile_id=id).first()
-    print(public_profile.profile_id)
-    
     # backdrop hardcoded -> when backdrop image is added to edit profile we can remove this
     # as this generates a public profile based off w/e is in the database
     backdrop_image = url_for('static', filename='default_backdrop.png')
-
+    
     if public_user and public_profile:
-        return render_template("public_profile.html", profile=public_profile, user=public_user, backdrop_image=backdrop_image)
+        if public_profile.profile_pic == "/static/default_user.jpg":
+            image_file = url_for('static', filename='default_user.jpg') 
+        else:
+            image_file = s3.generate_presigned_url('get_object',
+                                                        Params={'Bucket': 'comp3900-w18b-sheeesh','Key': public_profile.profile_pic})
+
+        return render_template("public_profile.html", profile=public_profile, user=public_user, image_file=image_file, backdrop_image=backdrop_image)
     else:
         flash("No user exists with this id.", category="error")
         return redirect(url_for('views.home'))
-'''
+
 
 # todo:
+
+# Make profile custom url. -> add url attribute to profiles database so we can make sure it is unique
+# later add tooltips for forms.
+# Sub plan -> Subscribe button, becomes deactivated when subscribed and text changes.
+# either have a hover that says unsubscribe or have an alert on click.
+
 # 1) recipes function
 #
 

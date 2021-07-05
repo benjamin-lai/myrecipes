@@ -82,7 +82,8 @@ def sign_up_fn(email, first_name, last_name, password1, password2):
         image_file = url_for('static', filename='default_user.jpg')      
 
         # Create default profile for new user
-        new_profile = Profiles(first_name=first_name, last_name=last_name, display_name=first_name + ' ' +  last_name, profile_pic=image_file, bio=bio, owns=new_user.id)
+        new_profile = Profiles(first_name=first_name, last_name=last_name, display_name=first_name + ' ' + 
+            last_name, profile_pic=image_file, bio=bio, custom_url=None, owns=new_user.id)
 
         db.session.add(new_profile)
         db.session.commit()             # Commits changes
