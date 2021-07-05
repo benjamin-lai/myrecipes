@@ -12,7 +12,7 @@ from tkinter import messagebox
 import ctypes 
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
-from .models import Users, Recipes, IngredientList, Ingredient, Contents, Recipestep
+from .models import Users, Recipes, IngredientList, Ingredient, Contents, Recipestep, Profiles
 from . import db
 from sqlalchemy import desc
 from sqlalchemy import func
@@ -52,7 +52,10 @@ Savelist["image_name2"] = None
 Savelist["image_name1"] = None
 Savelist["edit_ingredient"] = False
 
-	
+@recipes.route('/Recipe cards', methods = ['GET','POST'])
+def recipe_cards():
+    query = Recipes.query.order_by(Recipes.id.desc()).all()
+    return render_template("Recipe_card.html", query=query, type="recent")
 
 @recipes.route('/recipes', methods = ['GET','POST'])
 def recipe():
@@ -614,8 +617,10 @@ def Mbox(title, text, style):
 def create_recipe (RecipeName, Description, Serving):
     #add name and description to db
     print("Begin to add to recipe table")
+    user = Profiles.query.filter_by(owns = current_user.id).first()
+
     new_recipe = Recipes(name = RecipeName, description = Description, 
-        serving = Serving, creates = current_user.id)
+        serving = Serving, creates = current_user.id, creator = user.first_name)
 
     
     db.session.add(new_recipe)

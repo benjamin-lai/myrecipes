@@ -36,13 +36,15 @@ class Recipes(db.Model):
     photo = db.Column(db.String(150))
     serving = db.Column(db.Integer)
     creates = db.Column(db.Integer, db.ForeignKey('users.id'))
+    creator = db.Column(db.String(150))
 
-    def __init__(self,name,description,serving,creates):
+    def __init__(self,name,description,serving,creates, creator):
         self.name = name
         self.description = description
         self.photo = None
         self.serving = serving
         self.creates = creates
+        self.creator = creator
 
 #Ingredient temp dictionary
 IngredientList = []
