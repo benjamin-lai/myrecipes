@@ -569,10 +569,9 @@ def view_recipe(recipeName, recipeId):
         image_list.append(None)
         length1 += 1
     Savelist["RecipeId"] = recipe.id
+    obj = Recipestep.query.filter_by(recipe_id = recipe.id).all()
     return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
-    recipe_id = recipe.id,image1 = RecipeImage,
-    Step1 = step_list[0], Step2 = step_list[1], Step3 = step_list[2], Step4 = step_list[3],
-            image2 = image_list[0], image3 = image_list[1], image4 = image_list[2], image5 = image_list[3])
+    recipe_id = recipe.id,image1 = RecipeImage, query = obj, type="recent")
         
 
 
