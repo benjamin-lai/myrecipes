@@ -24,6 +24,7 @@ create table Recipes (
     photo           text,
     serving         int         not null,
     creates         integer     not null,   -- users.id
+    creator         text        not null,
     foreign key (creates) references Users(id)     
 );
 

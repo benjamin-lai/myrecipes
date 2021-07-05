@@ -12,7 +12,7 @@ from tkinter import messagebox
 import ctypes 
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
-from .models import Users, Recipes, IngredientList, Ingredient, Contents, Recipestep
+from .models import Users, Recipes, IngredientList, Ingredient, Contents, Recipestep, Profiles
 from . import db
 from sqlalchemy import desc
 from sqlalchemy import func
@@ -52,7 +52,10 @@ Savelist["image_name2"] = None
 Savelist["image_name1"] = None
 Savelist["edit_ingredient"] = False
 
-	
+@recipes.route('/Recipe cards', methods = ['GET','POST'])
+def recipe_cards():
+    query = Recipes.query.order_by(Recipes.id.desc()).all()
+    return render_template("Recipe_card.html", query=query, type="recent")
 
 @recipes.route('/recipes', methods = ['GET','POST'])
 def recipe():
@@ -569,10 +572,9 @@ def view_recipe(recipeName, recipeId):
         image_list.append(None)
         length1 += 1
     Savelist["RecipeId"] = recipe.id
+    obj = Recipestep.query.filter_by(recipe_id = recipe.id).all()
     return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
-    recipe_id = recipe.id,image1 = RecipeImage,
-    Step1 = step_list[0], Step2 = step_list[1], Step3 = step_list[2], Step4 = step_list[3],
-            image2 = image_list[0], image3 = image_list[1], image4 = image_list[2], image5 = image_list[3])
+    recipe_id = recipe.id,image1 = RecipeImage, query = obj, type="recent")
         
 
 
@@ -615,8 +617,10 @@ def Mbox(title, text, style):
 def create_recipe (RecipeName, Description, Serving):
     #add name and description to db
     print("Begin to add to recipe table")
+    user = Profiles.query.filter_by(owns = current_user.id).first()
+
     new_recipe = Recipes(name = RecipeName, description = Description, 
-        serving = Serving, creates = current_user.id)
+        serving = Serving, creates = current_user.id, creator = user.first_name)
 
     
     db.session.add(new_recipe)
