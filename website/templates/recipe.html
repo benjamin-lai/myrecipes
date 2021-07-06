@@ -126,13 +126,10 @@
     <h2>Comments</h2>
     <!-- Displays the ability to comment when the user is logged in-->
     {% if current_user.is_authenticated %}
-    <form method="POST">
-      <textarea name="review" id="review" class="form-control"></textarea>
-      <br />
+    
       <div align="center">
-        <button type="submit" class="btn btn-primary">Post</button>
+        <button type="button" onClick="createComment2({{ recipe_id }})">Post a new recipe!</button>
       </div>
-    </form>
     {% endif %}
 
     <!-- Displays the list of comments for the recipe-->
@@ -143,9 +140,14 @@
         {{ review.comment }}
         <!-- Displays the abiltiy to delete and modify if it is their comment or recipe. -->
         {% if current_user.is_authenticated and (creates == current_user.id) %} <!-- Still missing user-->
+        <button type="button" class="float-right" onClick="modifyComment({{ review.comment_id }})">
+          Modify
+        </button>
+
         <button type="button" class="close" onClick="deleteComment({{ review.comment_id }})">
           <span aria-hidden="true">&times;</span>
         </button>
+        
         {% endif %}
       </li>
       {% endfor %}

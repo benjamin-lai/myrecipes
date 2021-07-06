@@ -546,9 +546,6 @@ def edit_recipe():
     
 @recipes.route('/<recipeName>.<int:recipeId>', methods=['GET', 'POST'])
 def view_recipe(recipeName, recipeId):
-    if request.method == 'POST':
-        create_comment(recipeId)
-
     Savelist["edit_ingredient"] = False
     recipe = Recipes.query.filter_by(id=recipeId).first()
     print(recipe)
