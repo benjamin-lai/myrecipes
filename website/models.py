@@ -78,6 +78,7 @@ class Comments(db.Model):
     comment_id = db.Column(db.Integer, primary_key=True)
     comment = db.Column(db.String(10000))
     has = db.Column(db.Integer, db.ForeignKey('recipes.id'))
+    owns = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 class Method(db.Model, UserMixin):
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)

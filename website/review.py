@@ -1,5 +1,6 @@
 # This is contains helper functions to create, modify and delete messages.
 from flask import Blueprint, request, flash, jsonify
+from flask_login import login_required, current_user
 import json
 
 from .models import Comments, Recipes
@@ -10,21 +11,22 @@ review = Blueprint('review', __name__)
 # Creates a comment given the recipe_id
 # Already checks http request 
 @review.route('/create-comment', methods=['POST'])
+@login_required
 def create_comment():
-    print("hewahew")
     if request.method == 'POST':
         recipe = json.loads(request.data)
-        print(recipe)
         recipe_id = recipe['recipe_id']
         comment = recipe['comment']
 
         if len(comment) < 1:
             flash('Comment is too short!', category='error')
         else:
-            new_comment = Comments(comment=comment, has=recipe_id)
+            print(current_user.id)
+            new_comment = Comments(comment=comment, has=recipe_id, owns=current_user.id)
             db.session.add(new_comment)
             db.session.commit()
             flash('Comment added!', category='success')
+        return jsonify({})
 
 # Retrieves comments given recipe_id
 def retrieve_comments(recipe_id):
@@ -36,8 +38,6 @@ def delete_comment():
         comment = json.loads(request.data)
         comment_id = comment['comment_id']
         comment = Comments.query.get(comment_id)
-        print(comment)
-
 
         db.session.delete(comment)
         db.session.commit()
@@ -52,9 +52,13 @@ def modify_comment():
         comment_id = comment['comment_id']
         new_comment = comment['comment']
 
-        comment = Comments.query.get(comment_id)
-        comment.comment = new_comment
-        db.session.commit()
-        flash('Modified comment successfully!', category='success')
+
+        if len(new_comment) < 1:    
+            flash('Comment is too short!', category='error')
+        else:
+            comment = Comments.query.get(comment_id)
+            comment.comment = new_comment
+            db.session.commit()
+            flash('Modified comment successfully!', category='success')
 
         return jsonify({})
