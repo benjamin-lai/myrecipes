@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from flask_cors import CORS
 from . import db
-from .models import Users, Profiles
+from .models import Users, Profiles, Subscribed_To_Lists, Subscriber_Lists
 from .validate_email import validate_email
 import boto3
 from werkzeug.utils import secure_filename
@@ -117,7 +117,7 @@ def update_profile():
 
     return render_template("edit_profile.html", user=current_user, profile=profile)
 
-@profile.route('/<custom_url>') # public view of profile based off a url set by the user
+@profile.route('/<custom_url>', methods=["GET", "POST"]) # public view of profile based off a url set by the user
 def view_profile1(custom_url):
     # maybe try no digit
     try:
@@ -130,6 +130,30 @@ def view_profile1(custom_url):
     # as this generates a public profile based off w/e is in the database
     backdrop_image = url_for('static', filename='default_backdrop.png')
 
+    if request.method == "POST":
+    
+        sub_state = request.form.get('subscribe')
+        if sub_state == "Subscribe":
+            flash("Subscribed to this user!", category="sucess")
+        elif sub_state == "Subscribed":
+            flash("Unsubscribed to this user!", category="error")
+
+    # code for subscribing, contains is the subject user, id is the target
+    '''
+    if subbing:
+        new_subbed = Subscriber_Lists(subscriber_id = current_user.id, contains = public_user.id) # profile's sublist
+        new_subber = Subscribed_To_Lists(subscribed_id = public_user.id, contains = current_user.id) # user's subscriptions
+        db.session.add(new_subbed)
+        db.session.add(new_subber)
+    # code for unsubscribing
+    elif unsubbing:
+        del_subbed = Subscriber_Lists.query.filter_by(subscriber_id = current_user.id, contains = public_user.id)
+        del_subber = Subscribed_To_Lists.query.filter_by(subscribed_id = public_user.id, contains = current_user.id)
+        db.session.delete(del_subbed)
+        db.session.delete(del_subber)
+
+    db.session.commit()
+    '''
     if public_user:
         if public_profile.profile_pic == "/static/default_user.jpg":
             image_file = url_for('static', filename='default_user.jpg') 
@@ -144,36 +168,7 @@ def view_profile1(custom_url):
 
 #potential bug if user sets custom url to a number then when a new user signs up at that number theres a url conflict.
 
-'''    
-@profile.route('/<username>.<int:id>') # public view of profile based off name and id
-
-def view_profile2(username, id):
-    try:
-        public_profile = Profiles.query.filter_by(display_name=username)[id]
-    except:
-        flash("No user exists with this username or id.", category="error")
-        return redirect(url_for('views.home'))
-    
-    public_user = Users.query.filter_by(id=public_profile.profile_id).first()
-
-    # backdrop hardcoded -> when backdrop image is added to edit profile we can remove this
-    # as this generates a public profile based off w/e is in the database
-    backdrop_image = url_for('static', filename='default_backdrop.png')
-
-    if public_user:
-        if public_profile.profile_pic == "/static/default_user.jpg":
-            image_file = url_for('static', filename='default_user.jpg') 
-        else:
-            image_file = s3.generate_presigned_url('get_object',
-                                                        Params={'Bucket': 'comp3900-w18b-sheeesh','Key': public_profile.profile_pic})
-
-        return render_template("public_profile.html", profile=public_profile, user=public_user, image_file=image_file, backdrop_image=backdrop_image)
-    else:
-        flash("No user exists with this id.", category="error")
-        return redirect(url_for('views.home'))
-
-'''
-@profile.route('/<int:id>') # public view of profile based off id 
+@profile.route('/<int:id>', methods=["GET", "POST"]) # public view of profile based off id 
 def view_profile(id):
     try:
         public_user = Users.query.filter_by(id=id).first()

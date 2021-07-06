@@ -1,5 +1,5 @@
 {% extends "base.html" %} {% block title %}{{profile.display_name}}{% endblock %}
-<!-- Overwrites title-->
+<!-- Same as profile but no edit button, have the option to subscribe-->
 
 {% block content %}
 
@@ -24,6 +24,27 @@
                     <!-- Account info-->
                     <h1 class="mb-3">{{profile.display_name}}
                         <small class='text-muted'>#{{profile.profile_id}}</small>
+
+                        <!-- Subscribe Button-->
+                        <button class="btn btn-danger" id="subscribe" onclick="subState()" type="submit" method="POST">Subscribe</button>
+                        <!-- javascript function that changes the state of the subscribe button-->
+                        <script>
+                          function subState() {
+                            var toggle = document.getElementById("subscribe");
+                            if (toggle.innerHTML == "Subscribe"){
+                              toggle.innerHTML = "Subscribed"
+                              toggle.style.backgroundColor = "rgba(220, 53, 69, 0.7)"
+                                       
+                            }
+                            else {
+                              // Add an alert so users have to confirm unsubscribing
+                              toggle.innerHTML = "Subscribe"
+                              toggle.style.backgroundColor = "rgb(220, 53, 69, 1)"
+                        
+                            }
+                          }
+                        </script>
+
                     </h1>
                     <!-- Subscriber count: Need to create a list and link-->
                     <h4 class="text-info">Subscribers: X</h4>
