@@ -48,14 +48,21 @@
           <div class="navbar-nav">
             <a class="navbar-brand" href="/">MyRecipe</a>
           </div>
-
+          
           <!-- Second navbar to move content to the right-->
           <div class="navbar-nav ml-auto">
             <!-- Viewing condition for logged in and logged out users-->
             {% if current_user.is_authenticated %}
 
+            <!--search form-->
+            <form class="d-flex">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>            
+            
             <!-- Recipe creation stuff  -->
             <a class="nav-item nav-link" id="#" href="#">Recipe Stuff</a>
+
 
             <!-- Dropdown -->
             <li class="nav-item dropdown">
@@ -83,7 +90,7 @@
                 <a class="dropdown-item" id="logout" href="/logout">Logout</a>
               </div>
             </li>
-
+            
             {% else %}
             <!-- ATM only authentication methods avaliable -->
             <a class="nav-item nav-link" id="login" href="/login">Login</a>
