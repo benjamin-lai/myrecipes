@@ -58,12 +58,25 @@
               list-style: none;
             } rel="stylesheet" />
             
+
             <span class="fa fa-star checked"></span>
             <span class="fa fa-star checked"></span>
             <span class="fa fa-star checked"></span>
             <span class="fa fa-star"></span>
             <span class="fa fa-star"></span>
             
+            <!-- Like and disclick buttons -->
+            <div class="row">
+              <div class="col">
+                <button type="button" onClick="addLike({{ recipe_id }})">Like!</button>
+              </div>
+              <div class="col">
+                <button type="button" onClick="addDislike({{ recipe_id }})">Dislike!</button>
+              </div>
+            </div>
+            
+
+
             <html>
               <head>
               <!-- Font Awesome Icon Library -->
@@ -132,10 +145,14 @@
     {% endif %}
 
     <!-- Displays the list of comments for the recipe-->
+    
     <ul class="list-group list-group-flush" id="reviews">
 
-      {% for review in comments %}
+      <!-- Iterate through comments for the recipe and display associated name and comment. -->
+      {% for comment_display_name, review in comments %}
+      {{ comment_display_name }}
       <li class="list-group-item">
+        <!-- Current displays information off the screen if there is too much, need to fix it later-->
         {{ review.comment }}
         <!-- Displays the abiltiy to delete and modify if it is their comment or recipe. -->
         {% if current_user.is_authenticated and (creates == current_user.id or current_user.id == review.owns) %} <!-- Still missing user-->
