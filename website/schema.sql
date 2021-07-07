@@ -23,6 +23,8 @@ create table Recipes (
     description     text        not null,
     photo           text,
     serving         int         not null,
+    num_of_likes    int,
+    num_of_dislikes int,
     creates         integer     not null,   -- users.id
     creator         text        not null,
     foreign key (creates) references Users(id)     
@@ -103,15 +105,19 @@ create table Comments (
     comment_id      serial      primary key,
     comment         text        not null,       -- comment being added cant be nothing
     has             integer     not null,      -- = recipes.id
-    foreign key (has) references Recipes(id)
-
-
+    owns            integer     not null,
+    foreign key (has) references Recipes(id),
+    foreign key (owns) references Users(id)
+    
 );
 
 
 create table Likes (
-    number_of_likes integer     not null,       
+    id              serial      primary key,
+    like_status     integer     not null,           -- 1 for liked, 0 for nothing, -1 for dislike
     has             integer     not null,      -- = recipes.id
+    own             integer     not null,
+    foreign key (own) references Users(id),
     foreign key (has) references Recipes(id)
 );
 

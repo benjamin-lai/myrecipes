@@ -37,6 +37,8 @@ class Recipes(db.Model):
     serving = db.Column(db.Integer)
     creates = db.Column(db.Integer, db.ForeignKey('users.id'))
     creator = db.Column(db.String(150))
+    num_of_likes = db.Column(db.Integer)
+    num_of_dislikes = db.Column(db.Integer)
 
     def __init__(self,name,description,serving,creates, creator):
         self.name = name
@@ -45,6 +47,8 @@ class Recipes(db.Model):
         self.serving = serving
         self.creates = creates
         self.creator = creator
+        self.num_of_likes = 0
+        self.num_of_dislikes = 0
 
 #Ingredient temp dictionary
 IngredientList = []
@@ -74,9 +78,15 @@ class Recipestep(db.Model):
         self.step_comment = step_comment
         self.photo = photo
 
+class Comments(db.Model):
+    comment_id = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.String(10000))
+    has = db.Column(db.Integer, db.ForeignKey('recipes.id'))
+    owns = db.Column(db.Integer, db.ForeignKey('users.id'))
+
 class Method(db.Model, UserMixin):
-     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
-     method = db.Column(db.String(150), primary_key=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
+    method = db.Column(db.String(150), primary_key=True)
 
 class Meal_Type(db.Model, UserMixin):
      recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
@@ -107,8 +117,10 @@ class Newsfeeds(db.Model, UserMixin):
     likes = db.Column(db.Integer)
     display_name = db.Column(db.String(150))
     
-    
-class Likes(db.Model, UserMixin):
-    number_of_likes = db.Column(db.Integer)
-    has = db.Column(db.Integer, primary_key=True)
 
+
+class Likes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    like_status = db.Column(db.Integer)
+    has = db.Column(db.Integer, db.ForeignKey('recipes.id'))
+    own = db.Column(db.Integer, db.ForeignKey('users.id'))
