@@ -103,6 +103,26 @@ class Subscriber_Lists(db.Model, UserMixin):
 class Subscribed_To_Lists(db.Model, UserMixin):
     subscribed_id = db.Column(db.Integer, primary_key=True)
     contains = db.Column(db.Integer, primary_key=True)
+    
+
+
+# not sure if this is the proper way to add views?
+class Newsfeeds(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150))
+    description = db.Column(db.String(150))
+    photo = db.Column(db.String(150))
+    serving = db.Column(db.Integer)
+    creates = db.Column(db.Integer, db.ForeignKey('users.id'))
+    creator = db.Column(db.String(150))
+    contains = db.Column(db.Integer)
+    likes = db.Column(db.Integer)
+    dislikes = db.Column(db.Integer)
+    display_name = db.Column(db.String(150))
+    creation_time = db.Column(db.String(150))
+    creation_date = db.Column(db.String(150))
+    
+
 
 class Likes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
