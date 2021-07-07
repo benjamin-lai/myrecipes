@@ -114,7 +114,7 @@ create table Comments (
 
 create table Likes (
     id              serial      primary key,
-    like_status     integer     not null,       
+    like_status     integer     not null,           -- 1 for liked, 0 for nothing, -1 for dislike
     has             integer     not null,      -- = recipes.id
     own             integer     not null,
     foreign key (own) references Users(id),

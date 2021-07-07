@@ -14,12 +14,13 @@ function createComment2(recipe_id) {
 }
 
 function deleteComment(comment_id) {
-  fetch("/delete-comment", {
-    method: "POST",
-    body: JSON.stringify({ comment_id: comment_id }),
-  }).then((_res) => {
-    window.location.reload(true);
-  });
+  if (confirm("Are you sure you want to delete this comment?"))
+    fetch("/delete-comment", {
+      method: "POST",
+      body: JSON.stringify({ comment_id: comment_id }),
+    }).then((_res) => {
+      window.location.reload(true);
+    });
 }
 
 function modifyComment(comment_id) {

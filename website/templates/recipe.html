@@ -1,6 +1,7 @@
 
 {% extends "base.html" %} 
 <!-- Overwrites title-->
+
 {% block title %}KongBao Chicken{% endblock %}
 {% block content %}
 <head>
@@ -68,11 +69,11 @@
             <!-- Like and disclick buttons with their associated counter -->
             <div class="row">
               <div class="col">
-                <button type="button" onClick="addLike({{ recipe_id }})">Like!</button>
+                <button type="button" class="btn btn-primary" onClick="addLike({{ recipe_id }})">Like!</button>
                 {{ recipe.num_of_likes }}
               </div>
               <div class="col">
-                <button type="button" onClick="addDislike({{ recipe_id }})">Dislike!</button>
+                <button type="button" class="btn btn-primary" onClick="addDislike({{ recipe_id }})">Dislike!</button>
                 {{ recipe.num_of_dislikes }}
               </div>
             </div>
@@ -135,14 +136,14 @@
   {% endfor %}
 </div>
 
-
+<!-- This entire section is dedicated to comments -->
 <div class="container">
     <hr>
     <h2>Comments</h2>
     <!-- Displays the ability to comment when the user is logged in-->
     {% if current_user.is_authenticated %}
       <div align="center">
-        <button type="button" onClick="createComment2({{ recipe_id }})">Post a new recipe!</button>
+        <button type="button" class="btn btn-primary" onClick="createComment2({{ recipe_id }})">Post a new recipe!</button>
       </div>
     {% endif %}
 
@@ -152,19 +153,24 @@
       {% for comment_display_name, review in comments %}
       {{ comment_display_name }}
       <li class="list-group-item">
+        
+
         <!-- Current displays information off the screen if there is too much, need to fix it later-->
         {{ review.comment }}
-        <!-- Displays the abiltiy to delete comments if either they are the recipe owner or person who made the comment -->
-        {% if creates == current_user.id or current_user.id == review.owns %}
-          <button type="button" class="close" onClick="deleteComment({{ review.comment_id }})">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <!-- Only the person who made the comment can modify it -->
+
+        <!-- Only the person who made the comment can modify it -->
           {% if current_user.id == review.owns %}
             <button type="button" class="float-right" onClick="modifyComment({{ review.comment_id }})">
               Modify
             </button>
           {% endif %}
+          
+        <!-- Displays the abiltiy to delete comments if either they are the recipe owner or person who made the comment -->
+        {% if creates == current_user.id or current_user.id == review.owns %}
+          <button type="button" class="close" onClick="deleteComment({{ review.comment_id }})">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          
         {% endif %}
       </li>
       {% endfor %}

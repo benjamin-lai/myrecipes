@@ -73,42 +73,47 @@ def modify_comment():
 
         return jsonify({})
 
-# Add a like
+
 @review.route('/add-like', methods=['POST'])
 def add_like():
-    print("Route for add_like works")
-    # If user is going through this path it means they have clicked like
-    # Which should imply that status = 1.
-    status = 1
-    recipe = get_recipe()
-    likes_table = check_likes_exists(current_user.id, recipe.id)
-    if likes_table is not None:
-        update_like_status(recipe, status, likes_table)
+    if current_user.is_authenticated:
+        # If user is going through this path it means they have clicked like
+        # Which should imply that status = 1.
+        status = 1
+        like_dislike_recipe(status)
+
     else:
-        create_likes_table(status, recipe, current_user.id)
+        flash("You need to be logged in to do that", category='error')
 
     return jsonify({})
 
 @review.route('/add-dislike', methods=['POST'])
 def add_dislike():
-    # If user is going through this path it means they have clicked dislike
-    # Which should imply that status = -1.
-    print("Route for add_dislike works")
-    status = -1
-    recipe = get_recipe()
-    likes_table = check_likes_exists(current_user.id, recipe.id)
-    if likes_table is not None:
-        update_like_status(recipe, status, likes_table)
+    if current_user.is_authenticated:
+        # If user is going through this path it means they have clicked like
+        # Which should imply that status = -1.
+        status = -1
+        like_dislike_recipe(status)
+
     else:
-        create_likes_table(status, recipe, current_user.id)
+        flash("You need to be logged in to do that", category='error')
     
     return jsonify({})
 
-# 
-def get_recipe():
+# Process to either like or dislike recipe given the status
+def like_dislike_recipe(status):
     recipe = json.loads(request.data)
     recipe_id = recipe['recipe_id']
-    return Recipes.query.filter_by(id=recipe_id).first()
+    recipe = Recipes.query.filter_by(id=recipe_id).first()
+
+    # Determine if there is a like table for this user and recipe already
+    likes_table = check_likes_exists(current_user.id, recipe.id)
+    if likes_table is not None: 
+        # Update like
+        update_like_status(recipe, status, likes_table)
+    else:   # If like_table doesn't exist
+        # Create like table and assign the correct status
+        create_likes_table(status, recipe, current_user.id)
 
 
 # Helper function for likes/dislikes
