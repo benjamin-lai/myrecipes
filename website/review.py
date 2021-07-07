@@ -3,7 +3,7 @@ from flask import Blueprint, request, flash, jsonify
 from flask_login import login_required, current_user
 import json
 
-from .models import Comments, Profiles
+from .models import Comments, Profiles, Likes, Recipes
 from . import db
 
 review = Blueprint('review', __name__)
@@ -73,12 +73,90 @@ def modify_comment():
 
         return jsonify({})
 
+# Add a like
 @review.route('/add-like', methods=['POST'])
 def add_like():
     print("Route for add_like works")
+    # If user is going through this path it means they have clicked like
+    # Which should imply that status = 1.
+    status = 1
+    recipe = get_recipe()
+    likes_table = check_likes_exists(current_user.id, recipe.id)
+    if likes_table is not None:
+        update_like_status(recipe, status, likes_table)
+    else:
+        create_likes_table(status, recipe, current_user.id)
+
     return jsonify({})
 
 @review.route('/add-dislike', methods=['POST'])
 def add_dislike():
+    # If user is going through this path it means they have clicked dislike
+    # Which should imply that status = -1.
     print("Route for add_dislike works")
+    status = -1
+    recipe = get_recipe()
+    likes_table = check_likes_exists(current_user.id, recipe.id)
+    if likes_table is not None:
+        update_like_status(recipe, status, likes_table)
+    else:
+        create_likes_table(status, recipe, current_user.id)
+    
     return jsonify({})
+
+# 
+def get_recipe():
+    recipe = json.loads(request.data)
+    recipe_id = recipe['recipe_id']
+    return Recipes.query.filter_by(id=recipe_id).first()
+
+
+# Helper function for likes/dislikes
+def create_likes_table(status, recipe, user_id):
+    # Create new likes table for the user
+    new_likes = Likes(like_status=status, has=recipe.id, own=user_id)
+
+    # Update count for recipe
+    if status == 1:
+        recipe.num_of_likes += 1
+    else:
+        recipe.num_of_dislikes += 1
+    
+    db.session.add(new_likes)
+    db.session.commit()
+
+# Checks if table already exists for the user
+def check_likes_exists(user_id, recipe_id):
+    return Likes.query.filter_by(own=user_id, has=recipe_id).first()
+
+# Updates recipe like/dislike count.
+# New status can only be 1 (liked) or -1 (dislike).
+def update_like_status(recipe, new_status, likes):
+    current_status = likes.like_status
+
+    if current_status == 0:                     # User has not liked/disliked
+        if new_status == 1:                     # User has selected like
+            recipe.num_of_likes += 1            # Iterate like count by 1
+        else:                                   # User has selected dislike
+            recipe.num_of_dislikes += 1         # Iterate dislike count by 1
+        likes.like_status = new_status          # Updated like_status to new_status
+
+    elif current_status == 1:                   # User has liked before
+        recipe.num_of_likes -= 1                # Decrease number of likes by 1
+        if new_status == 1:                     # User has selected like again
+            likes.like_status = 0               # Change like status to nothing
+        else:                                   # User has selected dislike
+            likes.like_status = new_status      # Update like_status to new_status
+            recipe.num_of_dislikes += 1         # Update number of dislikes
+
+    else:                                       # User has disliked before
+        recipe.num_of_dislikes -= 1             # Decrease number of likes by 1
+        if new_status == 1:                     # User has selected like again
+            likes.like_status = new_status      # Change like status to nothing
+            recipe.num_of_likes += 1            # Update number of likes
+        else:                                   # User has selected dislike
+            likes.like_status = 0               # Update like_status to new_status
+
+    db.session.commit()
+
+    

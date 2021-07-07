@@ -33,3 +33,21 @@ function modifyComment(comment_id) {
     });
   }
 }
+
+function addLike(recipe_id) {
+  fetch("/add-like", {
+    method: "POST",
+    body: JSON.stringify({ recipe_id: recipe_id }),
+  }).then((_res) => {
+    window.location.reload(true);
+  });
+}
+
+function addDislike(recipe_id) {
+  fetch("/add-dislike", {
+    method: "POST",
+    body: JSON.stringify({ recipe_id: recipe_id }),
+  }).then((_res) => {
+    window.location.reload(true);
+  });
+}

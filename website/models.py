@@ -37,6 +37,8 @@ class Recipes(db.Model):
     serving = db.Column(db.Integer)
     creates = db.Column(db.Integer, db.ForeignKey('users.id'))
     creator = db.Column(db.String(150))
+    num_of_likes = db.Column(db.Integer)
+    num_of_dislikes = db.Column(db.Integer)
 
     def __init__(self,name,description,serving,creates, creator):
         self.name = name
@@ -45,6 +47,8 @@ class Recipes(db.Model):
         self.serving = serving
         self.creates = creates
         self.creator = creator
+        self.num_of_likes = 0
+        self.num_of_dislikes = 0
 
 #Ingredient temp dictionary
 IngredientList = []
@@ -97,3 +101,9 @@ class Subscriber_Lists(db.Model, UserMixin):
 class Subscribed_To_Lists(db.Model, UserMixin):
     subscribed_id = db.Column(db.Integer, primary_key=True)
     contains = db.Column(db.Integer, primary_key=True)
+
+class Likes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    like_status = db.Column(db.Integer)
+    has = db.Column(db.Integer, db.ForeignKey('recipes.id'))
+    own = db.Column(db.Integer, db.ForeignKey('users.id'))
