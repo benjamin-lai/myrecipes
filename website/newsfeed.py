@@ -15,9 +15,10 @@ CORS(newsfeed)
 @newsfeed.route('/newsfeed', methods=['GET', 'POST'])
 def Newsfeed():
     query = Newsfeeds.query.filter_by(contains=current_user.id).order_by(Newsfeeds.creation_date.desc()).order_by((Newsfeeds.likes-Newsfeeds.dislikes).desc()).order_by(Newsfeeds.creation_time.desc()).all()
-    if query.count() == 0:
-        print("hello")
-    return render_template("newsfeed.html", user=current_user, query=query, type="#")
+    type = '#'
+    if Newsfeeds.query.filter_by(contains=current_user.id).order_by(Newsfeeds.creation_date.desc()).order_by((Newsfeeds.likes-Newsfeeds.dislikes).desc()).order_by(Newsfeeds.creation_time.desc()).count() == 0:
+        type = 'empty'
+    return render_template("newsfeed.html", user=current_user, query=query, type=type)
 
 
 # just by date and time
