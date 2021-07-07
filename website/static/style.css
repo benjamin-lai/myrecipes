@@ -1,0 +1,29 @@
+.asText {
+    background:none;
+    border:none;
+    margin:0;
+    padding:0;
+    cursor: pointer;
+}
+
+.image {
+  object-fit:cover; 
+  width: 300px; 
+  height:300px;
+}
+
+.zoom {
+    height: 300px;
+    width: 300px;
+    overflow: hidden; 
+  }
+  
+  .zoom img {
+    transition: transform .8s ease;
+  }
+  
+  .zoom:hover img {
+    transform: scale(1.25);
+  }
+
+  
