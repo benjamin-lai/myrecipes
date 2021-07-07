@@ -622,7 +622,7 @@ def delete_recipe():
     db.session.commit()
     #delete recipe
     recipe = Recipes.query.filter_by(id=recipe_id).first()
-    print(recipe.id)
+    #print(recipe.id)
     db.session.delete(recipe)
     db.session.commit()
     return render_template("delete_recipe.html",user = current_user)

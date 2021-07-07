@@ -55,10 +55,17 @@
             {% if current_user.is_authenticated %}
 
             <!--search form-->
-            <form class="d-flex">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <form class="d-flex" action="/search_result" method="POST">
+              <input class="form-control me-2" 
+              type="search" 
+              placeholder="Search" 
+              aria-label="Search"
+              id="Search"
+              name="Search"
+              autocomplete="on"
+              value = {{search_value}}>
               <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>            
+            </form>         
             
             <!-- Recipe creation stuff  -->
             <a class="nav-item nav-link" id="#" href="#">Recipe Stuff</a>
