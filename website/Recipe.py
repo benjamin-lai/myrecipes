@@ -36,7 +36,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 recipes = Blueprint('recipes', __name__)
 CORS(recipes)
 
-
+IngredientList = []
 Savelist = {}
 Savelist["Serving"] = None
 Savelist["RecipeName"] = None
@@ -111,6 +111,8 @@ def recipe():
 def create_recipe():
     #Contents = take_ingredientList_into_str()
     Contents = ""
+    IngredientList = []#reset
+    print("reset1")
     print(IngredientList)
     #image_datas1 = None
     #image_datas2 = None
@@ -169,9 +171,11 @@ def create_recipe():
             
             if Dosage and UnitName and MyIngredient:
                 #we can begin to add ingredients
+                print(f"before {IngredientList}")
                 add_ingredients_to_list(Dosage,UnitName,MyIngredient)
+                print(IngredientList)
                 Contents = take_ingredientList_into_str()
-
+                print(f"after {IngredientList}")
                 flash(f"added ingredient {MyIngredient} successfully!")
             
             button4 = request.form.get('button4')
@@ -238,51 +242,72 @@ def create_recipe():
         
         Submit = request.form.get('Submit')
         if Submit != None:
-            #get the latest id of this recipeName
-            #obj = Recipes.query.filter_by(name= Savelist["RecipeName"]).all()
-            #recipe_id = obj[-1].id
-            #Savelist["RecipeId"] = recipe_id
             recipe_id = Savelist["RecipeId"]
             print(Savelist["RecipeId"])
-            add_ingredient_to_db(recipe_id)
-            #fetch description from db
-            Description = Recipes.query.filter_by(id = recipe_id).first().description
-            #fetch steps from db
-            Steps = ""
-            obj = Recipestep.query.filter_by(recipe_id = recipe_id).all()
-
-            step_list = []
-            image_list = []
-            for o in obj:
-                Steps = f"Step.{o.step_no} --> {o.step_comment}  \n"
-                step_list.append(Steps)
-                image_temp = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': o.photo})
-                image_list.append(image_temp)
-            length1 = len(step_list)
-            while length1 < 4:
-                step_list.append(f"Step.{length1}  \n")
-                image_list.append(None)
-                length1 += 1
-            print(step_list)
-            print(image_list)
-            print("Yeeeeeea")
-            #image_datas1_read = Savelist["image_datas1"].read()
-            #image_datas2_read = Savelist["image_datas2"].read()
-            #image1 = base64.b64encode(image_datas1_read).decode('ascii')
-            #image2 = base64.b64encode(image_datas2_read).decode('ascii')
             recipe_data = Recipes.query.filter_by(id = recipe_id).first()
-            print(recipe_data.photo)
-            image1 = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe_data.photo})
-            print(image1)
+            if recipe_data.photo == None:
+                flash(f"Please upload photo for recipe")
+            else:
+                #get the latest id of this recipeName
+                #obj = Recipes.query.filter_by(name= Savelist["RecipeName"]).all()
+                #recipe_id = obj[-1].id
+                #Savelist["RecipeId"] = recipe_id
+                add_ingredient_to_db(recipe_id)
+                #fetch description from db
+                Description = Recipes.query.filter_by(id = recipe_id).first().description
+                #fetch steps from db
+                Steps = ""
+                obj = Recipestep.query.filter_by(recipe_id = recipe_id).all()
 
-            Contents = take_ingredientList_into_str()
+                step_list = []
+                image_list = []
+                for o in obj:
+                    Steps = f"Step.{o.step_no} --> {o.step_comment}  \n"
+                    step_list.append(Steps)
+                    image_temp = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': o.photo})
+                    image_list.append(image_temp)
+                length1 = len(step_list)
+                while length1 < 4:
+                    step_list.append(f"Step.{length1}  \n")
+                    image_list.append(None)
+                    length1 += 1
+                print(step_list)
+                print(image_list)
+                print("Yeeeeeea")
+                #image_datas1_read = Savelist["image_datas1"].read()
+                #image_datas2_read = Savelist["image_datas2"].read()
+                #image1 = base64.b64encode(image_datas1_read).decode('ascii')
+                #image2 = base64.b64encode(image_datas2_read).decode('ascii')
                 
-            return redirect(url_for('recipes.view_recipe',recipeName = recipe_data.name,recipeId = recipe_data.id ))
-            """return render_template("recipe.html", user=current_user, Descriptions=Description, 
-                RecipeName = Savelist["RecipeName"], MyIngredient = Contents,IngreContents = Contents, 
-                Step1 = step_list[0], Step2 = step_list[1], Step3 = step_list[2], Step4 = step_list[3],
-                image2 = image_list[0], image3 = image_list[1], image4 = image_list[2], image5 = image_list[3], 
-                recipe_id = recipe_id, image1=image1)"""
+                print(recipe_data.photo)
+                image1 = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe_data.photo})
+                print(image1)
+
+                Contents = take_ingredientList_into_str()
+                IngredientList = []#reset
+                print("reset2")
+                print(IngredientList)
+                return redirect(url_for('recipes.view_recipe',recipeName = recipe_data.name,recipeId = recipe_data.id ))
+                """return render_template("recipe.html", user=current_user, Descriptions=Description, 
+                    RecipeName = Savelist["RecipeName"], MyIngredient = Contents,IngreContents = Contents, 
+                    Step1 = step_list[0], Step2 = step_list[1], Step3 = step_list[2], Step4 = step_list[3],
+                    image2 = image_list[0], image3 = image_list[1], image4 = image_list[2], image5 = image_list[3], 
+                    recipe_id = recipe_id, image1=image1)"""
+            Step_No = None
+            Step_Number = 0
+            if Savelist["RecipeId"]:
+                Step_No = db.session.query(func.max(Recipestep.step_no)).filter_by(recipe_id = Savelist["RecipeId"]).first()
+            print("Step_No:")
+            print(Step_No)
+            if Step_No != None:
+                if Step_No[0] != None:
+                    Step_Number = Step_No[0]
+                else:
+                    Step_Number = 0
+            else:
+                Step_Number = 0
+            return render_template("create_recipe.html", user=current_user, IngreContents = Contents, Step_Number = (Step_Number+1))
+
         else:
             #get the latest id of this recipeName
             
@@ -668,7 +693,7 @@ def take_ingredientList_into_str():
         Dosage = item.get('Dosage')
         UnitName = item.get('UnitName')
         MyIngredient = item.get('Ingredient')
-        Contents += (f"{counter}. --> {Dosage} {UnitName} {MyIngredient}.     "
+        Contents += (f"{counter}) --> {Dosage} {UnitName} {MyIngredient}.     "
                     f" ")
         counter += 1
     return Contents

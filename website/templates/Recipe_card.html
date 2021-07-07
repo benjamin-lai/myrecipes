@@ -1,3 +1,7 @@
+{% extends "base.html" %}
+<!-- Overwrites title-->
+{% block title %}Recipe_card{% endblock %} {% block content %}
+<h2>Card</h2>
 {% for recipe in query %}
 <!DOCTYPE html>
 <html>
@@ -23,6 +27,8 @@
   <body>
     <h2>Card</h2>
 
+    <h2></h2>
+
     <div class="card">
       <img
         src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipe.photo}}"
@@ -30,20 +36,19 @@
         alt="Avatar"
         style="width: 100%"
       />
-      <div class="container">
+      <div class="card-body">
         <h4><b>{{recipe.name}}</b></h4>
         <p>{{recipe.description}}</p>
         <h4><b>{{recipe.creator}}</b></h4>
-        <form action="recipe.{{recipe.name}}.{{recipe.id}}" method="get">
-          <input
-            type="submit"
-            name="into"
-            value="See more details"
-            style="margin-left: 110px"
-          />
+        <form
+          action="recipe.{{recipe.name}}.{{recipe.id}}"
+          method="post"
+          align="center"
+        >
+          <input type="submit" name="into" value="See more details" />
         </form>
       </div>
     </div>
   </body>
 </html>
-{% endfor %}
+{% endfor %} {% endblock %}
