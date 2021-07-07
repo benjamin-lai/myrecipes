@@ -4,7 +4,7 @@ from flask_login import LoginManager
 
 db = SQLAlchemy()
 DB_NAME = "rec"
-DB_PASSWORD = 'aa'
+DB_PASSWORD = 'huzhibo8294'
 
 def create_app():
     app = Flask(__name__)

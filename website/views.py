@@ -12,7 +12,7 @@ from tkinter import messagebox
 import ctypes 
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
-from .models import Users, Recipes, IngredientList, Ingredient, Contents, Recipestep
+from .models import Users, Recipes, Ingredient, Contents, Recipestep
 from . import db
 from sqlalchemy import desc
 from sqlalchemy import func

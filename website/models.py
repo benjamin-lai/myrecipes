@@ -47,7 +47,7 @@ class Recipes(db.Model):
         self.creator = creator
 
 #Ingredient temp dictionary
-IngredientList = []
+#IngredientList = []
 Contents = "empty"
 
 class Ingredient(db.Model):

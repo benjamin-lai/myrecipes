@@ -12,7 +12,7 @@ from tkinter import messagebox
 import ctypes 
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
-from .models import Users, Recipes, IngredientList, Ingredient, Contents, Recipestep, Profiles
+from .models import Users, Recipes, Ingredient, Contents, Recipestep, Profiles
 from . import db
 from sqlalchemy import desc
 from sqlalchemy import func
@@ -286,6 +286,7 @@ def create_recipe():
                 IngredientList = []#reset
                 print("reset2")
                 print(IngredientList)
+                IngredientList.clear()
                 return redirect(url_for('recipes.view_recipe',recipeName = recipe_data.name,recipeId = recipe_data.id ))
                 """return render_template("recipe.html", user=current_user, Descriptions=Description, 
                     RecipeName = Savelist["RecipeName"], MyIngredient = Contents,IngreContents = Contents, 
@@ -526,6 +527,7 @@ def edit_recipe():
             print(image1)
 
             Contents = take_ingredientList_into_str()
+            IngredientList.clear()
             return redirect(url_for('recipes.view_recipe',recipeName = recipe_data.name,recipeId = recipe_data.id ))
             """return render_template("recipe.html", user=current_user, Descriptions=Description, 
                 RecipeName = recipe_data.name, MyIngredient = Contents,IngreContents = Contents, 
