@@ -37,17 +37,23 @@ class Recipes(db.Model):
     serving = db.Column(db.Integer)
     creates = db.Column(db.Integer, db.ForeignKey('users.id'))
     creator = db.Column(db.String(150))
+    num_of_likes = db.Column(db.Integer)
+    num_of_dislikes = db.Column(db.Integer)
+    meal_type = db.Column(db.String(150))
 
-    def __init__(self,name,description,serving,creates, creator):
+    def __init__(self,name,description,serving,creates, creator, meal_type):
         self.name = name
         self.description = description
         self.photo = None
         self.serving = serving
         self.creates = creates
         self.creator = creator
+        self.num_of_likes = 0
+        self.num_of_dislikes = 0
+        self.meal_type = meal_type
 
 #Ingredient temp dictionary
-#IngredientList = []
+#Ingredientslist = []
 Contents = "empty"
 
 class Ingredient(db.Model):
@@ -74,9 +80,15 @@ class Recipestep(db.Model):
         self.step_comment = step_comment
         self.photo = photo
 
+class Comments(db.Model):
+    comment_id = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.String(10000))
+    has = db.Column(db.Integer, db.ForeignKey('recipes.id'))
+    owns = db.Column(db.Integer, db.ForeignKey('users.id'))
+
 class Method(db.Model, UserMixin):
-     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
-     method = db.Column(db.String(150), primary_key=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
+    method = db.Column(db.String(150), primary_key=True)
 
 class Meal_Type(db.Model, UserMixin):
      recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
@@ -91,3 +103,9 @@ class Subscriber_Lists(db.Model, UserMixin):
 class Subscribed_To_Lists(db.Model, UserMixin):
     subscribed_id = db.Column(db.Integer, primary_key=True)
     contains = db.Column(db.Integer, primary_key=True)
+
+class Likes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    like_status = db.Column(db.Integer)
+    has = db.Column(db.Integer, db.ForeignKey('recipes.id'))
+    own = db.Column(db.Integer, db.ForeignKey('users.id'))

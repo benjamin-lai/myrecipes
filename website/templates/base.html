@@ -22,6 +22,10 @@
       .dropdown:hover .dropdown-menu {
         display: block;
       }
+
+      .sticky-offset {
+        top: 56px;
+      }
     </style>
 
     <title>{% block title %}Home{% endblock %}</title>
@@ -29,7 +33,8 @@
   <body>
     <!-- Our navbar, caters for desktop and mobile -->
     <!-- Nav bar that has a dark bg, and changes when the screen is no longer small-->
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <!-- Sticky top makes it stay on the top of the screen-->
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark sticky-top">
       <!-- Creates a button for navbar when the screen is small.-->
       <button
         class="navbar-toggler"
@@ -77,8 +82,15 @@
                   >Profile</a
                 >
                 <a class="dropdown-item" id="#" href="#">Newsletters</a>
-                <a class="dropdown-item" id="Create recipe" href="/Create recipe">New Recipe</a>
-                <a class="dropdown-item" id="Recipe cards" href="/Recipe cards">Recipes</a>
+                <a
+                  class="dropdown-item"
+                  id="Create recipe"
+                  href="/Create recipe"
+                  >New Recipe</a
+                >
+                <a class="dropdown-item" id="Recipe cards" href="/Recipe cards"
+                  >Recipes</a
+                >
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" id="logout" href="/logout">Logout</a>
               </div>
@@ -94,18 +106,37 @@
       </div>
     </nav>
 
+    <!-- ######### Flashing Messages  ###############-->
     <!-- Get all the messages that was flashed, and display them on the screen-->
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %} {% for category, message in messages %} {% if category ==
     'error' %}
-    <div class="alert alert-danger alter-dismissable fade show" role="alert">
+    <div
+      class="
+        alert alert-danger
+        alter-dismissable
+        fade
+        show
+        sticky-top sticky-offset
+      "
+      role="alert"
+    >
       {{ message }}
       <button type="button" class="close" data-dismiss="alert">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     {% else %}
-    <div class="alert alert-success alter-dismissable fade show" role="alert">
+    <div
+      class="
+        alert alert-success
+        alter-dismissable
+        fade
+        show
+        sticky-top sticky-offset
+      "
+      role="alert"
+    >
       {{ message }}
       <button type="button" class="close" data-dismiss="alert">
         <span aria-hidden="true">&times;</span>

@@ -12,7 +12,8 @@ from tkinter import messagebox
 import ctypes 
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
-from .models import Users, Recipes, Ingredient, Contents, Recipestep, Profiles
+from .models import Users, Recipes, Ingredient, Contents, Recipestep, Profiles, Method
+from .review import create_comment, retrieve_comments
 from . import db
 from sqlalchemy import desc
 from sqlalchemy import func
@@ -110,7 +111,8 @@ def recipe():
 def create_recipe():
     #Contents = take_ingredientList_into_str()
     Contents = ""
-    IngredientList = []#reset
+    ##IngredientList.clear()#reset
+    
     print("reset1")
     print(IngredientList)
     #image_datas1 = None
@@ -124,12 +126,42 @@ def create_recipe():
         MyIngredient = request.form.get('Ingredient Name')
         StepNo = request.form.get('step_number')
         StepDes = request.form.get('discriptions')
+        Meal_type = request.form.get('Meal type')
+        Baking = request.form.get('Baking')
+        Frying = request.form.get('Frying')
+        Grilling = request.form.get('Grilling')
+        Steaming = request.form.get('Steaming')
+        Braising = request.form.get('Braising')
+        Stewing = request.form.get('Stewing')
 
-        
-
-        if RecipeName and Description and Serving:  #check not empty, create recipe
-            create_recipe(RecipeName,Description,Serving)
+        if RecipeName and Description and Serving and Meal_type:  #check not empty, create recipe
+            create_recipe(RecipeName,Description,Serving,Meal_type)
             Savelist["RecipeName"] = RecipeName
+            if Baking:
+                Baking = Method(recipe_id = Savelist["RecipeId"], method=Baking)
+                db.session.add(Baking)
+                db.session.commit()    
+            if Frying:
+                Frying = Method(recipe_id = Savelist["RecipeId"], method=Frying)
+                db.session.add(Frying)
+                db.session.commit() 
+            if Grilling:
+                Grilling = Method(recipe_id = Savelist["RecipeId"], method=Grilling)
+                db.session.add(Grilling)
+                db.session.commit() 
+            if Steaming:
+                Steaming = Method(recipe_id = Savelist["RecipeId"], method=Steaming)
+                db.session.add(Steaming)
+                db.session.commit()
+            if Braising:
+                Braising = Method(recipe_id = Savelist["RecipeId"], method=Braising)
+                db.session.add(Braising)
+                db.session.commit()
+             
+            methods = Method.query.filter_by(recipe_id=Savelist["RecipeId"]).first()
+            print(methods.method)
+            
+
             flash(f"Create Recipe {RecipeName} Successfully!")
 
         if check_create(Savelist["RecipeName"],current_user.id) is True:    #is true, already created recipe
@@ -283,10 +315,10 @@ def create_recipe():
                 print(image1)
 
                 Contents = take_ingredientList_into_str()
-                IngredientList = []#reset
+                IngredientList.clear()#reset
                 print("reset2")
                 print(IngredientList)
-                IngredientList.clear()
+                #IngredientList.clear()
                 return redirect(url_for('recipes.view_recipe',recipeName = recipe_data.name,recipeId = recipe_data.id ))
                 """return render_template("recipe.html", user=current_user, Descriptions=Description, 
                     RecipeName = Savelist["RecipeName"], MyIngredient = Contents,IngreContents = Contents, 
@@ -600,8 +632,12 @@ def view_recipe(recipeName, recipeId):
         length1 += 1
     Savelist["RecipeId"] = recipe.id
     obj = Recipestep.query.filter_by(recipe_id = recipe.id).all()
+    comments = retrieve_comments(recipe.id)
+    
+    methods = Method.query.filter_by(recipe_id=Savelist["RecipeId"]).all()
+
     return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
-    recipe_id = recipe.id,image1 = RecipeImage, query = obj, type="recent")
+    recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", meal_type = recipe.meal_type, methods=methods)
         
 
 
@@ -641,13 +677,13 @@ def Mbox(title, text, style):
     return ctypes.windll.user32.MessageBoxW(0, text, title, style)
 
 
-def create_recipe (RecipeName, Description, Serving):
+def create_recipe (RecipeName, Description, Serving, Meal_type):
     #add name and description to db
     print("Begin to add to recipe table")
     user = Profiles.query.filter_by(owns = current_user.id).first()
 
     new_recipe = Recipes(name = RecipeName, description = Description, 
-        serving = Serving, creates = current_user.id, creator = user.first_name)
+        serving = Serving, creates = current_user.id, creator = user.first_name, meal_type=Meal_type)
 
     
     db.session.add(new_recipe)

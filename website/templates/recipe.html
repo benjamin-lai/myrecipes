@@ -10,11 +10,20 @@
 <body>
     <div class="jumbotron">
         <div class="container">
+          <p style="color:blue;">Meal Type : {{meal_type}}</p>
           <h1>{{RecipeName}}</h1>
           <p>id : {{recipe_id}}</p>
-          <p>
-          Still wondering what this part does
-          </p>
+          <h6>
+          Cooking methods:
+          </h6>
+
+          {% for method in methods %}
+          <tr>
+            <td>
+              <p class="card-text"style="color:DarkOrange;">{{method.method}}</p>
+            </td>
+          </tr>
+          {% endfor %}
           <br />
         </div>
       </div>
@@ -74,8 +83,6 @@
               transform: translate(0, 0);
             }
             </style>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-            <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
             <ul class="list-inline rating-list">
               <li><i class="fa fa-star yellow"></i></li>
               <li><i class="fa fa-star yellow"></i></li>
