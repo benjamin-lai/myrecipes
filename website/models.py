@@ -98,7 +98,7 @@ class Subscriber_Lists(db.Model, UserMixin):
     contains = db.Column(db.Integer, primary_key=True)
     
     
-class Subscribed(db.Model, UserMixin):
+class Subscribed_To_Lists(db.Model, UserMixin):
     subscribed_id = db.Column(db.Integer, primary_key=True)
     contains = db.Column(db.Integer, primary_key=True)
     
@@ -115,7 +115,10 @@ class Newsfeeds(db.Model, UserMixin):
     creator = db.Column(db.String(150))
     contains = db.Column(db.Integer)
     likes = db.Column(db.Integer)
+    dislikes = db.Column(db.Integer)
     display_name = db.Column(db.String(150))
+    creation_time = db.Column(db.String(150))
+    creation_date = db.Column(db.String(150))
     
 
 

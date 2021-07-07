@@ -1,8 +1,7 @@
-create or replace view newsfeeds(id, name, description, photo, serving, creates, creator, contains, likes, display_name)
+create or replace view newsfeeds(id, name, description, photo, serving, creates, creator, contains, likes, dislikes, display_name, creation_time, creation_date)
 as
-    select id, name, description, photo, serving, creates, creator, contains, number_of_likes, display_name
+    select r.id, name, description, photo, serving, creates, creator, contains, num_of_likes, num_of_dislikes, display_name, creation_time, creation_date
     from recipes r
-        join subscribed s on (r.creates = s.subscribed_id)
-        join likes l on (l.has = r.id)
+        join subscribed_to_lists s on (r.creates = s.subscribed_id)
         join profiles p on (r.creates = p.profile_id)
 ;

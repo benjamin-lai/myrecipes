@@ -23,10 +23,12 @@ create table Recipes (
     description     text        not null,
     photo           text,
     serving         int         not null,
-    num_of_likes    int,
-    num_of_dislikes int,
+    num_of_likes    int         default 0,
+    num_of_dislikes int         default 0,
     creates         integer     not null,   -- users.id
     creator         text        not null,
+    creation_time   time        default DATE_TRUNC('second', localtime),
+    creation_date   date        default current_date,
     foreign key (creates) references Users(id)     
 );
 
@@ -120,6 +122,3 @@ create table Likes (
     foreign key (own) references Users(id),
     foreign key (has) references Recipes(id)
 );
-
-
-

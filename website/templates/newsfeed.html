@@ -6,7 +6,7 @@
 <body>
     <h1>Personalised Newsfeed</h1>
 
-    {% if type == 'recent' %}
+    {% if type == '#' %}
     <a
       class="nav-link dropdown-toggle"
       href="#"
@@ -15,14 +15,28 @@
       aria-haspopup="true"
       aria-expanded="false"
     >
-      Most Recent
+      Sort by:
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-      <a class="dropdown-item" id="newsfeed_popular" href="/newsfeed/popular"
-        >Most Popular</a
-      >
+      <a class="dropdown-item" id="newsfeed_likes" href="/newsfeed/recent">Most Recent</a>
       <a class="dropdown-item" id="newsfeed_likes" href="/newsfeed/likes">Most Likes</a>
     </div>
+  </li>
+  {% elif type == 'recent' %}
+  <a
+    class="nav-link dropdown-toggle"
+    href="#"
+    id="navbarDropdownMenuLink"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    Most Recent:
+  </a>
+  <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+    <a class="dropdown-item" id="newsfeed_likes" href="/newsfeed/likes">Most Likes</a>
+    <a class="dropdown-item" id="newsfeed_likes" href="/newsfeed">Remove Sort</a>
+  </div>
   </li>
   {% elif type == 'likes' %}
   <a
@@ -36,10 +50,10 @@
       Most Likes
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-      <a class="dropdown-item" id="newsfeed_recent" href="/newsfeed"
+      <a class="dropdown-item" id="newsfeed_recent" href="/newsfeed/recent"
         >Most Recent</a
       >
-      <a class="dropdown-item" id="newsfeed_popular" href="/newsfeed/popular">Most Popular</a>
+      <a class="dropdown-item" id="newsfeed_likes" href="/newsfeed">Remove Sort</a>
     </div>
   </li>
 
@@ -62,7 +76,8 @@
             <div class="col-md-8">
               <div class="card-body">
                 <h5 class="card-title">{{recipes.name}} </h5>
-                <p>Likes: {{recipes.likes}}</p>
+                <p class="card-text"><small class="text-muted">Posted: {{recipes.creation_time}} {{recipes.creation_date}}</small></p>
+                <p>Likes: {{recipes.likes}} Dislikes: {{recipes.dislikes}}</p>
       </td>
       <td>
         <p class="card-text">{{recipes.description}}</p>
