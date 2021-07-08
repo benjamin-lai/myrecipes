@@ -21,15 +21,32 @@ create table Recipes (
     id              serial      primary key,
     name            text        not null,
     description     text        not null,
-    photo           text        not null,
-    creates         integer     not null,
-    foreign key (creates) references Users(id)     -- users.id
+    photo           text,
+    serving         int         not null,
+    num_of_likes    int         default 0,
+    num_of_dislikes int         default 0,
+    creates         integer     not null,   -- users.id
+    creator         text        not null,
+    meal_type       text        not null,
+    creation_time   time        default DATE_TRUNC('second', localtime),
+    creation_date   date        default current_date,
+    foreign key (creates) references Users(id)     
 );
 
 create table Ingredient (
+    id              serial      primary key,
     recipe_id integer references Recipes(id),
-    ingredient     text,
-    primary key(recipe_id, ingredient)
+    ingredient      text,
+    dosage          int,
+    unit_name       text      
+);
+
+create table RecipeStep(
+    recipe_id       integer references Recipes(id),
+    step_no         int     not null,
+    step_comment    text    not null,
+    photo           text,
+    primary key(recipe_id, step_no)
 );
 
 create table Method (
@@ -91,17 +108,18 @@ create table Comments (
     comment_id      serial      primary key,
     comment         text        not null,       -- comment being added cant be nothing
     has             integer     not null,      -- = recipes.id
-    foreign key (has) references Recipes(id)
-
-
+    owns            integer     not null,
+    foreign key (has) references Recipes(id),
+    foreign key (owns) references Users(id)
+    
 );
 
 
 create table Likes (
-    number_of_likes integer     not null,       
+    id              serial      primary key,
+    like_status     integer     not null,           -- 1 for liked, 0 for nothing, -1 for dislike
     has             integer     not null,      -- = recipes.id
+    own             integer     not null,
+    foreign key (own) references Users(id),
     foreign key (has) references Recipes(id)
 );
-
-
-

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+<!-- Overwrites title-->
+{% block title %}Recipe_card{% endblock %} {% block content %}
+<h2>Card</h2>
+{% for recipe in query %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/{{recipe.name}}.{{recipe.id}}" />
+    <style>
+      .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        transition: 0.3s;
+        width: 20%;
+      }
+
+      .card:hover {
+        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+      }
+
+      .container {
+        padding: 2px 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Card</h2>
+
+    <h2></h2>
+
+    <div class="card">
+      <img
+        src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipe.photo}}"
+        class="img-fluid rounded-start"
+        alt="Avatar"
+        style="width: 100%"
+      />
+      <div class="card-body">
+        <h4><b>{{recipe.name}}</b></h4>
+        <p>{{recipe.description}}</p>
+        <h4><b>{{recipe.creator}}</b></h4>
+        <form
+          action="recipe.{{recipe.name}}.{{recipe.id}}"
+          method="post"
+          align="center"
+        >
+          <input type="submit" name="into" value="See more details" />
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
+{% endfor %} {% endblock %}

@@ -17,10 +17,16 @@ def create_app():
     from .views import views
     from .auth import auth
     from .profile import profile
+    from .Recipe import recipes
+    from .newsfeed import newsfeed
+    from .review import review
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(profile, url_prefix='/profile')
+    app.register_blueprint(recipes, url_prefix='/')
+    app.register_blueprint(newsfeed, url_prefix='/')
+    app.register_blueprint(review, url_prefix='/')
 
     from .models import Users
 
@@ -37,4 +43,3 @@ def create_app():
         return Users.query.get(int(id))
 
     return app
-
