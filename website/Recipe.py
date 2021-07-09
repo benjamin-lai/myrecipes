@@ -159,7 +159,6 @@ def create_recipe():
                 db.session.commit()
              
             methods = Method.query.filter_by(recipe_id=Savelist["RecipeId"]).first()
-            print(methods.method)
             
 
             flash(f"Create Recipe {RecipeName} Successfully!")

@@ -1,0 +1,287 @@
+{% extends "base.html" %} {% block title %}MyRecipes{% endblock %}
+<!-- Overwrites title-->
+
+{% block content %}
+<!-- Header -->
+
+
+<head>  
+  <!-- Import Bootstrap. Links to CDN which gives access to all the bootstrap designs -->
+    <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+    crossorigin="anonymous"
+    />
+    <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    crossorigin="anonymous"
+    />
+
+    <!-- When hovering over dropdown menu display content (I dont know how to connect css file) -->
+    <style type="text/css">
+        .dropdown:hover .dropdown-menu {
+          display: block;
+        }
+    </style>
+
+<body>
+  <!-- Our navbar, caters for desktop and mobile -->
+  <!-- Nav bar that has a dark bg, and changes when the screen is no longer small-->
+  <nav class="navbar navbar-light navbar-expand-sm" style="background-color: #e3f2fd;">
+    
+    <!-- Creates a button for navbar when the screen is small.-->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbar"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Container to hold content in the middle-->
+    <div class="container">
+      <!-- Wrapper for toggle (mobile) and desktop view-->
+      <div class="collapse navbar-collapse" id="navbar">
+        <!-- First nav bar to hold content to the left-->
+        <div class="navbar-nav">
+          <a class="navbar-brand" href="#">Activated Filters:{{contents}}</a>
+        </div>
+
+
+
+
+
+
+        <!-- Second navbar to move content to the right-->
+        <div class="navbar-nav ml-auto">
+            <!-- Dropdown1 for ingredient -->
+            <li class="nav-item dropdown">
+                <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="Ingredient"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >
+                Ingredient
+                </a>
+                <div
+                class="dropdown-menu"
+                aria-labelledby="Ingredient"
+                >
+					<div class = "container">
+						<form method="POST"  action="/search_result" >
+							<input type="checkbox" id="pork" name="pork" value="pork">
+							<label for="pork"> Pork</label><br>
+							<input type="checkbox" id="beef" name="beef" value="beef">
+							<label for="beef"> Beef</label><br>
+							<input type="checkbox" id="vegetables" name="vegetables" value="vegetables">
+							<label for="vegetables">Vegetables</label><br>
+							<input type="checkbox" id="seafood" name="seafood" value="seafood">
+							<label for="seafood"> Seafood</label><br>
+							<input type="checkbox" id="poultry" name="poultry" value="poultry">
+							<label for="poultry">Poultry</label><br>
+
+							<button name="IngreAdd" id = "IngreAdd" type="submit" class="btn btn-outline-success" >Add</button>
+						</form>
+					</div>
+				</div>
+            </li>
+
+            <!-- Dropdown2 for method -->
+            <li class="nav-item dropdown">
+                <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="Method"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >
+                Method
+                </a>
+                <div
+                class="dropdown-menu"
+                aria-labelledby="Method"
+                >
+					<div class = "container">
+						<form method="POST"  action="/search_result" >
+							<input type="checkbox" id="baking" name="baking" value="baking">
+							<label for="baking">Baking</label><br>
+
+							<input type="checkbox" id="frying" name="frying" value="frying">
+							<label for="frying">Frying</label><br>
+
+							<input type="checkbox" id="grilling" name="grilling" value="grilling">
+							<label for="grilling">Grilling</label><br>
+
+							<input type="checkbox" id="steaming" name="steaming" value="steaming">
+							<label for="steaming">Steaming</label><br>
+
+							<input type="checkbox" id="braising" name="braising" value="braising">
+							<label for="braising">Braising</label><br>
+
+							<input type="checkbox" id="stir_frying" name="stir_frying" value="stir_frying">
+							<label for="stir_frying">Stir Frying</label><br>
+
+							<button name="MethodAdd" id = "MethodAdd" type="submit" class="btn btn-outline-success" >Add</button>
+						</form>
+					</div>
+                </div>
+            </li>
+
+			<!-- Dropdown3 for mealType -->
+            <li class="nav-item dropdown">
+                <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="Method"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >
+                Meal Type
+                </a>
+                <div
+                class="dropdown-menu"
+                aria-labelledby="Method"
+                >
+					<div class = "container">
+						<form method="POST"  action="/search_result" >
+							<input type="radio" id="starter" name="Type" value="starter">
+							<label for="starter"> Starter</label><br>
+							<input type="radio" id="main" name="Type" value="main">
+							<label for="main"> Main</label><br>
+							<input type="radio" id="snack" name="Type" value="snack">
+							<label for="snack"> Snack</label><br>
+							<input type="radio" id="breakfast" name="Type" value="breakfast">
+							<label for="breakfast"> Breakfast</label><br>
+							<input type="radio" id="drink" name="Type" value="drink">
+							<label for="drink"> Drink</label><br>
+							<br>
+			
+							<button name="TypeAdd" id = "TypeAdd" type="submit" class="btn btn-outline-success" >Add</button>
+						</form>
+					</div>
+                </div>
+            </li>
+
+          <!-- Dropdown4 for sort -->
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdownMenuLink"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Sort By
+            </a>
+            <div
+              class="dropdown-menu"
+              aria-labelledby="navbarDropdownMenuLink"
+            >
+				<div class = "container">
+					<form method="POST"  action="/search_result">
+						<input type="radio" id="DateNew" name="Sort" value="DateNew">
+						<label for="DateNew">Recently</label><br>
+						<input type="radio" id="DateOld" name="Sort" value="DateOld">
+						<label for="DateOld">Least Recently</label><br>
+						<input type="radio" id="Star" name="Sort" value="Star">
+						<label for="Star">Star Rate</label><br>
+						<input type="radio" id="Likes" name="Sort" value="Likes">
+						<label for="Likes">Likes</label><br><br>
+
+						<button name="SortAdd" id = "SortAdd" type="submit" class="btn btn-outline-success" >Sort By</button>
+					</form>
+				</div>
+            </div>
+        </li>
+        
+		</div>
+      </div>
+    </div>
+  </nav>
+
+
+
+  <div class="container"></div>
+
+  <!-- Bootstrap. All the javascript required for the css components to work -->
+  <script
+    src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"
+  ></script>
+
+  <!-- Script that loads static, js or maybe css into our html file -->
+  <script
+    type="text/javascript"
+    src="{{ url_for('static', filename='index.js') }}"
+  ></script>
+</body>
+</html>
+
+<h1 align="center">{{message}}</h1>
+<h1>{{search_input}}</h1>
+  <!--for loop to add card, copied from recipe card-->
+  {% for recipe in query %}
+  <!DOCTYPE html>
+    <html>
+    <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/{{recipe.name}}.{{recipe.id}}">
+    <style>
+    .card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 20%;
+    }
+
+    .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    }
+
+    .container {
+    padding: 2px 16px;
+    }
+    </style>
+    </head>
+    <body>
+
+    <h2>    </h2>
+
+    <div class="card" >
+    <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipe.photo}}" class="img-fluid rounded-start" alt="Avatar" style="width:100%">
+    <div class="card-body">
+        <h4><b>{{recipe.name}}</b></h4> 
+        <p>{{recipe.description}}</p> 
+        <h4><b>{{recipe.creator}}</b></h4>
+        <form action="recipe.{{recipe.name}}.{{recipe.id}}" method="post" align = "center">
+            <input type="submit" name="into" value="See more details" />
+        </form>
+    </div>
+    </div>
+
+    </body>
+    </html>
+  {% endfor %}
+
+  
+</div>
+{% endblock %}
