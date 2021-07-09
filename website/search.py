@@ -25,6 +25,7 @@ searchInput = ""
 #global variables use to save filters
 IngredientFilter = []
 MethodFilter = []
+MealTypeFilter = ""
 SortBy = ""
 
 @search.route('/search_result', methods=['GET','POST'])  
@@ -32,7 +33,8 @@ def search_result():
     global IngredientFilter
     global searchInput
     global SortBy
-
+    global MethodFilter
+    global MealTypeFilter
     if request.method == 'POST':
         search_input = request.form.get('Search')
         if search_input is not None:
@@ -54,23 +56,51 @@ def search_result():
         addIngre = request.form.get('IngreAdd') 
         if addIngre is not None: #if None means not clicked, not None means clicked
             IngredientFilter.clear()
-            print("Add Ingredient!")
-            salt = request.form.get('Salt')
-            pepper = request.form.get('Pepper')
-            if salt is None and pepper is None:
-                flash("ingredient can't be None")
-            else:
-                IngredientFilter = []
-                #add every ingredient filter selected into a list
-                if salt is not None:
-                    IngredientFilter.append(salt)
-                if pepper is not None:
-                    IngredientFilter.append(pepper)
-                #remove duplicate
-                IngredientFilter = list(dict.fromkeys(IngredientFilter))
+            Pork = request.form.get('pork')
+            Beef = request.form.get('beef')
+            Vegi = request.form.get('vegetables')
+            SeaFood = request.form.get('seafood')
+            Poultry = request.form.get('poultry')
+
+            IngreFlag = check_and_add_ingredient(Pork,Beef,Vegi,SeaFood,Poultry)
+            if IngreFlag is True: # have ingredient slected
+                print("added ingredients")
+                print(IngredientFilter)
         else:
             print("Did not add ingredient")
 
+
+        #Method filter
+        addMethod = request.form.get('MethodAdd')
+        if addMethod is not None:
+            MethodFilter.clear()
+            Baking  = request.form.get('baking')
+            Frying  = request.form.get('frying')
+            Grilling  = request.form.get('grilling')
+            Steaming  = request.form.get('steaming')
+            Braising  = request.form.get('braising')
+            StirFrying  = request.form.get('stir_frying')
+
+            MethodFlag = check_and_add_method(Baking,Frying,Grilling,Steaming,Braising, StirFrying)
+            if MethodFlag is True: # have ingredient slected
+                print("added methods")
+                print(MethodFilter)
+        else:
+            print("Did not add methods")
+
+
+        #MealType filter
+        addType = request.form.get('TypeAdd')
+        if addType is not None:
+            MealTypeFilter = request.form.get('Type')
+            if MealTypeFilter is None:
+                flash("Meal Type can't be empty")
+            else:
+                print(MealTypeFilter)
+        else:
+            print("No meal type selected")
+
+        
         #SortBy
         SortAdd = request.form.get('SortAdd')
         if SortAdd is not None:
@@ -101,10 +131,50 @@ def search_result():
 
 
 #####helper functions#######
-
 def find_query_by_name(recipeName):
     query = Recipes.query.filter_by(name = recipeName).all()
     return query
+
+#find which elements of ingredients have been seleceted, and add them to list
+def check_and_add_ingredient(Pork,Beef,Vegi,SeaFood,Poultry):
+    global IngredientFilter
+    if Pork is None and Beef is None and Vegi is None and SeaFood is None and Poultry is None:
+        flash("Ingredient can't be None")
+        return False
+    if Pork is not None:
+        IngredientFilter.append(Pork)
+    if Beef is not None:
+        IngredientFilter.append(Beef)
+    if Vegi is not None:
+        IngredientFilter.append(Vegi)
+    if SeaFood is not None:
+        IngredientFilter.append(SeaFood)
+    if Poultry is not None:
+        IngredientFilter.append(Poultry)
+    #remove duplicate
+    IngredientFilter = list(dict.fromkeys(IngredientFilter))  
+    return True
+
+def check_and_add_method(Baking,Frying,Grilling,Steaming,Braising, StirFrying):
+    global MethodFilter
+    if Baking is None and Frying is None and Grilling is None and Steaming is None and Braising is None and StirFrying is None:
+        flash("Method can't be None")
+        return False
+    if Baking is not None:
+        MethodFilter.append(Baking)
+    if Frying is not None:
+        MethodFilter.append(Frying)
+    if Grilling is not None:
+        MethodFilter.append(Grilling)
+    if Steaming is not None:
+        MethodFilter.append(Steaming)
+    if Braising is not None:
+        MethodFilter.append(Braising)
+    if StirFrying is not None:
+        MethodFilter.append(StirFrying)
+    #remove duplicate
+    MethodFilter = list(dict.fromkeys(MethodFilter))
+    return True
 
 #generate str from 2 lists --> IngredientFilter, MethodFilter
 #and SortBY
@@ -114,8 +184,10 @@ def generate_str_from_list():
         Contents += (f"<< {i} ")
     for m in MethodFilter:
         Contents += (f"<< {m}")
+    if len(MealTypeFilter) > 0:
+        Contents += (f"<< {MealTypeFilter}")
     if len(SortBy) > 0:
-        Contents += (f"   <<< Order By  {SortBy}")
+        Contents += (f"<<< Order By {SortBy}")
     return Contents
 
 def use_IngredientFilter_for_query(query):
@@ -126,7 +198,6 @@ def use_IngredientFilter_for_query(query):
         for ing in ingre:
             for i in IngredientFilter:
                 print(ing.ingredient)
-                print(f"iiii   {i}")
                 if ing.ingredient == i:
                     find += 1
                     break
@@ -157,6 +228,8 @@ def reset_all():
     global IngredientFilter
     global searchInput
     global SortBy
+    global MethodFilter
     IngredientFilter.clear()
     MethodFilter.clear()
+    MealTypeFilter = ""
     SortBy = ""

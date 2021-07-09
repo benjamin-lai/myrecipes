@@ -48,7 +48,7 @@
       <div class="collapse navbar-collapse" id="navbar">
         <!-- First nav bar to hold content to the left-->
         <div class="navbar-nav">
-          <a class="navbar-brand" href="#">{{search_input}} : Activated Filters:  {{contents}}</a>
+          <a class="navbar-brand" href="#">Activated Filters:{{contents}}</a>
         </div>
 
 
@@ -74,15 +74,22 @@
                 class="dropdown-menu"
                 aria-labelledby="Ingredient"
                 >
-                <form method="POST"  action="/search_result" form_id = "ingreForm">
-					<input type="checkbox" id="Salt" name="Salt" value="salt">
-					<label for="Salt"> Salt</label><br>
+					<div class = "container">
+						<form method="POST"  action="/search_result" >
+							<input type="checkbox" id="pork" name="pork" value="pork">
+							<label for="pork"> Pork</label><br>
+							<input type="checkbox" id="beef" name="beef" value="beef">
+							<label for="beef"> Beef</label><br>
+							<input type="checkbox" id="vegetables" name="vegetables" value="vegetables">
+							<label for="vegetables">Vegetables</label><br>
+							<input type="checkbox" id="seafood" name="seafood" value="seafood">
+							<label for="seafood"> Seafood</label><br>
+							<input type="checkbox" id="poultry" name="poultry" value="poultry">
+							<label for="poultry">Poultry</label><br>
 
-					<input type="checkbox" id="Pepper" name="Pepper" value="pepper">
-					<label for="Salt"> Pepper</label><br>
-
-					<button name="IngreAdd" id = "IngreAdd" type="submit" class="btn btn-outline-success" >Add</button>
-				</form>
+							<button name="IngreAdd" id = "IngreAdd" type="submit" class="btn btn-outline-success" >Add</button>
+						</form>
+					</div>
 				</div>
             </li>
 
@@ -102,18 +109,69 @@
                 class="dropdown-menu"
                 aria-labelledby="Method"
                 >
-                <a class="dropdown-item" id="profile" href="/profile/my"
-                    >Profile</a
-                >
-                <a class="dropdown-item" id="#" href="#">Newsletters</a>
-                <a class="dropdown-item" id="Create recipe" href="/Create recipe">New Recipe</a>
-                <a class="dropdown-item" id="Recipe cards" href="/Recipe cards">Recipes</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" id="logout" href="/logout">Logout</a>
+					<div class = "container">
+						<form method="POST"  action="/search_result" >
+							<input type="checkbox" id="baking" name="baking" value="baking">
+							<label for="baking">Baking</label><br>
+
+							<input type="checkbox" id="frying" name="frying" value="frying">
+							<label for="frying">Frying</label><br>
+
+							<input type="checkbox" id="grilling" name="grilling" value="grilling">
+							<label for="grilling">Grilling</label><br>
+
+							<input type="checkbox" id="steaming" name="steaming" value="steaming">
+							<label for="steaming">Steaming</label><br>
+
+							<input type="checkbox" id="braising" name="braising" value="braising">
+							<label for="braising">Braising</label><br>
+
+							<input type="checkbox" id="stir_frying" name="stir_frying" value="stir_frying">
+							<label for="stir_frying">Stir Frying</label><br>
+
+							<button name="MethodAdd" id = "MethodAdd" type="submit" class="btn btn-outline-success" >Add</button>
+						</form>
+					</div>
                 </div>
             </li>
 
-          <!-- Dropdown3 for sort -->
+			<!-- Dropdown3 for mealType -->
+            <li class="nav-item dropdown">
+                <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="Method"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >
+                Meal Type
+                </a>
+                <div
+                class="dropdown-menu"
+                aria-labelledby="Method"
+                >
+					<div class = "container">
+						<form method="POST"  action="/search_result" >
+							<input type="radio" id="starter" name="Type" value="starter">
+							<label for="starter"> Starter</label><br>
+							<input type="radio" id="main" name="Type" value="main">
+							<label for="main"> Main</label><br>
+							<input type="radio" id="snack" name="Type" value="snack">
+							<label for="snack"> Snack</label><br>
+							<input type="radio" id="breakfast" name="Type" value="breakfast">
+							<label for="breakfast"> Breakfast</label><br>
+							<input type="radio" id="drink" name="Type" value="drink">
+							<label for="drink"> Drink</label><br>
+							<br>
+			
+							<button name="TypeAdd" id = "TypeAdd" type="submit" class="btn btn-outline-success" >Add</button>
+						</form>
+					</div>
+                </div>
+            </li>
+
+          <!-- Dropdown4 for sort -->
           <li class="nav-item dropdown">
             <a
               class="nav-link dropdown-toggle"
@@ -129,18 +187,20 @@
               class="dropdown-menu"
               aria-labelledby="navbarDropdownMenuLink"
             >
-            <form method="POST"  action="/search_result" form_id = "SortForm">
-				<input type="radio" id="DateNew" name="Sort" value="DateNew">
-				<label for="DateNew"> Recently Released</label><br>
-				<input type="radio" id="DateOld" name="Sort" value="DateOld">
-				<label for="DateOld"> Least Recently</label><br>
-				<input type="radio" id="Star" name="Sort" value="Star">
-				<label for="Star"> Star Rate</label><br>
-				<input type="radio" id="Likes" name="Sort" value="Likes">
-				<label for="Likes"> Likes</label><br><br>
+				<div class = "container">
+					<form method="POST"  action="/search_result">
+						<input type="radio" id="DateNew" name="Sort" value="DateNew">
+						<label for="DateNew">Recently</label><br>
+						<input type="radio" id="DateOld" name="Sort" value="DateOld">
+						<label for="DateOld">Least Recently</label><br>
+						<input type="radio" id="Star" name="Sort" value="Star">
+						<label for="Star">Star Rate</label><br>
+						<input type="radio" id="Likes" name="Sort" value="Likes">
+						<label for="Likes">Likes</label><br><br>
 
-				<button name="SortAdd" id = "SortAdd" type="submit" class="btn btn-outline-success" >Sort By</button>
-			</form>
+						<button name="SortAdd" id = "SortAdd" type="submit" class="btn btn-outline-success" >Sort By</button>
+					</form>
+				</div>
             </div>
         </li>
         
@@ -178,8 +238,8 @@
 </body>
 </html>
 
-<h1 align="left">{{message}}</h1>
-
+<h1 align="center">{{message}}</h1>
+<h1>{{search_input}}</h1>
   <!--for loop to add card, copied from recipe card-->
   {% for recipe in query %}
   <!DOCTYPE html>
