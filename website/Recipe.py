@@ -159,7 +159,6 @@ def create_recipe():
                 db.session.commit()
              
             methods = Method.query.filter_by(recipe_id=Savelist["RecipeId"]).first()
-            print(methods.method)
             
 
             flash(f"Create Recipe {RecipeName} Successfully!")
@@ -404,7 +403,13 @@ def edit_recipe():
         MyIngredient = request.form.get('Ingredient Name')
         StepNo = request.form.get('step_number')
         StepDes = request.form.get('discriptions')
-
+        Meal_type = request.form.get('Meal type')
+        Baking = request.form.get('Baking')
+        Frying = request.form.get('Frying')
+        Grilling = request.form.get('Grilling')
+        Steaming = request.form.get('Steaming')
+        Braising = request.form.get('Braising')
+        Stewing = request.form.get('Stewing')
 
         button_create = request.form.get('create')
         if button_create != None:
@@ -416,14 +421,49 @@ def edit_recipe():
             Savelist["UnitName"] = UnitName
             Savelist["MyIngredient"] = MyIngredient
             '''
+            if Meal_type:
+                recipe.meal_type = Meal_type
+                db.session.commit()
+                flash(f"Meal type updated Successfully!")
             if RecipeName:
                 recipe.name = RecipeName
+                db.session.commit()
+                flash(f"Recipe name updated Successfully!")
             if Description:
                 recipe.description = Description
-            if Serving:
+                flash(f"Description updated Successfully!")
+                db.session.commit()
+            if Serving and (Serving != 0):
                 recipe.serving = Serving
-            db.session.commit()
-            flash(f"Recipe name updated Successfully!")
+                db.session.commit()
+                flash(f"Serving updated Successfully!")
+            if Baking or Frying or Grilling or Steaming or Braising:
+                methods = Method.query.filter_by(recipe_id=recipe_id).all()
+                for i in methods:
+                    if i.recipe_id == recipe_id:
+                        db.session.delete(i)
+                db.session.commit()
+                if Baking:
+                    Baking = Method(recipe_id = Savelist["RecipeId"], method=Baking)
+                    db.session.add(Baking)
+                    db.session.commit()    
+                if Frying:
+                    Frying = Method(recipe_id = Savelist["RecipeId"], method=Frying)
+                    db.session.add(Frying)
+                    db.session.commit() 
+                if Grilling:
+                    Grilling = Method(recipe_id = Savelist["RecipeId"], method=Grilling)
+                    db.session.add(Grilling)
+                    db.session.commit() 
+                if Steaming:
+                    Steaming = Method(recipe_id = Savelist["RecipeId"], method=Steaming)
+                    db.session.add(Steaming)
+                    db.session.commit()
+                if Braising:
+                    Braising = Method(recipe_id = Savelist["RecipeId"], method=Braising)
+                    db.session.add(Braising)
+                    db.session.commit()
+    
              
         button3 = request.form.get('button3')
         if button3 != None:
@@ -582,7 +622,7 @@ def edit_recipe():
                     Step_Number = 0
             else:
                 Step_Number = 0
-            return render_template("edit_recipe.html", user=current_user, IngreContents = Contents, Step_Number = (Step_Number+1))
+            return render_template("edit_recipe.html", user=current_user, IngreContents = Contents, recipe = recipe, Step_Number = (Step_Number+1))
 
     else:
         Step_No = None
@@ -598,7 +638,7 @@ def edit_recipe():
                 Step_Number = 0
         else:
             Step_Number = 0
-        return render_template("edit_recipe.html", user=current_user, IngreContents = Contents, Step_Number = (Step_Number+1))
+        return render_template("edit_recipe.html", user=current_user, IngreContents = Contents, recipe = recipe, Step_Number = (Step_Number+1))
         #return render_template("create_recipe.html", user=current_user)
 
     
