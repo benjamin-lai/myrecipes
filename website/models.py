@@ -129,3 +129,11 @@ class Likes(db.Model):
     like_status = db.Column(db.Integer)
     has = db.Column(db.Integer, db.ForeignKey('recipes.id'))
     own = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+class History(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer, primary_key=True)
+    recipe = db.Column(db.Integer, primary_key=True)
+    last_view_time = db.Column(db.String(150))
+    last_view_date = db.Column(db.String(150))
+    

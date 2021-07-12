@@ -12,13 +12,14 @@ from tkinter import messagebox
 import ctypes 
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
-from .models import Users, Recipes, Ingredient, Contents, Recipestep, Profiles, Method
+from .models import Users, Recipes, Ingredient, Contents, Recipestep, Profiles, Method, History
 from .review import create_comment, retrieve_comments
 from . import db
 from sqlalchemy import desc
 from sqlalchemy import func
 import base64
 import boto3
+from datetime import datetime
 
 s3 = boto3.client('s3',
                     aws_access_key_id='AKIAQNR7WVADC7MX2ZEW',
@@ -52,6 +53,30 @@ Savelist["Step_Des"] = None
 Savelist["image_name2"] = None
 Savelist["image_name1"] = None
 Savelist["edit_ingredient"] = False
+
+@recipes.route('/history', methods = ['GET','POST'])
+def history():
+    histories = History.query.filter_by(userid = current_user.id).order_by(History.last_view_time.desc()).all()
+    query = []
+    for i in histories:
+        recipes = Recipes.query.filter_by(id = i.recipe).all()
+        for j in recipes:
+            query.append(j)
+    return render_template("history.html", query=query, type="recent")
+
+@recipes.route('/history.<int:recipeId>', methods=['GET', 'POST'])
+def delete_history(recipeId):
+    delete_histories = History.query.filter_by(userid = current_user.id, recipe = recipeId).first()
+    db.session.delete(delete_histories)
+    db.session.commit()
+    histories = History.query.filter_by(userid = current_user.id).order_by(History.last_view_time.asc()).all()
+    query = []
+    for i in histories:
+        recipes = Recipes.query.filter_by(id = i.recipe).all()
+        for j in recipes:
+            query.append(j)
+    return redirect(url_for('recipes.history'))
+    #return render_template("history.html", query=query, type="recent")
 
 @recipes.route('/Recipe cards', methods = ['GET','POST'])
 def recipe_cards():
@@ -675,6 +700,20 @@ def view_recipe(recipeName, recipeId):
     comments = retrieve_comments(recipe.id)
     
     methods = Method.query.filter_by(recipe_id=Savelist["RecipeId"]).all()
+
+    #Create recipe view history
+    exist_history = History.query.filter_by(userid = current_user.id, recipe = recipeId).first()
+    if exist_history != None:
+        print("duplicate browsing")
+        date = datetime.date(datetime.now())
+        time = datetime.time(datetime.now())
+        exist_history.last_view_time = time
+        exist_history.last_view_date = date
+        db.session.commit()
+    else:
+        history = History(userid = recipe.creates, recipe = recipe.id)
+        db.session.add(history)
+        db.session.commit()
 
     return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
     recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", meal_type = recipe.meal_type, methods=methods)

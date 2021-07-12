@@ -33,6 +33,16 @@ create table Recipes (
     foreign key (creates) references Users(id)     
 );
 
+create table History (
+    id                   serial      primary key,
+    userid               integer        not null,
+    recipe               integer        not null,
+    last_view_time       time           default DATE_TRUNC('second', localtime),
+    last_view_date       date           default current_date,
+    foreign key (userid) references Users(id),
+    foreign key (recipe) references Recipes(id)
+);
+
 create table Ingredient (
     id              serial      primary key,
     recipe_id integer references Recipes(id),
