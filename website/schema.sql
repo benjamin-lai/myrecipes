@@ -97,13 +97,6 @@ create table CookBooks_Lists (
     foreign key (recipe_id) references Recipes(id)      -- added this line, but not sure if necessary, will just check if the id exists in recipes
 );
 
-create table History_Lists (
-    recipe_id       integer      not null,
-    contains        integer     not null,   -- contains is profile_id
-    primary key (recipe_id, contains),
-    foreign key (contains) references Profiles(profile_id),
-    foreign key (recipe_id) references Recipes(id)      -- added this line, but not sure if necessary, will just check if the id exists in recipes
-);
 
 create table Starred_Recipes (
     recipe_id       integer      not null,
