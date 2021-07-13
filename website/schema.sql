@@ -126,3 +126,8 @@ create table Likes (
     foreign key (own) references Users(id),
     foreign key (has) references Recipes(id)
 );
+
+create table newsletter_email (
+    id              serial      primary key,
+    email           text 		check (email ~* '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$') not null unique
+);

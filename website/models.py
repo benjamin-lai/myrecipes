@@ -122,6 +122,9 @@ class Newsfeeds(db.Model, UserMixin):
     creation_time = db.Column(db.String(150))
     creation_date = db.Column(db.String(150))
     
+class newsletter_email(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(150), unique=True)
 
 
 class Likes(db.Model):
@@ -136,4 +139,3 @@ class History(db.Model):
     recipe = db.Column(db.Integer, primary_key=True)
     last_view_time = db.Column(db.String(150))
     last_view_date = db.Column(db.String(150))
-    
