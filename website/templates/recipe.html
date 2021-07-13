@@ -8,25 +8,25 @@
 </head>
 <!--content of recipe-->
 <body>
-    <div class="jumbotron">
-        <div class="container">
-          <p style="color:blue;">Meal Type : {{meal_type}}</p>
-          <h1>{{RecipeName}}</h1>
-          <p>id : {{recipe_id}}</p>
-          <h6>
-          Cooking methods:
-          </h6>
+  <div class="jumbotron">
+    <div class="container">
+      <p style="color:blue;">Meal Type : {{meal_type}}</p>
+      <h1>{{RecipeName}}</h1>
+      <p>id : {{recipe_id}}</p>
+      <h6>
+      Cooking methods:
+      </h6>
 
-          {% for method in methods %}
-          <tr>
-            <td>
-              <p class="card-text"style="color:DarkOrange;">{{method.method}}</p>
-            </td>
-          </tr>
-          {% endfor %}
-          <br />
-        </div>
-      </div>
+      {% for method in methods %}
+      <tr>
+        <td>
+          <p class="card-text"style="color:DarkOrange;">{{method.method}}</p>
+        </td>
+      </tr>
+      {% endfor %}
+      <br />
+    </div>
+  </div>
       <form action="edit recipe" method="POST">
         <button class="btn btn-success pull-right" type="submit" >Edit</button>
       </form> 
@@ -50,47 +50,44 @@
                   height="200"
                 />
             <h2>Star Rating</h2>
-            <style>
-            .fa-star:before {
-              content: "\f005";
+            
+            <link href=.rating-list li {
+              float: right;
+              color: #ddd;
+              padding: 10px 5px;
             }
             
-            .rating-list li i.yellow {
-              color: #FFD700;
+            .rating-list li:hover,
+            .rating-list li:hover ~ li {
+              color: #ffd700;
             }
             
-            .rating-list li i.gray {
-              color: #bbb;
-            }
-            
-            .list-inline>li {
+            .rating-list {
               display: inline-block;
-              padding-right: 5px;
-              padding-left: 5px;
-            }
+              list-style: none;
+            } rel="stylesheet" />
             
-            .rating-list li {
-              padding: 0px;
-            }
+
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star checked"></span>
+            <span class="fa fa-star"></span>
+            <span class="fa fa-star"></span>
             
-            .fa {
-              display: inline-block;
-              font: normal normal normal 14px/1 FontAwesome;
-              font-size: inherit;
-              text-rendering: auto;
-              -webkit-font-smoothing: antialiased;
-              -moz-osx-font-smoothing: grayscale;
-              transform: translate(0, 0);
-            }
-            </style>
-            <ul class="list-inline rating-list">
-              <li><i class="fa fa-star yellow"></i></li>
-              <li><i class="fa fa-star yellow"></i></li>
-              <li><i class="fa fa-star yellow"></i></li>
-              <li><i class="fa fa-star yellow"></i></li>
-              <li><i class="fa fa-star gray"></i></li>
-            </ul>
+            <!-- Like and disclick buttons with their associated counter -->
+            <div class="row">
+              <div class="col">
+                <button type="button" class="btn btn-primary" onClick="addLike({{ recipe_id }})">Like!</button>
+                {{ recipe.num_of_likes }}
+              </div>
+              <div class="col">
+                <button type="button" class="btn btn-primary" onClick="addDislike({{ recipe_id }})">Dislike!</button>
+                {{ recipe.num_of_dislikes }}
+              </div>
+            </div>
             
+
+
             <html>
               <head>
               <!-- Font Awesome Icon Library -->
@@ -145,7 +142,47 @@
     </td>
   </tr>
   {% endfor %}
-  
 </div>
 
+<!-- This entire section is dedicated to comments -->
+<div class="container">
+    <hr>
+    <h2>Comments</h2>
+    <!-- Displays the ability to comment when the user is logged in-->
+    {% if current_user.is_authenticated %}
+      <div align="center">
+        <button type="button" class="btn btn-primary" onClick="createComment2({{ recipe_id }})">Post a new recipe!</button>
+      </div>
+    {% endif %}
+
+    <!-- Displays the list of comments for the recipe-->
+    <ul class="list-group list-group-flush" id="reviews">
+      <!-- Iterate through comments for the recipe and display associated name and comment. -->
+      {% for comment_display_name, review in comments %}
+      {{ comment_display_name }}
+      <li class="list-group-item">
+        
+
+        <!-- Current displays information off the screen if there is too much, need to fix it later-->
+        {{ review.comment }}
+
+        <!-- Only the person who made the comment can modify it -->
+          {% if current_user.id == review.owns %}
+            <button type="button" class="float-right" onClick="modifyComment({{ review.comment_id }})">
+              Modify
+            </button>
+          {% endif %}
+          
+        <!-- Displays the abiltiy to delete comments if either they are the recipe owner or person who made the comment -->
+        {% if creates == current_user.id or current_user.id == review.owns %}
+          <button type="button" class="close" onClick="deleteComment({{ review.comment_id }})">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+
+</div>
 {% endblock %}
