@@ -1,4 +1,3 @@
-# This is contains helper functions to create, modify and delete messages.
 from flask import Blueprint, request, flash, jsonify
 from flask_login import login_required, current_user
 import json
@@ -163,5 +162,3 @@ def update_like_status(recipe, new_status, likes):
             likes.like_status = 0               # Update like_status to new_status
 
     db.session.commit()
-
-    
