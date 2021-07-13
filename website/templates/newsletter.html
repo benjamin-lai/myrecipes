@@ -1,0 +1,65 @@
+{% extends "base.html" %} {% block title %}MyRecipes{% endblock %}
+<!-- Overwrites title-->
+{% block content %}
+<head>
+<style>
+    
+    h1 {
+      color: grey;
+      text-align: center;
+    }
+
+    
+    p {
+      font-family: verdana;
+      font-size: 55px;
+      color: grey;
+      text-align: center;
+    }
+
+    input {
+        width: 100%;
+    }
+
+    label {
+        text-align: center;
+    }
+    
+    </style>
+</head>
+<body>
+    <p>We always loves to hear your feedback</p>
+    <div class="container">
+        <div class="jumbotron page-header" style="margin-bottom: 0px">
+            <h1>Support</h1>
+            <form method="get">
+                <label for="emailIn" style="color:grey;">Enter your feedback</label>
+                <input 
+                class="form-control"
+                type="text" 
+                id="support_input" 
+                name="support_input"
+                autocomplete="on"
+                placeholder="Feedback can be input here"><br>
+                <button name="support" id = "support" type="submit" class="btn btn-primary" style="float: right;" formmethod="post">Submit</button>
+            </form>
+            <br><br><hr><br>
+            <h1>Newsletter</h1>
+            <form method="get">
+                <label for="emailIn" style="color:grey;">Enter Email Address</label>
+                <input 
+                class="form-control"
+                type="text" 
+                id="email_input" 
+                name="email_input"
+                autocomplete="on"
+                placeholder="Enter your email to recive our newsletter"><br>
+                <button name="newsletter" id = "newsletter" type="submit" class="btn btn-primary" style="float: right;" formmethod="post">Submit</button>
+            </form>
+                
+        </div>
+    </div>
+    <p>{{message}}</p>
+</body>
+{% endblock %}
+
