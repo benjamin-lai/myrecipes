@@ -785,7 +785,7 @@ def view_recipe(recipeName, recipeId):
         exist_history.last_view_date = date
         db.session.commit()
     else:
-        history = History(userid = recipe.creates, recipe = recipe.id)
+        history = History(userid = current_user.id, recipe = recipe.id)
         db.session.add(history)
         db.session.commit()
 

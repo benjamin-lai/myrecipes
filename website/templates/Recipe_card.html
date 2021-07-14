@@ -1,7 +1,23 @@
 {% extends "base.html" %}
 <!-- Overwrites title-->
 {% block title %}Recipe_card{% endblock %} {% block content %}
+<html>
 <h2>Card</h2>
+</body>
+<head>
+    <title>Page Title</title>
+    <style>
+      body {background-color: powderblue;}
+      h3 {color: red;}
+      p {color: blue;}
+    </style>
+  </head>  
+  <body>
+  
+  <h3>{{meal_type}}</h3>
+    
+  </body>
+  </html>
 {% for recipes in query %}
 <tr>
   <td>
