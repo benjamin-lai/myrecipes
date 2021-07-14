@@ -1,0 +1,57 @@
+<!-- Overrides base.html -->
+{% extends "base.html" %}
+
+<!-- Overrides tab name-->
+
+{% block title %}Newsletter Management{% endblock %} {% block content%}
+
+<br />
+<section class="container-fluid">
+  <section class="row justify-content-center">
+    <!-- Shadow-->
+    <div class="shadow p-3 mb-5 bg-white rounded" style="width: 45rem">
+      <div class="card-body">
+        <div align="center">
+          <h3>Support Page</h3>
+          <p>Feel free to leave a comment or message us about any enquiries.</p>
+          <br />
+
+          <!-- Display current email address -->
+          <label><b>Email Address: </b> {{ user.email }}</label>
+          <hr />
+
+          <form method="POST">
+            <label><b>Topic</b></label>
+            <br />
+            <select
+              class="form-select form-select-lg mb-3"
+              aria-label=".form-select-lg example"
+              name="topic_select"
+            >
+              <option <option selected="true" disabled="disabled">
+                Select a topic
+              </option>
+              <option value="Leaving Feedback">Leaving Feedback</option>
+              <option value="Enquires">Enquires</option>
+              <option value="Reporting A Bug">Reporting A Bug</option>
+              <option value="Other">Other</option>
+            </select>
+            <br />
+            <br />
+            <div class="form-group">
+              <label for="email-body"><b>Comment</b></label>
+              <textarea
+                class="form-control"
+                id="email-body"
+                name="email-body"
+                rows="3"
+              ></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+{% endblock %}
