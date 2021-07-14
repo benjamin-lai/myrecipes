@@ -62,27 +62,27 @@ def trending_section():
     for i in recipes:
         if i.num_of_likes > i.num_of_dislikes:
             trending.append(i)
-    return render_template("trending_section.html", query=trending, type="recent")
+    return render_template("trending_section.html", query=trending, type="recent", meal_type = "All types")
 
 @recipes.route('/Trending Section.Starter', methods = ['GET','POST'])
-def trending_section_starter():
+def trending_section_Starter():
     print("Starter")
     recipes = Recipes.query.filter_by(meal_type = "Starter").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
     for i in recipes:
         if i.num_of_likes > i.num_of_dislikes:
             trending.append(i)
-    return render_template("trending_section.html", query=trending, type="recent")
+    return render_template("trending_section.html", query=trending, type="recent", meal_type = "Starter")
     
 @recipes.route('/Trending Section.Main', methods = ['GET','POST'])
-def trending_section_main():
+def trending_section_Main():
     print("Main")
     recipes = Recipes.query.filter_by(meal_type = "Main").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
     for i in recipes:
         if i.num_of_likes > i.num_of_dislikes:
             trending.append(i)
-    return render_template("trending_section.html", query=trending, type="recent")
+    return render_template("trending_section.html", query=trending, type="recent", meal_type = "Main")
 
 @recipes.route('/Trending Section.Dessert', methods = ['GET','POST'])
 def trending_section_Dessert():
@@ -92,7 +92,7 @@ def trending_section_Dessert():
     for i in recipes:
         if i.num_of_likes > i.num_of_dislikes:
             trending.append(i)
-    return render_template("trending_section.html", query=trending, type="recent")
+    return render_template("trending_section.html", query=trending, type="recent", meal_type = "Dessert")
 
 @recipes.route('/Trending Section.Snack', methods = ['GET','POST'])
 def trending_section_Snack():
@@ -102,7 +102,7 @@ def trending_section_Snack():
     for i in recipes:
         if i.num_of_likes > i.num_of_dislikes:
             trending.append(i)
-    return render_template("trending_section.html", query=trending, type="recent")
+    return render_template("trending_section.html", query=trending, type="recent", meal_type = "Snack")
 
 @recipes.route('/Trending Section.Breakfast', methods = ['GET','POST'])
 def trending_section_Breakfastk():
@@ -112,7 +112,7 @@ def trending_section_Breakfastk():
     for i in recipes:
         if i.num_of_likes > i.num_of_dislikes:
             trending.append(i)
-    return render_template("trending_section.html", query=trending, type="recent")
+    return render_template("trending_section.html", query=trending, type="recent", meal_type = "Breakfastk")
 
 @recipes.route('/Trending Section.Drink', methods = ['GET','POST'])
 def trending_section_Drink():
@@ -122,7 +122,7 @@ def trending_section_Drink():
     for i in recipes:
         if i.num_of_likes > i.num_of_dislikes:
             trending.append(i)
-    return render_template("trending_section.html", query=trending, type="recent")
+    return render_template("trending_section.html", query=trending, type="recent", meal_type = "Drink")
 
 @recipes.route('/history', methods = ['GET','POST'])
 def history():

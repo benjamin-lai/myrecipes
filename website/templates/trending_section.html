@@ -32,15 +32,28 @@
 <body>
 
 <div class="btn-group">
-  <a href="/Trending Section.Starter" name="Starter" type="add">Starter</a>
-  <a href="/Trending Section.Main" name="Main" type="add">Main</a>
-  <a href="/Trending Section.Dessert" name="Dessert" type="add">Dessert</a>
-  <a href="/Trending Section.Snack" name="Snack" type="add">Snack</a>
-  <a href="/Trending Section.Breakfast" name="Breakfast" type="add">Breakfast</a>
-  <a href="/Trending Section.Drink" name="Drink" type="add">Drink</a>
+  <a href="/Trending Section.Starter" name="Starter" type="add" class="btn btn-primary">Starter</a>
+  <a href="/Trending Section.Main" name="Main" type="add" class="btn btn-primary">Main</a>
+  <a href="/Trending Section.Dessert" name="Dessert" type="add" class="btn btn-primary">Dessert</a>
+  <a href="/Trending Section.Snack" name="Snack" type="add" class="btn btn-primary">Snack</a>
+  <a href="/Trending Section.Breakfast" name="Breakfast" type="add" class="btn btn-primary">Breakfast</a>
+  <a href="/Trending Section.Drink" name="Drink" type="add" class="btn btn-primary">Drink</a>
 </div>
-
+  
 </body>
+<head>
+    <title>Page Title</title>
+    <style>
+      body {background-color: powderblue;}
+      h3 {color: red;}
+      p {color: blue;}
+    </style>
+  </head>  
+  <body>
+  
+  <h3>{{meal_type}}</h3>
+    
+  </body>
 </html>
 {% for recipes in query %}
 <tr>
@@ -63,7 +76,7 @@
     <p class="card-text">{{recipes.description}}</p>
   </td>
   <td>
-    <p class="card-text">{{recipes.num_of_likes}}</p>
+    <p class="card-text">Likes:{{recipes.num_of_likes}}</p>
   </td>
   <td>
         <!-- want to change thise so it displays profile based off profile_id-->
