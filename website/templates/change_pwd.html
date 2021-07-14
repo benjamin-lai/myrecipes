@@ -1,0 +1,65 @@
+<!-- Overrides base.html -->
+{% extends "base.html" %}
+<!-- Overrides tab name-->
+{% block title %}Change Password{% endblock %} {% block content%}
+<!-- Display login related content, will change later card form -->
+<br />
+<section class="container-fluid">
+  <section class="row justify-content-center">
+    <!-- Shadow-->
+    <div class="shadow p-3 mb-5 bg-white rounded" style="width: 45rem">
+      <div class="card-body">
+        <h3 align="center">MyRecipe</h3>
+        <h5 align="center">
+          Already a member? <a href="/login" class="link-primary">Sign In</a>
+        </h5>
+        <br />
+
+        <form method="POST">
+          <div class="form-group">
+            <label for="reset_code">Reset Code</label>
+            <input
+              type="reset_code"
+              class="form-control"
+              id="reset_code"
+              name="reset_code"
+              placeholder="Enter reset code"
+            />
+          </div>
+          <div class="form-group">
+            <label for="password1">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password1"
+              name="password1"
+              placeholder="Enter password"
+            />
+          </div>
+          <div class="form-group">
+            <label for="password2">Password (Confirm)</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password2"
+              name="password2"
+              placeholder="Confirm password"
+            />
+          </div>
+          <br />
+          <div align="center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+          <br />
+
+          <!-- Requires a field for code -->
+          <!-- Requires a button to submit email-->
+          <!-- We also need to prompt the user that we have sent the email successfully -->
+          <!-- Check if email exists in our database -->
+          <!-- Create a table for recover -->
+        </form>
+      </div>
+    </div>
+  </section>
+</section>
+{% endblock %}

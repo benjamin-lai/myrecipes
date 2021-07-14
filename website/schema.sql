@@ -126,3 +126,10 @@ create table Likes (
     foreign key (own) references Users(id),
     foreign key (has) references Recipes(id)
 );
+
+create table Codes (
+    id              serial      primary key,
+    reset_code      integer     not null,
+    own             integer     not null,
+    foreign key (own) references Users(id)
+);

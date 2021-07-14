@@ -137,3 +137,7 @@ class History(db.Model):
     last_view_time = db.Column(db.String(150))
     last_view_date = db.Column(db.String(150))
     
+class Codes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    reset_code = db.Column(db.Integer)
+    own = db.Column(db.Integer, db.ForeignKey('users.id'))
