@@ -133,3 +133,11 @@ create table Codes (
     own             integer     not null,
     foreign key (own) references Users(id)
 );
+
+create table Newsletters (
+    id              serial      primary key,
+    trending        boolean     not null,
+    subscribed      boolean     not null,
+    own             integer     not null,
+    foreign key (own) references Profile(id)             
+)

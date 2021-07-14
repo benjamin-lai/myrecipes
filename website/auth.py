@@ -134,7 +134,7 @@ def change_password():
                 
                 flash('Successfully changed password!', category='success')
                 db.session.delete(user_code)
-                user.password = password1
+                user.password = generate_password_hash(password1)
                 db.session.commit()
                 login_user(user, remember=True)
                 return redirect(url_for('views.home'))
