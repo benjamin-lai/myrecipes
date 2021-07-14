@@ -46,9 +46,10 @@
       <!-- Wrapper for toggle (mobile) and desktop view-->
       <div class="collapse navbar-collapse" id="navbar">
         <!-- First nav bar to hold content to the left-->
-        <div class="navbar-nav">
-          <a class="navbar-brand" href="#">Activated Filters:{{contents}}</a>
-        </div>
+        <form class="navbar-nav" method="POST">
+          <a class="navbar-brand" href="#">  Activated Filters:{{contents}}</a>
+          <button class="btn btn-sm btn-outline-secondary" type="submit" name="clear" id = "clear">Clear</button>  
+        </form>
 
 
 
@@ -238,7 +239,6 @@
 </html>
 
 <h1 align="center">{{message}}</h1>
-<h1>{{search_input}}</h1>
   <!--for loop to add card, copied from recipe card-->
   {% for recipes in query %}
 <tr>

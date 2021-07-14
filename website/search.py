@@ -25,8 +25,9 @@ searchInput = ""
 #global variables use to save filters
 IngredientFilter = []
 MethodFilter = []
-MealTypeFilter = ""
-SortBy = ""
+MealTypeFilter = None
+SortBy = None
+query = []
 
 @search.route('/search_result', methods=['GET','POST'])  
 def search_result():
@@ -35,20 +36,36 @@ def search_result():
     global SortBy
     global MethodFilter
     global MealTypeFilter
+    global query
+
     if request.method == 'POST':
         search_input = request.form.get('Search')
         if search_input is not None:
             if len(search_input) < 1:
-                flash("search input can not be empty!")
+                flash("search input can not be empty!", category='error')
+                #clear query
+                query = []
             else:
                 searchInput = search_input  #put into global variable
                 reset_all()
                 print("reset")
                 print(MealTypeFilter)
+
+                #find the query based on search_input
+                query = find_query_by_name(searchInput)
+                print(f"query = {query}")
+
+        #clear filters
+        clear = request.form.get('clear')
+        if clear is not None:
+            reset_all()
+            print("filter cleared")
+            #go back to same search page without any filters
+            #find the query based on search_input
+            query = find_query_by_name(searchInput)
+            return render_template("search.html",user = current_user,
+                search_input = searchInput,query = query,search_value = searchInput)
         
-        #find the query based on search_input
-        query = find_query_by_name(searchInput)
-        print(f"query = {query}")
 
         #ingredient filter
         addIngre = request.form.get('IngreAdd') 
@@ -92,7 +109,8 @@ def search_result():
         if addType is not None:
             MealTypeFilter = request.form.get('Type')
             if MealTypeFilter is None:
-                flash("Meal Type can't be empty")
+                print("mealtype issssss none")
+                flash("Meal Type can't be empty", category='error')
             else:
                 print(MealTypeFilter)
         else:
@@ -104,12 +122,11 @@ def search_result():
         if SortAdd is not None:
             SortBy = request.form.get('Sort')
             if SortBy is None:
-                flash("Sort By can't be None")
+                flash("Sort By can't be None", category='error')
             else:
                 print(SortBy)
         else:
             print("No sortBy filter")
-
 
         #use IngredientFilter for query
         query = use_IngredientFilter_for_query(query)
@@ -122,13 +139,15 @@ def search_result():
 
         Contents = generate_str_from_list()
         if len(Contents) < 1:
-            Contents = "None"
+            Contents = ""
         if len(query) > 0:
             return render_template("search.html",user = current_user,
                 search_input = searchInput,query = query,search_value = searchInput,
                 contents = Contents)
-    message = "No Recipe be Founded"
-    return render_template("search.html",user = current_user,search_input = search_input,message = message, contents = Contents)
+    
+    message = f"No Recipe be Founded  {searchInput}"
+    return render_template("search.html",user = current_user,search_input = searchInput
+        ,message = message)
     
 
 
@@ -141,7 +160,7 @@ def find_query_by_name(recipeName):
 def check_and_add_ingredient(Pork,Beef,Vegi,SeaFood,Poultry):
     global IngredientFilter
     if Pork is None and Beef is None and Vegi is None and SeaFood is None and Poultry is None:
-        flash("Ingredient can't be None")
+        flash("Ingredient can't be None", category='error')
         return False
     if Pork is not None:
         IngredientFilter.append(Pork)
@@ -160,7 +179,7 @@ def check_and_add_ingredient(Pork,Beef,Vegi,SeaFood,Poultry):
 def check_and_add_method(Baking,Frying,Grilling,Steaming,Braising, StirFrying):
     global MethodFilter
     if Baking is None and Frying is None and Grilling is None and Steaming is None and Braising is None and StirFrying is None:
-        flash("Method can't be None")
+        flash("Method can't be None", category='error')
         return False
     if Baking is not None:
         MethodFilter.append(Baking)
@@ -186,9 +205,9 @@ def generate_str_from_list():
         Contents += (f"<< {i} ")
     for m in MethodFilter:
         Contents += (f"<< {m}")
-    if len(MealTypeFilter) > 0:
+    if MealTypeFilter is not None:
         Contents += (f"<< {MealTypeFilter}")
-    if len(SortBy) > 0:
+    if SortBy is not None:
         Contents += (f"<<< Order By {SortBy}")
     return Contents
 
@@ -225,14 +244,18 @@ def use_MethodFilter_for_query(query):
     return query_after
 
 def use_TypeFilter_for_query(query):
-    if len(MealTypeFilter) < 1:
+    print(f"wtfwtf{MealTypeFilter}")
+    if MealTypeFilter is None:
         return query
-    query_after = []
-    for q in query:
-        print(f"type : {q.meal_type}")
-        if q.meal_type.lower() == MealTypeFilter.lower():
-            query_after.append(q)
-    return query_after
+    else:
+        
+        print("????")
+        query_after = []
+        for q in query:
+            print(f"type : {q.meal_type}")
+            if q.meal_type.lower() == MealTypeFilter.lower():
+                query_after.append(q)
+        return query_after
 
 # custom functions to get recipe info
 def get_recipe_id(q):
@@ -267,5 +290,5 @@ def reset_all():
     global MealTypeFilter
     IngredientFilter.clear()
     MethodFilter.clear()
-    MealTypeFilter = ""
-    SortBy = ""
+    MealTypeFilter = None
+    SortBy = None
