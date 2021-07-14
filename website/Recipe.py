@@ -54,6 +54,76 @@ Savelist["image_name2"] = None
 Savelist["image_name1"] = None
 Savelist["edit_ingredient"] = False
 
+
+@recipes.route('/Trending Section', methods = ['GET','POST'])
+def trending_section():
+    recipes = Recipes.query.order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
+    trending = []
+    for i in recipes:
+        if i.num_of_likes > i.num_of_dislikes:
+            trending.append(i)
+    return render_template("trending_section.html", query=trending, type="recent")
+
+@recipes.route('/Trending Section.Starter', methods = ['GET','POST'])
+def trending_section_starter():
+    print("Starter")
+    recipes = Recipes.query.filter_by(meal_type = "Starter").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
+    trending = []
+    for i in recipes:
+        if i.num_of_likes > i.num_of_dislikes:
+            trending.append(i)
+    return render_template("trending_section.html", query=trending, type="recent")
+    
+@recipes.route('/Trending Section.Main', methods = ['GET','POST'])
+def trending_section_main():
+    print("Main")
+    recipes = Recipes.query.filter_by(meal_type = "Main").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
+    trending = []
+    for i in recipes:
+        if i.num_of_likes > i.num_of_dislikes:
+            trending.append(i)
+    return render_template("trending_section.html", query=trending, type="recent")
+
+@recipes.route('/Trending Section.Dessert', methods = ['GET','POST'])
+def trending_section_Dessert():
+    print("Dessert")
+    recipes = Recipes.query.filter_by(meal_type = "Dessert").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
+    trending = []
+    for i in recipes:
+        if i.num_of_likes > i.num_of_dislikes:
+            trending.append(i)
+    return render_template("trending_section.html", query=trending, type="recent")
+
+@recipes.route('/Trending Section.Snack', methods = ['GET','POST'])
+def trending_section_Snack():
+    print("Snack")
+    recipes = Recipes.query.filter_by(meal_type = "Snack").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
+    trending = []
+    for i in recipes:
+        if i.num_of_likes > i.num_of_dislikes:
+            trending.append(i)
+    return render_template("trending_section.html", query=trending, type="recent")
+
+@recipes.route('/Trending Section.Breakfast', methods = ['GET','POST'])
+def trending_section_Breakfastk():
+    print("Breakfast")
+    recipes = Recipes.query.filter_by(meal_type = "Breakfast").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
+    trending = []
+    for i in recipes:
+        if i.num_of_likes > i.num_of_dislikes:
+            trending.append(i)
+    return render_template("trending_section.html", query=trending, type="recent")
+
+@recipes.route('/Trending Section.Drink', methods = ['GET','POST'])
+def trending_section_Drink():
+    print("Drink")
+    recipes = Recipes.query.filter_by(meal_type = "Drink").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
+    trending = []
+    for i in recipes:
+        if i.num_of_likes > i.num_of_dislikes:
+            trending.append(i)
+    return render_template("trending_section.html", query=trending, type="recent")
+
 @recipes.route('/history', methods = ['GET','POST'])
 def history():
     histories = History.query.filter_by(userid = current_user.id).order_by(History.last_view_time.desc()).all()
@@ -181,6 +251,10 @@ def create_recipe():
             if Braising:
                 Braising = Method(recipe_id = Savelist["RecipeId"], method=Braising)
                 db.session.add(Braising)
+                db.session.commit()
+            if Stewing:
+                Stewing = Method(recipe_id = Savelist["RecipeId"], method=Stewing)
+                db.session.add(Stewing)
                 db.session.commit()
              
             methods = Method.query.filter_by(recipe_id=Savelist["RecipeId"]).first()

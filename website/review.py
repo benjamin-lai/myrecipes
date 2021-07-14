@@ -1,3 +1,4 @@
+# This is contains helper functions to create, modify and delete messages.
 from flask import Blueprint, request, flash, jsonify
 from flask_login import login_required, current_user
 import json

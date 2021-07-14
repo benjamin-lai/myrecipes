@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+<!-- Overwrites title-->
+{% block title %}Recipe_card{% endblock %} {% block content %}
+<h2>Trending Section</h2>
+<html>
+<style>
+.btn-group a {
+  background-color: #04AA6D; /* Green background */
+  border: 1px solid green; /* Green border */
+  color: white; /* White text */
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  float: left; /* Float the buttons side by side */
+}
+
+/* Clear floats (clearfix hack) */
+.btn-group:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.btn-group button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+  background-color: #3e8e41;
+}
+</style>
+<body>
+
+<div class="btn-group">
+  <a href="/Trending Section.Starter" name="Starter" type="add">Starter</a>
+  <a href="/Trending Section.Main" name="Main" type="add">Main</a>
+  <a href="/Trending Section.Dessert" name="Dessert" type="add">Dessert</a>
+  <a href="/Trending Section.Snack" name="Snack" type="add">Snack</a>
+  <a href="/Trending Section.Breakfast" name="Breakfast" type="add">Breakfast</a>
+  <a href="/Trending Section.Drink" name="Drink" type="add">Drink</a>
+</div>
+
+</body>
+</html>
+{% for recipes in query %}
+<tr>
+  <td>
+    <div class="card mb-3" style="max-width: 1000px;">
+      <div class="row g-0">
+        <div class="col-md-4">
+          <div class="zoom">
+            <a href="/recipe.{{recipes.name}}.{{recipes.id}}">
+              <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipes.photo}}" class="image">
+            </a>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">{{recipes.name}} </h5>
+    
+  </td>
+  <td>
+    <p class="card-text">{{recipes.description}}</p>
+  </td>
+  <td>
+    <p class="card-text">{{recipes.num_of_likes}}</p>
+  </td>
+  <td>
+        <!-- want to change thise so it displays profile based off profile_id-->
+        <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.display_name}}"> {{recipes.creator}}</a></u></small></p>
+        <a href="/recipe.{{recipes.name}}.{{recipes.id}}" class="btn btn-primary">Get the Recipe</a>
+      </div>
+    </div>
+  </div>
+</div>
+  </td>
+</tr>
+
+{% endfor %} {% endblock %}

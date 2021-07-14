@@ -21,7 +21,6 @@ def create_app():
     from .newsfeed import newsfeed
     from .review import review
     from .search import search
-    from .newsletter import newsletter
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
@@ -30,7 +29,6 @@ def create_app():
     app.register_blueprint(newsfeed, url_prefix='/')
     app.register_blueprint(review, url_prefix='/')
     app.register_blueprint(search, url_prefix='/')
-    app.register_blueprint(newsletter, url_prefix='/')
 
     from .models import Users
 
