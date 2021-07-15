@@ -24,6 +24,7 @@ searchInput = ""
 
 #global variables use to save filters
 IngredientFilter = []
+IngredientExclude = []
 MethodFilter = []
 MealTypeFilter = None
 SortBy = None
@@ -32,6 +33,7 @@ query = []
 @search.route('/search_result', methods=['GET','POST'])  
 def search_result():
     global IngredientFilter
+    global IngredientExclude
     global searchInput
     global SortBy
     global MethodFilter
@@ -66,6 +68,7 @@ def search_result():
             return render_template("search.html",user = current_user,
                 search_input = searchInput,query = query,search_value = searchInput)
         
+        
 
         #ingredient filter
         addIngre = request.form.get('IngreAdd') 
@@ -85,6 +88,23 @@ def search_result():
             print("Did not add ingredient")
 
 
+        #ingredient search filter
+        ingre_include = request.form.get('include')
+        ingre_exclude = request.form.get('exclude')
+        if ingre_include is not None:
+            #add ingredient include filter
+            print(ingre_include)
+            if len(ingre_include) > 0:
+                #add to ingredient filter list
+                IngredientFilter.append(ingre_include)
+        if ingre_exclude is not None:
+            #add ingre exclude
+            print(ingre_exclude)
+            if len(ingre_exclude) > 0:
+                IngredientExclude.append(ingre_exclude)
+
+
+
         #Method filter
         addMethod = request.form.get('MethodAdd')
         if addMethod is not None:
@@ -97,7 +117,7 @@ def search_result():
             StirFrying  = request.form.get('stir_frying')
 
             MethodFlag = check_and_add_method(Baking,Frying,Grilling,Steaming,Braising, StirFrying)
-            if MethodFlag is True: # have ingredient slected
+            if MethodFlag is True: # have ingredient selected
                 print("added methods")
                 print(MethodFilter)
         else:
@@ -127,24 +147,35 @@ def search_result():
                 print(SortBy)
         else:
             print("No sortBy filter")
-
         #use IngredientFilter for query
         query = use_IngredientFilter_for_query(query)
+        print(f"query      {query}")
         #use MethodFilter for query
         query = use_MethodFilter_for_query(query)
         #use MealTypeFilter for query
         query = use_TypeFilter_for_query(query)
         #user SortBy (trim orders)
         query = sort_query(query)
-
+        #use exclude ingredient filter
+        query = use_ingredient_exclude_filter(query)
+        
+        include_contents = generate_include_contents()
+        exclude_contents = generate_exclude_contents()
+        print(f"exclude {exclude_contents}")
         Contents = generate_str_from_list()
         if len(Contents) < 1:
             Contents = ""
         if len(query) > 0:
+            print(f"query {query}")
             return render_template("search.html",user = current_user,
                 search_input = searchInput,query = query,search_value = searchInput,
-                contents = Contents)
-    
+                contents = Contents, include_ingreList = include_contents, exclude_ingreList = exclude_contents)
+        else:
+            message = f"No Recipe be Founded  {searchInput}"
+            return render_template("search.html",user = current_user,
+                search_input = searchInput,query = query,search_value = searchInput,
+                contents = Contents, include_ingreList = include_contents, 
+                exclude_ingreList = exclude_contents,message = message)
     message = f"No Recipe be Founded  {searchInput}"
     return render_template("search.html",user = current_user,search_input = searchInput
         ,message = message)
@@ -227,6 +258,20 @@ def use_IngredientFilter_for_query(query):
             query_after.append(q)
     return query_after
 
+
+def use_ingredient_exclude_filter(query):
+    query_after = []
+    for q in query:
+        flag = 0
+        ingre = Ingredient.query.filter_by(recipe_id = q.id).all()
+        for ing in ingre:           
+            for i in IngredientExclude:
+               if ing.ingredient.lower() == i.lower():
+                   flag = 1
+        if flag == 0:
+            query_after.append(q)
+    return query_after
+
 def use_MethodFilter_for_query(query):
     query_after = []
     for q in query:
@@ -244,12 +289,9 @@ def use_MethodFilter_for_query(query):
     return query_after
 
 def use_TypeFilter_for_query(query):
-    print(f"wtfwtf{MealTypeFilter}")
     if MealTypeFilter is None:
         return query
     else:
-        
-        print("????")
         query_after = []
         for q in query:
             print(f"type : {q.meal_type}")
@@ -284,11 +326,25 @@ def sort_query(query):
 #do the rest for each filter when search input have been changed
 def reset_all():
     global IngredientFilter
+    global IngredientExclude
     global searchInput
     global SortBy
     global MethodFilter
     global MealTypeFilter
     IngredientFilter.clear()
+    IngredientExclude.clear()
     MethodFilter.clear()
     MealTypeFilter = None
     SortBy = None
+
+def generate_include_contents():
+    Contents = ""
+    for i in IngredientFilter:
+        Contents += (f"<< {i} ")
+    return Contents
+
+def generate_exclude_contents():
+    Contents = ""
+    for i in IngredientExclude:
+        Contents += (f"<< {i} ")
+    return Contents

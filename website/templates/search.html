@@ -48,7 +48,6 @@
         <!-- First nav bar to hold content to the left-->
         <form class="navbar-nav" method="POST">
           <a class="navbar-brand" href="#">  Activated Filters:{{contents}}</a>
-          <button class="btn btn-sm btn-outline-secondary" type="submit" name="clear" id = "clear">Clear</button>  
         </form>
 
 
@@ -209,6 +208,82 @@
     </div>
   </nav>
 
+
+
+  <!-- Our navbar2, for ingredients only -->
+  <nav class="navbar navbar-light navbar-expand-sm" style="background-color: #e3f2fd;">
+    
+    <!-- Creates a button for navbar when the screen is small.-->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbar"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Container to hold content in the middle-->
+    <div class="container">
+      <!-- Wrapper for toggle (mobile) and desktop view-->
+      <div class="collapse navbar-collapse" id="navbar">
+        <!-- First nav bar to hold content to the left-->
+        <form class="navbar-nav" method="POST">
+          <a class="navbar-brand" href="#">Ingredients Include:{{include_ingreList}}     </a>
+          <a class="navbar-brand" href="#">Ingredients Exclude: {{exclude_ingreList}}</a>
+          <button class="btn btn-sm btn-outline-secondary" type="submit" name="clear" id = "clear">Clear All</button>  
+        </form>
+
+
+
+
+
+
+        <!-- Second navbar to move content to the right-->
+        <div class="navbar-nav ml-auto">
+            <!-- Dropdown1 for ingredient -->
+            <li class="nav-item dropdown">
+                <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="Ingredient"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >
+                Ingredient
+                </a>
+                <div
+                class="dropdown-menu"
+                aria-labelledby="Ingredient"
+                >
+					<div class = "container">
+						<form method="POST"  action="/search_result" >
+              <input class="form-control me-2" 
+              type="search" 
+              placeholder="include" 
+              aria-label="include"
+              id="include"
+              name="include"
+              autocomplete="on">
+              <button class="btn btn-outline-success" type="submit" name = "include_add" id = "include _add">Add</button>
+              <hr>
+              <input class="form-control me-2" 
+              type="search" 
+              placeholder="exclude" 
+              aria-label="exclude"
+              id="exclude"
+              name="exclude"
+              autocomplete="on">
+              <button class="btn btn-outline-success" type="submit" name = "exclude_add" id = "exclude _add">Add</button>
+						</form>
+					</div>
+				</div>
+            </li>
+		</div>
+      </div>
+    </div>
+  </nav>
 
 
   <div class="container"></div>
