@@ -89,19 +89,25 @@ def search_result():
 
 
         #ingredient search filter
+        button_include = request.form.get('include_add')
+        button_exclude = request.form.get('exclude_add')
         ingre_include = request.form.get('include')
         ingre_exclude = request.form.get('exclude')
-        if ingre_include is not None:
+        if button_include is not None:
             #add ingredient include filter
             print(ingre_include)
             if len(ingre_include) > 0:
                 #add to ingredient filter list
                 IngredientFilter.append(ingre_include)
-        if ingre_exclude is not None:
+            else:
+                flash("Ingredient Input can't be empty", category='error')
+        if button_exclude is not None:
             #add ingre exclude
-            print(ingre_exclude)
+            print(f"ingre_exclude {ingre_exclude}")
             if len(ingre_exclude) > 0:
                 IngredientExclude.append(ingre_exclude)
+            else:
+                flash("Ingredient Exclude can't be empty", category='error')
 
 
 
