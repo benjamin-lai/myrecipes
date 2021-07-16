@@ -1,0 +1,20 @@
+<!-- Overrides base.html -->
+{% extends "base.html" %}
+<!-- Overrides tab name-->
+{% block title %}Please Login{% endblock %} {% block content%}
+<!-- Display login related content, will change later card form -->
+<br />
+<section class="container-fluid">
+  <section class="row justify-content-center">
+    <!-- Shadow-->
+    <div class="shadow p-3 mb-5 bg-white rounded" style="width: 45rem">
+      <div class="card-body" align="center">
+        <h3>MyRecipe</h3>
+        <h5>You do not have access to this! Please login to continue.</h5>
+        <hr />
+        <a href="/login"><button class="btn btn-primary">Login</button></a>
+      </div>
+    </div>
+  </section>
+</section>
+{% endblock %}
