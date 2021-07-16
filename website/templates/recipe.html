@@ -143,6 +143,36 @@
   </tr>
   {% endfor %}
 </div>
+<br><br><br><br>
+
+
+<!-- Similar recipes to the one that is currently being looked at -->
+<div class="jumbotron" style="width: 100%">
+  <div class="container">
+    <h1>Similar Recipes</h1>
+
+    {% for res in res %}
+        <tr>
+          <td>
+            
+            <div class="feed_zoom" style="width: 100px; float:left; height:100px; margin:10px">
+              <a href="/recipe.{{res[2]}}.{{res[0]}}">
+                <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{res[3]}}" class="feed_image">
+              </a>
+              <p style="font-size:9px; text-align:center;">{{res[2]}}</p>
+            </div>
+          </td>
+        </tr>
+
+      {% endfor %}
+    <br><br><br><br>
+  </div>
+</div>
+
+
+    
+      
+
 
 <!-- This entire section is dedicated to comments -->
 <div class="container">
@@ -184,5 +214,9 @@
       {% endfor %}
     </ul>
 
+
 </div>
+
+
+
 {% endblock %}
