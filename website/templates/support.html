@@ -20,8 +20,8 @@
           <label><b>Email Address: </b> {{ user.email }}</label>
           <hr />
 
-          <form method="POST">
-            <label><b>Topic</b></label>
+          <form method="POST" enctype="multipart/form-data">
+            <h4>Topic</h4>
             <br />
             <select
               class="form-select form-select-lg mb-3"
@@ -38,8 +38,21 @@
             </select>
             <br />
             <br />
+
+            <label for="files" class="form-label"
+              >Multiple files input example</label
+            >
+            <input
+              class="form-control"
+              type="file"
+              id="files"
+              name="files"
+              multiple
+            />
+            <br />
+
             <div class="form-group">
-              <label for="email-body"><b>Comment</b></label>
+              <h4>Comment</h4>
               <textarea
                 class="form-control"
                 id="email-body"
