@@ -4,36 +4,161 @@
 {% block title %}Recipe{% endblock %}
 {% block content %}
 <head>
-    <script src="{{ url_for('static',filename = 'Recipe/Like.js')}}"></script>
-    <style>
-      ul,li{ padding:0; margin:0; overflow:hidden;}
-      li{ list-style:none;}
-      img{ border:0;}
-      .box{ width:4540px;}
-      .box li{ float:left; width:150px; height:150px; margin-right:180px;}
-      </style>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">    
+  <script src="{{ url_for('static',filename = 'Recipe/Like.js')}}"></script>
+  <style>
+    .container button{
+      margin-right: 0px;
+    }
+
+    .jumbotron {
+    margin-left: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    }
+    .wrap{
+    height: 180px;
+    width:2000px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    }
+
+    .text{
+      height: 20px;
+      width:300px;
+      overflow: hidden;
+      margin-bottom: 25px;
+    }
+
+    .wrap img{
+      display: block;float: left;margin-right: 190px;
+    }
+
+    .text div{
+      display: block;float: left;margin-right: 30px;
+    }
+
+    .sidebar {
+    height: 800px;
+    width: 300px;
+    
+    top: 0px;
+    float: right;
+    margin-top: 300px;
+    padding-top: 10px;
+    background-color: rgb(247, 247, 244);
+    }
+
+    .sidebar div {
+    padding: 10px;
+    font-size: 24px;
+    display: block;
+    align-items: center;
+    }
+
+    .sidebar div img{
+      width :281px;
+      height:180px;
+      object-fit:cover;
+    }
+
+    .body-text {
+    margin-right: 150px;
+    font-size: 18px;
+    text-align: "center";
+    }
+
+    .img-fit{
+    width: 1100px;
+    height: 500px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+
+    }
+    
+    .img-fit img{
+    width:100%;
+    height: 100%;
+    object-fit:cover; 
+    }
+
+    .atmiddle{
+      
+      margin-left: 100px;
+    }
+
+    .atmiddle img{
+      object-fit: cover;
+    }
+
+    .checked {
+      color: orange;
+    }
+
+    .mid{
+      width: 560px;
+      text-align: left;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 20px;
+    }
+
+    .text_mid_step{
+      width: 760px;
+      text-align: left;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 40px;
+    }
+
+
+  </style>
+
 </head>
 <!--content of recipe-->
 <body>
-  <div class="jumbotron">
-    <div class="container">
-      <p style="color:blue;">Meal Type : {{meal_type}}</p>
-      <h1>{{RecipeName}}</h1>
-      <p>id : {{recipe_id}}</p>
-      <h6>
-      Cooking methods:
-      </h6>
+  
+  <!--cover photo-->
+  <div class = "img-fit">
+    <img
+    class="w3-round"
+    src="{{image1}}"
+  />
+  </div>
+  
+  <!--sidebar-->
+  <div class="sidebar">
+    <div style = "text-align: center;"><h4>More  delicious for you</h4></div>
+    <div>
+      <img
+        class= "w3-card-4"
+        src="{{image1}}"
 
-      {% for method in methods %}
-      <tr>
-        <td>
-          <p class="card-text"style="color:DarkOrange;">{{method.method}}</p>
-        </td>
-      </tr>
-      {% endfor %}
-      <br />
+      />
+      <div style = "text-align: center;"><h4>Testing  Reco 1</h4></div>
+    </div>
+    <div>
+      <img
+          class="w3-card-4"
+          src="{{image1}}"
+        />
+        Testing  Reco 2
+    </div>
+    <div>
+      <img
+      class="w3-card-4"
+      src="{{image1}}"
+    />
+      Testing  Reco 3
     </div>
   </div>
+  
+  <!--title-->
+  <div class="jumbotron">
+    
+    <div class="container">
+    <!--action buttons-->
+    <div>
       <form action="edit recipe" method="POST">
         <button class="btn btn-success pull-right" type="submit" >Edit</button>
       </form> 
@@ -41,117 +166,132 @@
       <form action="Delete recipe " method="POST">
         <button class="btn btn-success pull-right" type="submit">Delete</button>
       </form>
-
-
-      <div class="row"></div>
-      <div class="row">
-        <div class="col-md-6"></div>
-        <div class="col-md-6"></div>
+    </div>
+      <h1 style="font-size:88px;">{{RecipeName}}</h1>
+        
+      <div class = "text">
+        <div><p style="color:blue;">Meal Type : {{meal_type}}</p></div>
+        <div><h8>id : {{recipe_id}}</h8></div>
       </div>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-4">
-            
-            <img
-                  class="rounded-circle account-img"
-                  src="{{image1}}"
-                  width="200"
-                  height="200"
-                />
-            <h2>Star Rating</h2>
-            
-            <link href=.rating-list li {
-              float: right;
-              color: #ddd;
-              padding: 10px 5px;
-            }
-            
-            .rating-list li:hover,
-            .rating-list li:hover ~ li {
-              color: #ffd700;
-            }
-            
-            .rating-list {
-              display: inline-block;
-              list-style: none;
-            } rel="stylesheet" />
-            
-
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star checked"></span>
-            <span class="fa fa-star"></span>
-            <span class="fa fa-star"></span>
-            
-            <!-- Like and disclick buttons with their associated counter -->
-            <div class="row">
-              <div class="col">
-                <button type="button" class="btn btn-primary" onClick="addLike({{ recipe_id }})">Like!</button>
-                {{ recipe.num_of_likes }}
-              </div>
-              <div class="col">
-                <button type="button" class="btn btn-primary" onClick="addDislike({{ recipe_id }})">Dislike!</button>
-                {{ recipe.num_of_dislikes }}
-              </div>
-            </div>
-            
-
-
-            <html>
-              <head>
-              <!-- Font Awesome Icon Library -->
-                <style>
-              .checked {
-                color: orange;
-              }
-              </style>
-              </head>
-              <body>
-              
-              
-
-              </body>
-              </html>
-          </div>
-          <div> 
-            <h3 style="margin-top:40px">Description</h3>
-            <p class="text-secondary">{{Descriptions}}</p>
-          </div>
+      Cooking methods:
+      </h6>
+      <div class = "text">
+        {% for method in methods %}
+        <div>
+          <p class="card-text"style="color:DarkOrange;">{{method.method}}</p>
         </div>
+        {% endfor %}
       </div>
-      <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
-      <div> 
-        <h3 style="margin-top:40px", style="margin-left:40px">Ingredients</h3>
-        <p class="text-secondary">{{MyIngredient}}</p>
+    </div>
+  </div>
+  
+  
+  <!--user image, description, rating, likes, Ingredients-->
+  <div class="container">
+    <div>
+      <img
+      class="rounded-circle account-img"
+      src="{{image1}}"
+      width="200"
+      height="200"
+      />
+      
+      <span class="mid">
+        <h3>Description</h3>
+        {{Descriptions}}
+      </span>
+    </div>
+    <h2 style="margin-left: 30px;">UserName</h2>
+
+    <!--star rating begin-->
+    <link href=.rating-list li {
+      float: right;
+      color: #ddd;
+      padding: 10px 5px;
+    }
+    
+    .rating-list li:hover,
+    .rating-list li:hover ~ li {
+      color: #ffd700;
+    }
+    
+    .rating-list {
+      display: inline-block;
+      list-style: none;
+    } rel="stylesheet" />
+    
+    <div style = "margin-left: 30px;">
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star checked"></span>
+      <span class="fa fa-star"></span>
+      <span class="fa fa-star"></span>
+    </div>
+    <!--star rating end-->
+    
+    <!-- Like and disclick buttons with their associated counter -->
+    <div class="row">
+      <div class="col">
+        <button type="button" class="btn btn-primary" onClick="addLike({{ recipe_id }})">Like!</button>
+        {{ recipe.num_of_likes }}
+        <button type="button" class="btn btn-primary" onClick="addDislike({{ recipe_id }})">Dislike!</button>
+        {{ recipe.num_of_dislikes }}
       </div>
+    </div>
+    
+    <div> 
+      <h3 style="margin-top:40px", style="margin-left:40px">Ingredients</h3>
+      <p class="text-secondary">{{MyIngredient}}</p>
+    </div>
+
+
+    <div>
+      {% for des_step in query %}
+        <td>
+          <h3 class="card-text">Step.{{des_step.step_no}}</h3>
+        </td><br>
+        <div class = "atmiddle">
+          <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{des_step.photo}}" class="w3-card-4" width = "600" height = "450">
+        </div><br>
+        <div> 
+          <p class="text_mid_step">{{des_step.step_comment}}</p>
+        </div>
+      {% endfor %}
+    </div>
+  
+  </div>     
 </body>
 
-<view >
-    <view style="font-size:12px;color:#aaa;text-align:center;margin-top:5px;">User Name</view>        
-</view>
+<br><br><br><br>
 
-<br>
-    <image src = "{{ url_for('static',filename = 'images/2_09.png')}}">
-    <p>user's information is here</p>
-</br >
 
-<div class="col-md-4" align = "left">
-  <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+<!-- Similar recipes to the one that is currently being looked at -->
+<div class="jumbotron" style="width: 100%">
+  <div class="container">
+    <h1>Similar Recipes</h1>
 
-  {% for des_step in query %}
-  <tr>
-    <td>
-      <p class="card-text"style="color:blue;">Step.{{des_step.step_no}}</p>
-    </td>
-    <td>
-      <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{des_step.photo}}" class="img-fluid rounded-start" alt="...">
-    </td>
-    <td>
-      <p class="card-text">{{des_step.step_comment}}</p>
-    </td>
-  </tr>
-  {% endfor %}
+    {% for res in res %}
+        <tr>
+          <td>
+            
+            <div class="feed_zoom" style="width: 100px; float:left; height:100px; margin:10px">
+              <a href="/recipe.{{res[2]}}.{{res[0]}}">
+                <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{res[3]}}" class="feed_image">
+              </a>
+              <p style="font-size:9px; text-align:center;">{{res[2]}}</p>
+            </div>
+          </td>
+        </tr>
+
+    {% endfor %}
+    <br><br><br><br>
+  </div>
 </div>
+
+
+    
+      
+
 
 <!-- This entire section is dedicated to comments -->
 <div class="container">
@@ -193,24 +333,24 @@
       {% endfor %}
     </ul>
 
+  <!--share and download-->
   <hr>
-    <ul class="box">
-        <a class= "facebook" href= "https://www.facebook.com/sharer.php?text=Amazing recipes I found in MyRecipe [{{RecipeName}}]&u=http://127.0.0.1:5000/recipe.{{RecipeName}}.{{recipe_id}}" target= "_blank" id= "J-share-facebook" >
-          <li><img border="0" align="left" src="{{ url_for('static',filename = 'images/facebook1.png')}}" alt="facebook" height="150" width="150"></li>
-        </a>
-        <a href="https://twitter.com/share?text=Amazing recipes I found in MyRecipe [{{RecipeName}}]    &url=http://127.0.0.1:5000/recipe.{{RecipeName}}.{{recipe_id}}" target="_blank"></li>
-          <li><img border="0" align="right" src="{{ url_for('static',filename = 'images/twitter.png')}}" alt="twitter" height="150" width="150">
-        </a>
-        <a href="http://service.weibo.com/share/share.php?appkey=&title=Amazing recipes I found in MyRecipe [{{RecipeName}}]&url=http://127.0.0.1:5000/recipe.{{RecipeName}}.{{recipe_id}}" target="_blank">
-          <li><img border="0" align="center" src="{{ url_for('static',filename = 'images/weibo2.png')}}" alt="facebook" height="140" width="140"></li>
-        </a>
-        <a href="http://127.0.0.1:5000/recipe.{{RecipeName}}.{{recipe_id}}" download = "MeRecipe_{{RecipeName}}">
-          <li><img src="{{ url_for('static',filename = 'images/download.png')}}" width="130" height="130" alt="" /></li>
-        </a>
-    </ul>
-
-  
-  
-
+  <div class = "wrap">
+    <a class= "facebook" href= "https://www.facebook.com/sharer.php?text=Amazing recipes I found in MyRecipe [{{RecipeName}}]&u=http://127.0.0.1:5000/recipe.{{RecipeName}}.{{recipe_id}}" target= "_blank" id= "J-share-facebook" >
+      <img border="0"  src="{{ url_for('static',filename = 'images/facebook1.png')}}" alt="facebook" height="150" width="150">
+    </a>
+    <a href="https://twitter.com/share?text=Amazing recipes I found in MyRecipe [{{RecipeName}}]    &url=http://127.0.0.1:5000/recipe.{{RecipeName}}.{{recipe_id}}" target="_blank">
+      <img border="0"  src="{{ url_for('static',filename = 'images/twitter.png')}}" alt="twitter" height="150" width="150">
+    </a>
+    <a href="http://service.weibo.com/share/share.php?appkey=&title=Amazing recipes I found in MyRecipe [{{RecipeName}}]&url=http://127.0.0.1:5000/recipe.{{RecipeName}}.{{recipe_id}}" target="_blank">
+      <img border="0"  src="{{ url_for('static',filename = 'images/weibo2.png')}}" alt="facebook" height="140" width="140">
+    </a>
+    <a href="http://127.0.0.1:5000/recipe.{{RecipeName}}.{{recipe_id}}" download = "MeRecipe_{{RecipeName}}">
+      <img src="{{ url_for('static',filename = 'images/download.png')}}" width="160" height="150" alt="" />
+    </a>
+  </div>
 </div>
+
+
+
 {% endblock %}
