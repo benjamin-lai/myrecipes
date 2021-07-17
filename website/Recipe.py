@@ -417,7 +417,7 @@ def create_recipe():
                 no_list.append(int(o.step_no))
             print(no_list)
             if Savelist["Step_number"] != None and (int(Savelist["Step_number"]) in no_list) and (button4 != None):
-                flash("Aleady complete this step") 
+                flash("Aleady complete this step", 'error') 
             elif Savelist["Step_number"] and Savelist["Step_Des"] and Savelist["image_name2"] and (button4 != None):
                 
                 # we can begin to add steps
@@ -432,14 +432,14 @@ def create_recipe():
                 db.session.commit()             # Commits changes
                 flash(f"Added comment at Step.{StepNo}!")
             if (Savelist["Step_number"] != -1) and Savelist["Step_Des"] and (Savelist["image_name2"] == None) and (button4 != None):
-                flash(f"Please upload photo for steps!")
+                flash(f"Please upload photo for steps!", 'error')
             if (Savelist["Step_number"] == -1) and Savelist["Step_Des"] and (Savelist["image_name2"] == None) and (button4 != None):
-                flash(f"Please add Step Number!")
+                flash(f"Please add Step Number!", 'error')
             if (Savelist["Step_number"] != -1) and (Savelist["Step_Des"] == None) and (Savelist["image_name2"] == None) and (button4 != None):
-                flash(f"Please add Step Description!")
+                flash(f"Please add Step Description!", 'error')
 
         else:
-            flash(f"Please create the recipe first!")
+            flash(f"Please create the recipe first!", 'error')
 
 
         
@@ -449,7 +449,7 @@ def create_recipe():
             print(Savelist["RecipeId"])
             recipe_data = Recipes.query.filter_by(id = recipe_id).first()
             if recipe_data.photo == None:
-                flash(f"Please upload photo for recipe")
+                flash(f"Please upload photo for recipe", 'error')
             else:
                 #get the latest id of this recipeName
                 #obj = Recipes.query.filter_by(name= Savelist["RecipeName"]).all()
@@ -491,6 +491,20 @@ def create_recipe():
                 print("reset2")
                 print(IngredientList)
                 #IngredientList.clear()
+                Savelist["Serving"] = None
+                Savelist["RecipeName"] = None
+                Savelist["RecipeId"] = None
+                Savelist["Dosage"] = None
+                Savelist["UnitName"] = None
+                Savelist["MyIngredient"] = None
+                Savelist["Description"] = None
+                Savelist["image_datas1"] = None
+                Savelist["image_datas2"] = None
+                Savelist["Step_number"] = -1   #step number can't be None
+                Savelist["Step_Des"] = None
+                Savelist["image_name2"] = None
+                Savelist["image_name1"] = None
+
                 return redirect(url_for('recipes.view_recipe',recipeName = recipe_data.name,recipeId = recipe_data.id ))
                 """return render_template("recipe.html", user=current_user, Descriptions=Description, 
                     RecipeName = Savelist["RecipeName"], MyIngredient = Contents,IngreContents = Contents, 
@@ -557,7 +571,11 @@ def edit_recipe():
     print(recipe_id)
     recipe = Recipes.query.filter_by(id=recipe_id).first()
         
-        #find recipe success
+    #find recipe success
+    if recipe.creates != current_user.id:
+        flash("You are not the owner of this recipe", 'error')
+        return redirect(url_for('recipes.view_recipe',recipeName = recipe.name,recipeId = recipe.id ))
+
     Contents = generate_ingreStr_by_recipeId(recipe.id)
     #RecipeImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe.photo})
     #fetch steps from db
@@ -944,24 +962,49 @@ def view_recipe(recipeName, recipeId):
 def delete_recipe():
     #delete the recipe using recipeId
     recipe_id = Savelist["RecipeId"]
+
+    recipe = Recipes.query.filter_by(id=recipe_id).first()
+        
+    #find recipe success
+    if recipe.creates != current_user.id:
+        flash("You are not the owner of this recipe", 'error')
+        return redirect(url_for('recipes.view_recipe',recipeName = recipe.name,recipeId = recipe.id ))
     #delete ingredient
     ingre = Ingredient.query.filter_by(recipe_id=recipe_id).all()
-    for i in ingre:
-        if i.recipe_id == recipe_id:
-            db.session.delete(i)
-    db.session.commit()
+    if ingre != None:
+        for i in ingre:
+            if i.recipe_id == recipe_id:
+                db.session.delete(i)
+        db.session.commit()
     #delete steps
     steps = Recipestep.query.filter_by(recipe_id=recipe_id).all()
-    for s in steps:
-        if s.recipe_id == recipe_id:
-            db.session.delete(s)
-    db.session.commit()
+    if steps != None:
+        for s in steps:
+            if s.recipe_id == recipe_id:
+                db.session.delete(s)
+        db.session.commit()
+    #delete history
+    historys = History.query.filter_by(recipe=recipe_id).all()
+    if historys != None:
+        for s in historys:
+            if s.recipe == recipe_id:
+                db.session.delete(s)
+        db.session.commit()
+    #delete Method
+    methods = Method.query.filter_by(recipe_id=recipe_id).all()
+    if methods != None:
+        for s in methods:
+            if s.recipe_id == recipe_id:
+                db.session.delete(s)
+        db.session.commit() 
     #delete recipe
     recipe = Recipes.query.filter_by(id=recipe_id).first()
-    print(recipe.id)
-    db.session.delete(recipe)
-    db.session.commit()
-    return render_template("delete_recipe.html",user = current_user)
+    if recipe != None:
+        print(recipe.id)
+        db.session.delete(recipe)
+        db.session.commit()
+    flash("Delete successfully")
+    return redirect(url_for('views.home'))
 
 
 
