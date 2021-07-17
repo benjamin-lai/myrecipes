@@ -21,47 +21,54 @@
 
           <!-- Display current email address -->
           <label><b>Email Address: </b> {{ user.email }}</label>
+
           <hr />
           <hr />
+
+          <!-- Trending Recipes -->
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value="1"
+            id="trending_checkbox"
+            name="checkbox"
+          />
+          <label class="form-check-label" for="trending_checkbox">
+            <b>Trending Recipes</b>
+          </label>
+          <p>Get a list of trending recipes once every week!</p>
+          <hr />
+
+          <!-- Subcribed Users -->
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value="2"
+            id="subscribed_checkbox"
+            name="checkbox"
+          />
+          <label class="form-check-label" for="subscribed_checkbox">
+            <b>Subscribed User</b>
+          </label>
+          <p>Get updates on recent posts that your subscribed users post!</p>
+          <hr />
+          <br />
 
           <form method="POST">
-            <!-- Trending Recipes -->
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                value="1"
-                id="trending_checkbox"
-                name="checkbox"
-              />
-              <label class="form-check-label" for="trending_checkbox">
-                <b>Trending Recipes</b>
-              </label>
-              <p>Get a list of trending recipes once every week!</p>
-            </div>
-            <hr />
-
-            <!-- Subcribed Users -->
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                value="2"
-                id="subscribed_checkbox"
-                name="checkbox"
-              />
-              <label class="form-check-label" for="subscribed_checkbox">
-                <b>Subscribed User</b>
-              </label>
-              <p>
-                Get updates on recent posts that your subscribed users post!
-              </p>
-            </div>
-            <hr />
-            <br />
-
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button
+              type="submit"
+              class="btn btn-success"
+              onClick="subscribeToNewsletters()"
+            >
+              Subscribe
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              onClick="unsubscribeToNewsletters()"
+            >
+              Unsubscribe
+            </button>
           </form>
         </div>
       </div>

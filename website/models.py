@@ -144,7 +144,6 @@ class Codes(db.Model):
 
 class Newsletters(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    subscribed = db.Column(db.Boolean)           # This is the option to subscribe to newsletters for users.
     trending = db.Column(db.Boolean)
     subscribed_to = db.Column(db.Boolean)       # This is for subscribed to 
     own = db.Column(db.Integer, db.ForeignKey('users.id'))

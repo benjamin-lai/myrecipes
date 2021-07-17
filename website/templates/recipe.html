@@ -91,6 +91,17 @@
               <li><i class="fa fa-star gray"></i></li>
             </ul>
             
+            <!-- Like and disclick buttons with their associated counter -->
+            <div class="row">
+              <div class="col">
+                <button type="button" class="btn btn-primary" onClick="addLike({{ recipe_id }})">Like!</button>
+                {{ recipe.num_of_likes }}
+                <button type="button" class="btn btn-primary" onClick="addDislike({{ recipe_id }})">Dislike!</button>
+                {{ recipe.num_of_dislikes }}
+              </div>
+            </div>
+
+
             <html>
               <head>
               <!-- Font Awesome Icon Library -->
@@ -147,5 +158,44 @@
   {% endfor %}
   
 </div>
+<!-- This entire section is dedicated to comments -->
+<div class="container">
+    <hr>
+    <h2>Comments</h2>
+    <!-- Displays the ability to comment when the user is logged in-->
+    {% if current_user.is_authenticated %}
+      <div align="center">
+        <button type="button" class="btn btn-primary" onClick="createComment2({{ recipe_id }})">Post a new recipe!</button>
+      </div>
+    {% endif %}
+
+    <!-- Displays the list of comments for the recipe-->
+    <ul class="list-group list-group-flush" id="reviews">
+      <!-- Iterate through comments for the recipe and display associated name and comment. -->
+      {% for comment_display_name, review in comments %}
+      {{ comment_display_name }}
+      <li class="list-group-item">
+        
+
+        <!-- Current displays information off the screen if there is too much, need to fix it later-->
+        {{ review.comment }}
+
+        <!-- Only the person who made the comment can modify it -->
+          {% if current_user.id == review.owns %}
+            <button type="button" class="float-right" onClick="modifyComment({{ review.comment_id }})">
+              Modify
+            </button>
+          {% endif %}
+          
+        <!-- Displays the abiltiy to delete comments if either they are the recipe owner or person who made the comment -->
+        {% if creates == current_user.id or current_user.id == review.owns %}
+          <button type="button" class="close" onClick="deleteComment({{ review.comment_id }})">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
 
 {% endblock %}

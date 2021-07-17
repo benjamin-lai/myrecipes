@@ -16,3 +16,11 @@ This week I worked on the environment by watching tutorials and reading a bunch 
 to set up the database, back-end and front-end. A tiring process which was rewarding as I've never done this before. 
 The goal before the progressive demo is to create a minimal viable product, which i believe our sprint 1 will be good for.
 After, the demo we discussed about the retrospectives, and also talked about the next sprint, in that who is responsibile for which parts.
+
+Week 5
+Finished up sprint 1, finish the demo, started on retrospective.
+
+Week 6
+Finished retrospective, discussed all important aspects as a group. Completed review.
+
+Week 7

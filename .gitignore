@@ -1,1 +1,5 @@
  */__pycache__/*
+myenv
+.vscode
+website/__pycache__
+.gitignore
