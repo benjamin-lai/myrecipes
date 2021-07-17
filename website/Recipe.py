@@ -721,7 +721,11 @@ def edit_recipe():
                     Step_Number = 0
             else:
                 Step_Number = 0
-            return render_template("edit_recipe.html", user=current_user, IngreContents = Contents, recipe = recipe, Step_Number = (Step_Number+1))
+            
+            ingredient = Ingredient.query.filter_by(recipe_id=Savelist["RecipeId"]).all()
+            for i in ingredient:
+                print(i.ingredient)
+            return render_template("edit_recipe.html", user=current_user, IngreContents = Contents, recipe = recipe, Step_Number = (Step_Number+1), ingredient = ingredient)
 
     else:
         Step_No = None
@@ -737,7 +741,10 @@ def edit_recipe():
                 Step_Number = 0
         else:
             Step_Number = 0
-        return render_template("edit_recipe.html", user=current_user, IngreContents = Contents, recipe = recipe, Step_Number = (Step_Number+1))
+        ingredient = Ingredient.query.filter_by(recipe_id=Savelist["RecipeId"]).all()
+        for i in ingredient:
+            print(i.ingredient)
+        return render_template("edit_recipe.html", user=current_user, IngreContents = Contents, recipe = recipe, Step_Number = (Step_Number+1), ingredients = ingredient)
         #return render_template("create_recipe.html", user=current_user)
 
     
