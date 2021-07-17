@@ -51,7 +51,18 @@
         <div class="collapse navbar-collapse" id="navbar">
           <!-- First nav bar to hold content to the left-->
           <div class="navbar-nav">
-            <a class="navbar-brand" href="/">MyRecipe</a>
+            <a class="myrecipes" href="/">
+              <li>
+                <img
+                  border="0"
+                  align="left"
+                  src="{{ url_for('static',filename = 'images/my-recipes.svg')}}"
+                  alt="facebook"
+                  height="40"
+                  width="100"
+                />
+              </li>
+            </a>
           </div>
 
           <!-- Second navbar to move content to the right-->
@@ -103,12 +114,7 @@
                 <a class="dropdown-item" id="profile" href="/profile/my"
                   >Profile</a
                 >
-                <a
-                  class="dropdown-item"
-                  id="newsletter"
-                  href="/manage_newsletters"
-                  >Newsletters</a
-                >
+
                 <a class="dropdown-item" id="newsfeed" href="/newsfeed"
                   >Personalised Newsfeed</a
                 >
@@ -119,10 +125,26 @@
                 <a class="dropdown-item" id="history" href="/history"
                   >History</a
                 >
+                <a
+                  class="dropdown-item"
+                  id="Trending Section"
+                  href="/Trending Section"
+                  >Trending Section</a
+                >
 
+                <!-- Newsletter and support tabs -->
+                <div class="dropdown-divider"></div>
+                <a
+                  class="dropdown-item"
+                  id="newsletter"
+                  href="/manage_newsletters"
+                  >Newsletters</a
+                >
                 <a class="dropdown-item" id="support" href="/support"
                   >Support</a
                 >
+
+                <!-- Logout option -->
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" id="logout" href="/logout">Logout</a>
               </div>

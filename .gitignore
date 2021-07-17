@@ -3,3 +3,4 @@ myenv
 .vscode
 website/__pycache__
 .gitignore
+rec.dump

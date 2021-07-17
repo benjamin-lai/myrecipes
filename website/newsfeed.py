@@ -34,4 +34,3 @@ def Newsfeed_Likes():
     query = Newsfeeds.query.filter_by(contains=current_user.id).order_by((Newsfeeds.likes-Newsfeeds.dislikes).desc()).all()
     
     return render_template("newsfeed.html", user=current_user, query=query, type="likes")
-

@@ -163,5 +163,3 @@ def update_like_status(recipe, new_status, likes):
             likes.like_status = 0               # Update like_status to new_status
 
     db.session.commit()
-
-    

@@ -46,9 +46,9 @@
       <!-- Wrapper for toggle (mobile) and desktop view-->
       <div class="collapse navbar-collapse" id="navbar">
         <!-- First nav bar to hold content to the left-->
-        <div class="navbar-nav">
-          <a class="navbar-brand" href="#">Activated Filters:{{contents}}</a>
-        </div>
+        <form class="navbar-nav" method="POST">
+          <a class="navbar-brand" href="#">  Activated Filters:{{contents}}</a>
+        </form>
 
 
 
@@ -210,6 +210,82 @@
 
 
 
+  <!-- Our navbar2, for ingredients only -->
+  <nav class="navbar navbar-light navbar-expand-sm" style="background-color: #e3f2fd;">
+    
+    <!-- Creates a button for navbar when the screen is small.-->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbar"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Container to hold content in the middle-->
+    <div class="container">
+      <!-- Wrapper for toggle (mobile) and desktop view-->
+      <div class="collapse navbar-collapse" id="navbar">
+        <!-- First nav bar to hold content to the left-->
+        <form class="navbar-nav" method="POST">
+          <a class="navbar-brand" href="#">Ingredients Include:{{include_ingreList}}     </a>
+          <a class="navbar-brand" href="#">Ingredients Exclude: {{exclude_ingreList}}</a>
+          <button class="btn btn-warning" type="submit" name="clear" id = "clear">Clear All</button>  
+        </form>
+
+
+
+
+
+
+        <!-- Second navbar to move content to the right-->
+        <div class="navbar-nav ml-auto">
+            <!-- Dropdown1 for ingredient -->
+            <li class="nav-item dropdown">
+                <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="Ingredient"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >
+                Ingredient
+                </a>
+                <div
+                class="dropdown-menu"
+                aria-labelledby="Ingredient"
+                >
+					<div class = "container">
+						<form method="POST"  action="/search_result" >
+              <input class="form-control me-2" 
+              type="search" 
+              placeholder="include" 
+              aria-label="include"
+              id="include"
+              name="include"
+              autocomplete="on">
+              <button class="btn btn-success" type="submit" name = "include_add" id = "include _add">Add</button>
+              <hr>
+              <input class="form-control me-2" 
+              type="search" 
+              placeholder="exclude" 
+              aria-label="exclude"
+              id="exclude"
+              name="exclude"
+              autocomplete="on">
+              <button class="btn btn-success" type="submit" name = "exclude_add" id = "exclude _add">Add</button>
+						</form>
+					</div>
+				</div>
+            </li>
+		</div>
+      </div>
+    </div>
+  </nav>
+
+
   <div class="container"></div>
 
   <!-- Bootstrap. All the javascript required for the css components to work -->
@@ -238,50 +314,39 @@
 </html>
 
 <h1 align="center">{{message}}</h1>
-<h1>{{search_input}}</h1>
   <!--for loop to add card, copied from recipe card-->
-  {% for recipe in query %}
-  <!DOCTYPE html>
-    <html>
-    <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="/{{recipe.name}}.{{recipe.id}}">
-    <style>
-    .card {
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-    width: 20%;
-    }
-
-    .card:hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-    }
-
-    .container {
-    padding: 2px 16px;
-    }
-    </style>
-    </head>
-    <body>
-
-    <h2>    </h2>
-
-    <div class="card" >
-    <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipe.photo}}" class="img-fluid rounded-start" alt="Avatar" style="width:100%">
-    <div class="card-body">
-        <h4><b>{{recipe.name}}</b></h4> 
-        <p>{{recipe.description}}</p> 
-        <h4><b>{{recipe.creator}}</b></h4>
-        <form action="recipe.{{recipe.name}}.{{recipe.id}}" method="post" align = "center">
-            <input type="submit" name="into" value="See more details" />
-        </form>
+  {% for recipes in query %}
+<tr>
+  <td>
+    <div class="card mb-3" style="max-width: 1000px;">
+      <div class="row g-0">
+        <div class="col-md-4">
+          <div class="zoom">
+            <a href="/recipe.{{recipes.name}}.{{recipes.id}}">
+              <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipes.photo}}" class="image">
+            </a>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">{{recipes.name}} </h5>
+    
+  </td>
+  <td>
+    <p class="card-text">{{recipes.description}}</p>
+  </td>
+  <td>
+        <!-- want to change thise so it displays profile based off profile_id-->
+        <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.display_name}}"> {{recipes.creator}}</a></u></small></p>
+        <a href="/recipe.{{recipes.name}}.{{recipes.id}}" class="btn btn-primary">Get the Recipe</a>
+      </div>
     </div>
-    </div>
+  </div>
+</div>
+  </td>
+</tr>
 
-    </body>
-    </html>
-  {% endfor %}
+{% endfor %}
 
-  
 </div>
 {% endblock %}

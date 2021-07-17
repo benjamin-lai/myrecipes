@@ -20,6 +20,10 @@ from sqlalchemy import func
 import base64
 import boto3
 from datetime import datetime
+import psycopg2
+from psycopg2.extensions import AsIs
+
+
 
 s3 = boto3.client('s3',
                     aws_access_key_id='AKIAQNR7WVADC7MX2ZEW',
@@ -54,6 +58,76 @@ Savelist["image_name2"] = None
 Savelist["image_name1"] = None
 Savelist["edit_ingredient"] = False
 
+
+@recipes.route('/Trending Section', methods = ['GET','POST'])
+def trending_section():
+    recipes = Recipes.query.order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
+    trending = []
+    for i in recipes:
+        if i.num_of_likes > i.num_of_dislikes:
+            trending.append(i)
+    return render_template("trending_section.html", query=trending, type="recent", meal_type = "All types")
+
+@recipes.route('/Trending Section.Starter', methods = ['GET','POST'])
+def trending_section_Starter():
+    print("Starter")
+    recipes = Recipes.query.filter_by(meal_type = "Starter").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
+    trending = []
+    for i in recipes:
+        if i.num_of_likes > i.num_of_dislikes:
+            trending.append(i)
+    return render_template("trending_section.html", query=trending, type="recent", meal_type = "Starter")
+    
+@recipes.route('/Trending Section.Main', methods = ['GET','POST'])
+def trending_section_Main():
+    print("Main")
+    recipes = Recipes.query.filter_by(meal_type = "Main").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
+    trending = []
+    for i in recipes:
+        if i.num_of_likes > i.num_of_dislikes:
+            trending.append(i)
+    return render_template("trending_section.html", query=trending, type="recent", meal_type = "Main")
+
+@recipes.route('/Trending Section.Dessert', methods = ['GET','POST'])
+def trending_section_Dessert():
+    print("Dessert")
+    recipes = Recipes.query.filter_by(meal_type = "Dessert").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
+    trending = []
+    for i in recipes:
+        if i.num_of_likes > i.num_of_dislikes:
+            trending.append(i)
+    return render_template("trending_section.html", query=trending, type="recent", meal_type = "Dessert")
+
+@recipes.route('/Trending Section.Snack', methods = ['GET','POST'])
+def trending_section_Snack():
+    print("Snack")
+    recipes = Recipes.query.filter_by(meal_type = "Snack").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
+    trending = []
+    for i in recipes:
+        if i.num_of_likes > i.num_of_dislikes:
+            trending.append(i)
+    return render_template("trending_section.html", query=trending, type="recent", meal_type = "Snack")
+
+@recipes.route('/Trending Section.Breakfast', methods = ['GET','POST'])
+def trending_section_Breakfastk():
+    print("Breakfast")
+    recipes = Recipes.query.filter_by(meal_type = "Breakfast").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
+    trending = []
+    for i in recipes:
+        if i.num_of_likes > i.num_of_dislikes:
+            trending.append(i)
+    return render_template("trending_section.html", query=trending, type="recent", meal_type = "Breakfastk")
+
+@recipes.route('/Trending Section.Drink', methods = ['GET','POST'])
+def trending_section_Drink():
+    print("Drink")
+    recipes = Recipes.query.filter_by(meal_type = "Drink").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
+    trending = []
+    for i in recipes:
+        if i.num_of_likes > i.num_of_dislikes:
+            trending.append(i)
+    return render_template("trending_section.html", query=trending, type="recent", meal_type = "Drink")
+
 @recipes.route('/history', methods = ['GET','POST'])
 def history():
     histories = History.query.filter_by(userid = current_user.id).order_by(History.last_view_time.desc()).all()
@@ -62,7 +136,77 @@ def history():
         recipes = Recipes.query.filter_by(id = i.recipe).all()
         for j in recipes:
             query.append(j)
-    return render_template("history.html", query=query, type="recent")
+    
+    
+    
+    
+    conn = psycopg2.connect(
+    database="rec", user='postgres', password='aa', host='localhost', port= '5432'
+)
+    conn.autocommit = True
+    cursor = conn.cursor()
+    # i1 is the history of the curr user joined with ingredients to see what ingredients their history has.
+    # i2 is a list of recipes that have ingredients which arent in the i1 list.
+    # i1 is joined with i2 so it can find a list of recipes which use the same ingredients or ingredients with similar names as the ones in their history, but dont contain any of the
+    # recipes that are already in their recipe, where it counts the amount of times that a recipe has the same ingredients as the previous recipes.
+    # meaning if recipe 1 and recipe 2 have 3 ingredients in common or ingredients that are similar then it will count that
+    # this list is called s1 and then unioned with another list which is basically the same as s1 but the regex is the opposite way to ensure
+    # that it takes cases that are missed by s1, ex. 'chicken' is like 'chicken wing' but 'chicken wing' is not like 'chicken'
+    # then that joined list is called s2 and that is joined with recipes to find the name and photo of the recipes, where it is order by highest to
+    # lowest count of similar ingredients, then those with highest ingredients is displayed first.
+    
+    
+    # tldr: count amount of similar ingredients of other recipes then display the ones with the highest similar ingredients.
+    sql ='''select s2.recipe_id, count(*), name, photo
+            from
+                (select * from
+                    (select * from
+                        (select distinct ingredient
+                            from history h
+                            join ingredient i on i.recipe_id = h.recipe
+                            where userid=5) i1
+                        inner join
+                            (select recipe_id, ingredient from Ingredient
+                            except
+                            
+                            select recipe_id, ingredient
+                            from history h
+                            join ingredient i on i.recipe_id = h.recipe
+                            where userid=5) i2
+                            
+                        on lower(concat('%%', i1.ingredient, '%%')) like lower(concat( '%%', i2.ingredient, '%%'))) s1     
+                union
+                    (select * from
+                        (select distinct ingredient
+                            from history h
+                            join ingredient i on i.recipe_id = h.recipe
+                            where userid=5) i1
+                        inner join
+                            (select recipe_id, ingredient from Ingredient
+                            except
+                             
+                            select recipe_id, ingredient
+                            from history h
+                            join ingredient i on i.recipe_id = h.recipe
+                            where userid=5) i2
+
+                        on lower(concat('%%', i2.ingredient, '%%')) like lower(concat( '%%', i1.ingredient, '%%')))) s2
+                
+                    
+        join recipes r 
+            on r.id = s2.recipe_id
+        group by s2.recipe_id, r.name, r.photo
+        order by count desc
+        limit 4;
+        '''
+    
+    id = str(current_user.id)
+    
+    cursor.execute(sql, (id, id))
+    res=cursor.fetchall()
+    
+    
+    return render_template("history.html", query=query, type="recent", res=res)
 
 @recipes.route('/history.<int:recipeId>', methods=['GET', 'POST'])
 def delete_history(recipeId):
@@ -181,6 +325,10 @@ def create_recipe():
             if Braising:
                 Braising = Method(recipe_id = Savelist["RecipeId"], method=Braising)
                 db.session.add(Braising)
+                db.session.commit()
+            if Stewing:
+                Stewing = Method(recipe_id = Savelist["RecipeId"], method=Stewing)
+                db.session.add(Stewing)
                 db.session.commit()
              
             methods = Method.query.filter_by(recipe_id=Savelist["RecipeId"]).first()
@@ -711,12 +859,83 @@ def view_recipe(recipeName, recipeId):
         exist_history.last_view_date = date
         db.session.commit()
     else:
-        history = History(userid = recipe.creates, recipe = recipe.id)
+        history = History(userid = current_user.id, recipe = recipe.id)
         db.session.add(history)
         db.session.commit()
+    
+    
+    
+    conn = psycopg2.connect(
+    database="rec", user='postgres', password='aa', host='localhost', port= '5432'
+)
+    conn.autocommit = True
+    cursor = conn.cursor()
+    
+    # finds similar recipes to the one currently being looked at
+    # works similarly to history similar recipes
+    # i1 is a list of ingredients except for the current recipe
+    # i2 is a list of ingredients from the current recipe
+    # join those two to get t1 to find the list of recipes that have the same ingredients
+    # then similarly done to j1 and j2 but in the opposite way for the ingredients to find any missing cases (explained above in history)
+    # then that is unioned to t1 to get t2 
+    # then join that list to recipes to get the name and photo and count how many similarities, then order from highest to lowest
+    
+    
+    sql ='''select t2.rec_id, count(*), name, photo
+            from
+            (select * from
+                (select * from
+                    (select id, recipe_id as rec_id, ingredient from Ingredient where recipe_id != %s) i1
+                    inner join
+                    (select id, recipe_id, ingredient from Ingredient where recipe_id = %s) i2
+                    on lower(concat('%%', i2.ingredient, '%%')) LIKE lower(concat('%%', i1.ingredient, '%%'))) as t1
+                union
+                (select * from
+                    (select id, recipe_id as rec_id, ingredient from Ingredient where recipe_id != %s) j1
+                    inner join
+                (select id, recipe_id, ingredient from Ingredient where recipe_id = %s) j2
+                on lower(concat('%%', j1.ingredient, '%%')) LIKE lower(concat('%%', j2.ingredient, '%%')))) as t2
+            join
+                recipes r on (r.id = t2.rec_id)
+            group by t2.rec_id, r.name, r.photo
+            order by count desc
+            limit 7;'''
+    
+    
+    id = str(recipe.id)
+    print(id)
+    
+    cursor.execute(sql, (id, id, id, id))
+    res=cursor.fetchall()
+    
+    
+    
+    #sqlalchemy attemps
+    
+    #sub = Ingredient.query.filter_by(recipe_id = recipe.id).with_entities(Ingredient.recipe_id, func.count(Ingredient.recipe_id)).order_by(Ingredient.recipe_id).group_by(Ingredient.recipe_id).all()
+    # ing = Ingredient.query.filter(Ingredient.recipe_id != recipe.id).with_entities(Ingredient.ingredient).subquery()
+    # print(ing)
+    
+    # qry = Ingredient.query.outerjoin(ing, Ingredient.ingredient==ing)
+    # print(qry)
+    # sub = Ingredient.query.filter_by(recipe_id=recipe.id).all()
+    # q = ing.union(sub)
+    
+    # print(q)
+    # que = Ingredient.query.filter_by(recipe_id = recipe.id).outerjoin(sub).all()
+    # print(que)
+    #res = sub.query(func.count(sub.recipe_id)).scalar()
+    #print(res)
+    # res = Ingredient.query.filter(Ingredient.ingredient.in_(sub)).all()
+    # for res in res:
+    #     print(res)
+    
+    
+    
+    
 
     return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
-    recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", meal_type = recipe.meal_type, methods=methods)
+    recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", meal_type = recipe.meal_type, methods=methods, res=res)
         
 
 
