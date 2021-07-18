@@ -871,6 +871,7 @@ def view_recipe(recipeName, recipeId):
     #find recipe success
     Contents = generate_ingreStr_by_recipeId(recipe.id)
     RecipeImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe.photo})
+    
     #fetch steps from db
     Steps = ""
     obj = Recipestep.query.filter_by(recipe_id = recipe.id).all()
@@ -974,13 +975,16 @@ def view_recipe(recipeName, recipeId):
     # for res in res:
     #     print(res)
     
+    #to tell which image should use for user
+    if len(get_user_image()) == 24:
+        UserImage = get_default_user_img()
+    else:
+        UserImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': get_user_image()})
     
-    
-    
-
     return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
-    recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", meal_type = recipe.meal_type, methods=methods, res=res)
-        
+    recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", 
+    meal_type = recipe.meal_type, methods=methods, res=res, UserImage = UserImage, UserName = recipe.creator)
+         
 
 
 
@@ -1139,3 +1143,12 @@ def initial():
     Savelist["color_2"] = ''
     Savelist["color_3"] = ''
     Savelist["color_4"] = ''
+#find user image by userId
+def get_user_image():
+    user = Profiles.query.filter_by(owns = current_user.id).first()
+    print(f"1 {len(user.profile_pic)}")
+    return user.profile_pic
+
+def get_default_user_img():
+    image_file = url_for('static', filename='default_user.jpg')
+    return image_file
