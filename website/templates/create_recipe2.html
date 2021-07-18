@@ -1,0 +1,215 @@
+{% extends "base.html" %} {% block title %}Create Recipe{% endblock %}
+<!-- Overwrites title-->
+{% block content %}
+<section class="container-fluid">
+  <section class="row justify-content-center">
+    <!-- Shadow-->
+    <div class="shadow p-3 mb-5 bg-white rounded" style="width: 80rem">
+      <div class="card-body">
+        <br />
+        <h3 align="center">MyRecipe</h3>
+        <h5 align="center">
+          Create Recipe
+        </h5>
+        <br />
+
+        <form method="POST" name="part1_part2" id="part1_part2" enctype=multipart/form-data>
+        <!-- Recipe name and recipe description -->
+        <h4 align="left">Step 1</h4>
+        <div class="form-group">
+          <label for="Recipe Name" style="color:red;">Enter Your Recipe Name</label>
+          <input
+            type="Recipe Name"
+            class="form-control"
+            id="Recipe Name"
+            name="Recipe Name"
+            autocomplete="on"
+            placeholder="Enter Recipe Name"
+            style="width:200px; color:black;"
+          />
+        </div>
+        <div class="form-group">
+          <label for="Recipe Description" style="color:red;">Enter Recipe Description</label>
+          <input
+            type="Recipe Des"
+            class="form-control"
+            id="Recipe Des"
+            name="Recipe Des"
+            autocomplete="on"
+            placeholder="Enter Recipe Description"
+            style="width:200px; color:black;"
+          />
+        </div>
+
+        
+        <div class="navbar-nav ml-auto">
+          <!-- Dropdown for Meal Types-->
+          <li class="nav-item dropdown">
+            <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="Meal_type"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            >
+            Meal type
+            </a>
+            <select name="Meal type" id="Meal type" style="margin-left:5px">
+              <option value="Starter">Starter</option>
+              <option value="Main">Main</option>
+              <option value="Dessert">Dessert</option>
+              <option value="Snack">Snack</option>
+              <option value="Breakfast">Breakfast</option>
+              <option value="Drink">Drink</option>
+            </select>
+          </li>
+
+          <!-- Drop down for methods-->
+          <li class="nav-item dropdown">
+            <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="Method"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            >
+            Method
+            </a>
+
+            <div
+            class="dropdown-menu"
+            aria-labelledby="Ingredient"
+            >
+          
+            <input type="checkbox" id="Baking" name="Baking" value="Baking">
+            <label for="Baking"> Baking</label><br>
+
+            <input type="checkbox" id="Frying" name="Frying" value="Frying">
+            <label for="Main"> Frying</label><br>
+
+            <input type="checkbox" id="Grilling" name="Grilling" value="Grilling">
+            <label for="Grilling"> Grilling</label><br>
+
+            <input type="checkbox" id="Steaming" name="Steaming" value="Steaming">
+            <label for="Steaming"> Steaming</label><br>
+
+            <input type="checkbox" id="Braising" name="Braising" value="Braising">
+            <label for="Braising"> Breakfast</label><br>
+
+            <input type="checkbox" id="Stewing" name="Stewing" value="Stewing">
+            <label for="Stewing"> Stewing</label><br>
+          
+            </div>
+          </li>
+
+        </div>
+
+        <!-- Servings -->
+        <h6 align="left">Choose your servings</h6>
+        <div class="form-group">
+          <label for="Servings">Servings</label>
+          <INPUT id="Servings" name="Servings" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="0" >
+        </div id="parentDiv" class="form-inline">
+        <button name="create" type="add" class="btn btn-primary">Create</button>
+
+        <!-- Recipe photo -->
+        <h4 style = "margin-top:30px; margin-left:1px">Upload recipe Page photo</h4>
+        <input style = "margin-left:1px" type=file name=file1>
+        <input name = "button3" type=submit value=Upload>
+        <hr>
+
+        <!-- Ingredients -->
+        <h4 align="left">Step 2</h4>
+        <p style="color:blue;">{{IngreContents}}<p>
+        <h6 align="left" style="color:red;">Add Ingredients</h6>
+
+        <!-- I think form-inline screws with place, avoid using it  and use bootstrap grids -->
+        <div class="form-inline" id="rightDiv" style="float:left"></div>
+          <label for="dosage" style="margin-left:40px;">Unit</label>
+          <label for="unit_name" style="margin-left:60px">Unit Name</label>
+          <label for="unit_name" style="margin-left:20px">Ingredients</label>
+        </div>
+
+        <!-- No clue -->
+        <div class="form-inline" id="rightDiv" style="float:left">
+          <INPUT  id="dosage" 
+                  name="dosage"
+                  TYPE="NUMBER" 
+                  MIN="0" 
+                  MAX="10" 
+                  STEP="1" 
+                  VALUE="0" 
+                  SIZE="0" 
+                  class="form-control" 
+                  style="margin-left:110px">
+        </div>
+
+        <!-- No clue -->
+        <div class="form-inline" id="rightDiv" style="float:left">
+          <select name="Unit Name" id="Unit Name" style="margin-left:5px">
+            <option value="cups">cups</option>
+            <option value="g">g</option>
+            <option value="fl oz">fl oz</option>
+            <option value="tsp">tsp</option>
+            <option value="tbsp">tbsp</option>
+            <option value="bags">bags</option>
+            <option value="bar">bar</option>
+            <option value="bulb">bulb</option>
+            <option value="capsule">capsule</option>
+            <option value="cl">cl</option>
+            <option value="clove">clove</option>
+            <option value="cob">cob</option>
+            <option value="dash">dash</option>
+            <option value="drop">drop</option>
+            <option value="gallon">gallon</option>
+            <option value="head">head</option>
+            <option value="kg">kg</option>
+          </select>
+        </div>
+
+        <!-- No clue -->
+        <div class="form-inline" id="rightDiv" style="float:left">
+          <input
+          type="Ingredient Name"
+          class="form-control"
+          id="Ingredient Name"
+          name="Ingredient Name"
+          placeholder="Ingredient Name"
+          style="width:200px; color:black;margin-left:5px"
+          />
+        </div>
+        <button name="button1" type="add" class="btn btn-primary">Add</button>
+
+        <br />
+        </form> 
+        <hr>
+
+        <!-- Not too sure why you are adding another form-->
+        <form method="POST" name="part3" id="part3" enctype=multipart/form-data style="margin-left:80px">
+          <h4 align="left" style = "margin-top:30px">Step 3</h4>
+          <h6 align="left" style="color:red;">Upload photos and discriptions for your recipe</h6>
+          <div class="form-group">
+            <label for="step_number">Step No</label>
+            <INPUT id="step_number" name="step_number" value={{Step_Number}} TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="0" >
+          </div id="parentDiv" class="form-inline">
+
+          <!-- Description -->
+          <h6 align="left" style="color:red;">Add Discriptions</h6>
+          <div align="left" style="color:blue;">discriptions<br> <textarea name="discriptions" cols="30" rows="3"></textarea></div>
+          <div align="left" > <input type="reset" name="Submit2" value="Clear" style="float:left; margin-left:0px"> </div>
+    
+
+          <h4 align="left" style = "margin-top:0px; margin-left:0px">Upload Step photos</h4>
+          <input style = "margin-left:0px" type=file name=file2>
+          <input name = "button4" type=submit value=Upload>
+
+          <br />
+          <button  style = "margin-top:0px; margin-left:0px" name="Submit" type="add" class="btn btn-primary">Submit Recipe</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</section>
+{% endblock %}
