@@ -20,11 +20,11 @@
 </div>
 
 <body>
-  <main class="page projects-page">
+  <main class="page projects-page" style = "margin-left:25px;">
       <section class="portfolio-block projects-cards">
           <div class="container">
               <div class="heading">
-                  <h2>Hello</h2>
+                  <h2>Hello {{userName}}</h2>
               </div>
               <div class="row">
                   {% for res in res %}
@@ -44,11 +44,5 @@
           </div>
       </section>
   </main>
-  <footer class="page-footer">
-      <div class="container">
-          <div class="links"><a href="#">About me</a><a href="#">Contact me</a><a href="#">Projects</a></div>
-          <div class="social-icons"><a href="#"><i class="icon ion-social-facebook"></i></a><a href="#"><i class="icon ion-social-instagram-outline"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a></div>
-      </div>
-  </footer>
 </body
 {% endblock %}

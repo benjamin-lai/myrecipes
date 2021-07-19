@@ -12,7 +12,7 @@ from tkinter import messagebox
 import ctypes 
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
-from .models import Users, Recipes, Ingredient, Contents, Recipestep
+from .models import Users, Recipes, Ingredient, Contents, Recipestep, Profiles
 from . import db
 from sqlalchemy import desc
 from sqlalchemy import func
@@ -40,7 +40,8 @@ CORS(views)
 @views.route('/', methods=['GET', 'POST'])
 def home():
     recipe = Recipes.query.all()
-    return render_template("home.html", user=current_user, res = recipe)
+    user = Profiles.query.filter_by(owns = current_user.id).first()
+    return render_template("home.html", user=current_user, res = recipe, userName = user.first_name)
 
 
 
