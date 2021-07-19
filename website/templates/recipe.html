@@ -39,18 +39,18 @@
     }
 
     .sidebar {
-    height: 800px;
-    width: 300px;
-    
-    top: 0px;
-    float: right;
-    margin-top: 300px;
-    padding-top: 10px;
-    background-color: rgb(247, 247, 244);
-    }
+height: 100%;
+width: 300px;
+position: -webkit-sticky; /* for Safari users */
+position: static;
+top: 0px;
+float: right;
+margin-top: 300px;
+padding-top: 10px;
+background-color: rgb(255, 255, 255);
+}
 
     .sidebar div {
-    padding: 10px;
     font-size: 24px;
     display: block;
     align-items: center;
@@ -103,13 +103,11 @@
       margin-left: 20px;
     }
 
-    .text_mid_step{
-      width: 760px;
-      text-align: left;
-      display: inline-block;
-      vertical-align: middle;
-      margin-left: 40px;
-    }
+    .right {
+    width: 770px;
+    margin-left: 30px;
+    padding-bottom: 20px;
+}
 
     .text_wrapper {
       word-break:break-all;
@@ -133,34 +131,19 @@
   <!--sidebar-->
   <div class="sidebar">
     <div style = "text-align: center;"><h4>More  delicious for you</h4></div>
-    <div>
-      <img
-        class= "w3-card-4"
-        src="{{image1}}"
-
-      />
-      <div style = "text-align: center;"><h4>Testing  Reco 1</h4></div>
-    </div>
-    <div>
-      <img
-          class="w3-card-4"
-          src="{{image1}}"
-        />
-        Testing  Reco 2
-    </div>
-    <div>
-      <img
-      class="w3-card-4"
-      src="{{image1}}"
-    />
-      Testing  Reco 3
-    </div>
-  </div>
-  
-  <!--title-->
-  <div class="jumbotron">
+    <!--recommandation-->
+    <!-- Similar recipes to the one that is currently being looked at -->
+    {% for res in res %}
+      <div>
+        <a href="/recipe.{{res[2]}}.{{res[0]}}">
+          <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{res[3]}}" class="w3-card-4">
+        </a>
+        <h4 style="text-align:center;">{{res[2]}}</h4>
+      </div>
+    {% endfor %}
     
-    <div class="container">
+    <!-- Only the person who made the recipe can modify and delete it -->
+    {% if current_user.id == creates %}
     <!--action buttons-->
     <div>
       <form action="edit recipe" method="POST">
@@ -171,6 +154,13 @@
         <button class="btn btn-success pull-right" type="submit">Delete</button>
       </form>
     </div>
+    {% endif %}
+  </div>
+  
+  <!--title-->
+  <div class="jumbotron">
+    
+    <div class="container">
       <h1 style="font-size:88px;">{{RecipeName}}</h1>
         
       <div class = "text">
@@ -195,17 +185,16 @@
     <div>
       <img
       class="rounded-circle account-img"
-      src="{{image1}}"
+      src="{{UserImage}}"
       width="200"
       height="200"
       />
-      
       <span class="mid">
         <h3>Description</h3>
         {{Descriptions}}
       </span>
     </div>
-    <h2 style="margin-left: 30px;">UserName</h2>
+    <h2 style="margin-left: 40px;">{{UserName}}</h2>
 
     <!--star rating begin-->
     <link href=.rating-list li {
@@ -256,7 +245,7 @@
         <div class = "atmiddle">
           <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{des_step.photo}}" class="w3-card-4" width = "600" height = "450">
         </div><br>
-        <div> 
+        <div class = "right">
           {{des_step.step_comment}}
         </div>
       {% endfor %}
@@ -265,31 +254,7 @@
   </div>     
 </body>
 
-<br><br><br><br>
-
-
-<!-- Similar recipes to the one that is currently being looked at -->
-<div class="jumbotron" style="width: 100%">
-  <div class="container">
-    <h1>Similar Recipes</h1>
-
-    {% for res in res %}
-        <tr>
-          <td>
-            
-            <div class="feed_zoom" style="width: 100px; float:left; height:100px; margin:10px">
-              <a href="/recipe.{{res[2]}}.{{res[0]}}">
-                <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{res[3]}}" class="feed_image">
-              </a>
-              <p style="font-size:9px; text-align:center;">{{res[2]}}</p>
-            </div>
-          </td>
-        </tr>
-
-    {% endfor %}
-    <br><br><br><br>
-  </div>
-</div>
+<br><br>
 
 
 <!-- This entire section is dedicated to comments -->
