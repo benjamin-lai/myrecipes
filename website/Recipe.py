@@ -12,7 +12,7 @@ from tkinter import messagebox
 import ctypes 
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
-from .models import Users, Recipes, Ingredient, Contents, Recipestep, Profiles, Method, History
+from .models import Users, Recipes, Ingredient, Contents, Recipestep, Profiles, Method, History, Likes, Comments
 from .review import create_comment, retrieve_comments
 from . import db
 from sqlalchemy import desc
@@ -895,18 +895,19 @@ def view_recipe(recipeName, recipeId):
     methods = Method.query.filter_by(recipe_id=Savelist["RecipeId"]).all()
 
     #Create recipe view history
-    exist_history = History.query.filter_by(userid = current_user.id, recipe = recipeId).first()
-    if exist_history != None:
-        print("duplicate browsing")
-        date = datetime.date(datetime.now())
-        time = datetime.time(datetime.now())
-        exist_history.last_view_time = time
-        exist_history.last_view_date = date
-        db.session.commit()
-    else:
-        history = History(userid = current_user.id, recipe = recipe.id)
-        db.session.add(history)
-        db.session.commit()
+    if current_user.is_authenticated:
+        exist_history = History.query.filter_by(userid = current_user.id, recipe = recipeId).first()
+        if exist_history != None:
+            print("duplicate browsing")
+            date = datetime.date(datetime.now())
+            time = datetime.time(datetime.now())
+            exist_history.last_view_time = time
+            exist_history.last_view_date = date
+            db.session.commit()
+        else:
+            history = History(userid = current_user.id, recipe = recipe.id)
+            db.session.add(history)
+            db.session.commit()
     
     
     
@@ -976,10 +977,10 @@ def view_recipe(recipeName, recipeId):
     #     print(res)
     
     #to tell which image should use for user
-    if len(get_user_image()) == 24:
+    if len(get_user_image(recipeId)) == 24:
         UserImage = get_default_user_img()
     else:
-        UserImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': get_user_image()})
+        UserImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': get_user_image(recipeId)})
     
     return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
     recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", 
@@ -1005,28 +1006,41 @@ def delete_recipe():
         for i in ingre:
             if i.recipe_id == recipe_id:
                 db.session.delete(i)
-        db.session.commit()
+
     #delete steps
     steps = Recipestep.query.filter_by(recipe_id=recipe_id).all()
     if steps != None:
         for s in steps:
             if s.recipe_id == recipe_id:
                 db.session.delete(s)
-        db.session.commit()
+
     #delete history
     historys = History.query.filter_by(recipe=recipe_id).all()
     if historys != None:
         for s in historys:
             if s.recipe == recipe_id:
                 db.session.delete(s)
-        db.session.commit()
+
     #delete Method
     methods = Method.query.filter_by(recipe_id=recipe_id).all()
     if methods != None:
         for s in methods:
             if s.recipe_id == recipe_id:
                 db.session.delete(s)
-        db.session.commit() 
+
+    
+    # Delete associated likes
+    likes = Likes.query.filter_by(own=current_user.id).all()
+    for like in likes:
+        db.session.delete(like)
+
+
+    # Delete associated comments
+    comments = Comments.query.filter_by(owns=current_user.id).all()
+    for comment in comments:
+        db.session.delete(comment)
+
+
     #delete recipe
     recipe = Recipes.query.filter_by(id=recipe_id).first()
     if recipe != None:
@@ -1144,8 +1158,9 @@ def initial():
     Savelist["color_3"] = ''
     Savelist["color_4"] = ''
 #find user image by userId
-def get_user_image():
-    user = Profiles.query.filter_by(owns = current_user.id).first()
+def get_user_image(recipeId):
+    recipe = Recipes.query.filter_by(id = recipeId).first()
+    user = Profiles.query.filter_by(owns = recipe.creates).first()
     print(f"1 {len(user.profile_pic)}")
     return user.profile_pic
 
