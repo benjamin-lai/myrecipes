@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from flask_cors import CORS
 
-from .models import Users, Profiles
+from .models import Subscribed, Subscriber, Users, Profiles
 from .validate_email import validate_email
 from . import db
 
@@ -92,5 +92,4 @@ def sign_up_fn(email, first_name, last_name, password1, password2):
         flash('Account created!', category='success')
         return True
     return False
-
 

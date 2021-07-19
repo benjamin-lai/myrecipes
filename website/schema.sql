@@ -14,6 +14,8 @@ create table Profiles (
     bio             text,
     custom_url      text,
     owns            integer     not null,   -- user.id  = profile.id =  owns? may be redundant, just mapping how its shown through 3311
+    sub_count       integer     default 0,
+    recipe_count    integer     default 0,
     foreign key (owns) references Users(id) -- or just change owns to profile_id or something as use that as the relation.
 );
 
@@ -63,7 +65,7 @@ create table Meal_Type (
 
 
 -- list of people that are subscribed to the profile (contains)
-create table Subscriber_Lists (
+create table Subscriber (
     subscriber_id   integer     not null,
     contains        integer     not null,   -- contains is profile_id
     primary key (subscriber_id, contains),
@@ -71,7 +73,7 @@ create table Subscriber_Lists (
 );
 
 -- list of people that the profile (contains) is subscribed to
-create table Subscribed_To_Lists (
+create table Subscribed (
     subscribed_id   integer      not null,
     contains        integer     not null,   -- contains is profile_id
     primary key (subscribed_id, contains),
@@ -123,3 +125,5 @@ create table Likes (
     foreign key (own) references Users(id),
     foreign key (has) references Recipes(id)
 );
+
+

@@ -11,11 +11,81 @@
     <div class="jumbotron">
         <div class="container">
           <p style="color:blue;">Meal Type : {{meal_type}}</p>
-          <h1>{{RecipeName}}</h1>
+          <h1>
+            {{RecipeName}}
+            <!-- Recipe Star Button-->
+            <div id="favourite" style="float:right">
+              <div id="heart"></div> 
+              <a><div id="heartwhite" onclick="star_state();" style="cursor: pointer;"></div></a>
+
+
+              {% if star_status == "starred" %}
+                <script type = text/javascript>
+                  document.getElementById("heartwhite").style.opacity = 0;
+                </script>
+              {% endif %}
+
+              <!-- toggle the star button from starred to unstarred-->
+              {% if current_user.is_authenticated %}
+              <script type = text/javascript>          
+                function star_state() {
+                  var toggle = document.getElementById("heartwhite");
+                  var status = "";
+                  // Set the opacity to 1 by default
+                  if (toggle.style.opacity == "")
+                    toggle.style.opacity = 1;
+                  
+                  // Alternate between being transparent and visible
+                  if (toggle.style.opacity == "1") {
+                    toggle.style.opacity = "0";
+                    status = "starred"
+                  }
+                  else if (toggle.style.opacity = "0") {
+                    toggle.style.opacity = "1";
+                    status = "unstarred"
+                  }
+
+                  
+                  // Post to backend                 
+                  $.ajax({
+                      type : "POST", // http method
+                      url : "{{url_for('recipes.star_recipe')}}", // the endpoint
+                      data : {status: JSON.stringify(status), 
+                          user: JSON.stringify({{current_user.id}}), 
+                          recipe: JSON.stringify({{recipe_id}})
+                      }, // data sent with the post request
+
+                      // handle a successful response
+                      success : function() {
+                          console.log("success"); // another sanity check
+                      },
+
+                      // handle a non-successful response
+                      error : function(xhr,errmsg,err) {
+                          console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                      }
+                  });
+
+
+                }
+              </script>
+              {% else %}
+              <script type = text/javascript>
+                function star_state(){
+                  window.alert("Please sign in first so you can heart your favourite recipes!")
+                }
+              </script>
+              {% endif %}
+
+            </div>
+          </h1>
           <p>id : {{recipe_id}}</p>
           <h6>
           Cooking methods:
           </h6>
+          
+
+
 
           {% for method in methods %}
           <tr>

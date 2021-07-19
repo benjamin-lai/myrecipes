@@ -12,13 +12,15 @@ from tkinter import messagebox
 import ctypes 
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
-from .models import Users, Recipes, Ingredient, Contents, Recipestep, Profiles, Method
+from .models import StarredRecipes, Users, Recipes, Ingredient, Contents, Recipestep, Profiles, Method
 from .review import create_comment, retrieve_comments
 from . import db
 from sqlalchemy import desc
 from sqlalchemy import func
 import base64
 import boto3
+import random
+import json
 
 s3 = boto3.client('s3',
                     aws_access_key_id='AKIAQNR7WVADC7MX2ZEW',
@@ -635,9 +637,18 @@ def view_recipe(recipeName, recipeId):
     comments = retrieve_comments(recipe.id)
     
     methods = Method.query.filter_by(recipe_id=Savelist["RecipeId"]).all()
+    if current_user.is_authenticated:
+        if not StarredRecipes.query.filter_by(recipe_id=recipe.id, contains=current_user.id).first():
+            star_status = "unstarred"
+        else:
+            star_status = "starred"
+    else:
+        star_status = "unstarred"
+
 
     return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
-    recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", meal_type = recipe.meal_type, methods=methods)
+        recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, 
+            recipe=recipe, type="recent", meal_type = recipe.meal_type, methods=methods, star_status=star_status)
         
 
 
@@ -665,6 +676,62 @@ def delete_recipe():
     db.session.commit()
     return render_template("delete_recipe.html",user = current_user)
 
+# return a view of a random recipe
+@recipes.route('/recipe/random')
+def random_recipe():
+    rand_num = random.randrange(0, db.session.query(Recipes).count())
+    rand_recipe = db.session.query(Recipes)[rand_num]
+    name = rand_recipe.name
+    id = rand_recipe.id
+    return view_recipe(name, id) 
+
+# star and unstar a recipe
+@recipes.route('/recipe/star', methods=['GET', 'POST'])
+def star_recipe():
+    message = ''
+    if request.method == "POST":
+        star_status = request.form['status']
+        user_id = request.form['user']
+        recipe_id = request.form['recipe']
+
+        # sub_status = "subscribe" or "subscribed" with the quotations included. Later add an alert for unsubscribing and make sure only s
+        # logged in users can subscribe. Can't subscribe to yourself (maybe add this).
+
+    if str(star_status) == '"starred"':
+        new_star = StarredRecipes(recipe_id=recipe_id, contains=user_id) # user's subscribed to list
+        db.session.add(new_star)
+        
+        message = "user " + str(user_id) + " has starred recipe " + str(recipe_id)
+    # code for unsubscribing
+    elif str(star_status) == '"unstarred"':
+        del_star = StarredRecipes.query.filter_by(recipe_id=recipe_id, contains=user_id).first()
+  
+        db.session.delete(del_star)
+        message = "user " + str(user_id) + " has unstarred recipe " + str(recipe_id)
+
+    db.session.commit()
+
+    
+    return message
+
+# View user's starred recipes
+@recipes.route('recipes/starred', methods=['GET', 'POST'])
+def view_starred():
+    query = StarredRecipes.query.filter_by(contains=current_user.id).all()
+    recipes = []
+    profiles = []
+    for item in query:
+
+        recipe = Recipes.query.filter_by(id=item.recipe_id).first()
+        profile = Profiles.query.filter_by(profile_id=recipe.creates).first()
+        print(profile.custom_url)
+        setattr(recipe, "custom_url", profile.custom_url)
+        recipes.append(recipe)
+    type = '#'
+    if StarredRecipes.query.filter_by(contains=current_user.id).count() == 0:
+        type = 'empty'
+
+    return render_template("starred.html", user=current_user, query=recipes, type=type)
 
 
 #############helper funcs##########
@@ -752,3 +819,5 @@ def generate_ingreStr_by_recipeId(recipeId):
                     f" ")
         counter += 1
     return Contents
+
+
