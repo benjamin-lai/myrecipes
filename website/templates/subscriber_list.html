@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %}{{profile.display_name}}'s subscribers{% endblock %}
+{% extends "base.html" %} {% block title %}{{profile.display_name}}'s {% if type == "subscribers" %}subscribers {% else %}subscriptions{% endif %}{% endblock %}
 <!-- Same as profile but no edit button, have the option to subscribe-->
 
 {% block content %}
@@ -11,7 +11,7 @@
           <table class="table manage-candidates-top mb-0">
             <thead>
               <tr>
-                <th>Subscribers ({{sub_count}})</th>
+                <th>{% if type == "subscribers" %}Subscribers{% else %}Subscriptions{% endif %} ({{sub_count}})</th>
                 <th class="text-center">Status</th>
                 <th class="action text-right">Action</th>
               </tr>
@@ -21,7 +21,12 @@
               <tr class="candidates-list">
                 <td class="title">
                   <div class="thumb">
-                    <img class="rounded-circle account-img" src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{sub.profile_pic}}" alt="" width="200" height="200">
+                    {% if sub.profile_pic == "/static/default_user.jpg" %}
+                        <!-- hardcoded in a default image-->
+                        <img class="rounded-circle account-img" src="https://hdqwalls.com/wallpapers/person-silhouette-meteors-night-sky-8k-jz.jpg" alt="" width="200" height="200">
+                    {% else %}
+                        <img class="rounded-circle account-img" src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{sub.profile_pic}}" alt="" width="200" height="200">
+                    {% endif %}
                   </div>
                   <div class="candidate-list-details">
                     <div class="candidate-list-info">
@@ -43,7 +48,7 @@
                 </td>
                 <td class="candidate-list-favourite-time text-center">
                  <!-- <a class="candidate-list-favourite order-2 text-danger" href="#"><i class="fas fa-heart"></i></a>-->
-                 <br>
+                
                   <span class="candidate-list-time order-1">
                         <!-- User Bio -->
                         <div class="form-group purple-border">
@@ -51,7 +56,7 @@
                             <textarea
                             class="form-control"
                             id="exampleFormControlTextarea3"
-                            rows="5"
+                            rows="6"
                             cols="50"
                             readonly="">{{sub.bio}}</textarea>
                         </div> 

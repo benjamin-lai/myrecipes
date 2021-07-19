@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from flask_cors import CORS
 from . import db
-from .models import Recipes, Users, Profiles, Subscribed, Subscriber, profile_subs
+from .models import Recipes, Users, Profiles, Subscribed, Subscriber, profile_subs, profile_subbed
 from .validate_email import validate_email
 import boto3
 from werkzeug.utils import secure_filename
@@ -33,13 +33,12 @@ def Profile():
         image_file = url_for('static', filename='default_user.jpg') 
         backdrop_image = url_for('static', filename='default_backdrop.png')
     else:
-        print(profile.profile_pic)
         image_file = s3.generate_presigned_url('get_object',
                                                     Params={'Bucket': 'comp3900-w18b-sheeesh','Key': profile.profile_pic})
         backdrop_image = url_for('static', filename='default_backdrop.png')
 
         
-    return render_template("profile.html", profile=profile, user=current_user, image_file=image_file, backdrop_image=backdrop_image)
+    return view_profile1(profile.custom_url)
 
 
 @profile.route('/my/edit', methods=['GET', 'POST'])
@@ -89,7 +88,7 @@ def update_profile():
                 flash('Password must be at least 7 characters.', category='error')
             elif url_check and url_check.profile_id!=current_user.id and len(url_check.custom_url)>0:
                 flash('The specified profile URL is already in use', category='error')
-            elif custom_url.isdigit():
+            elif custom_url.isdigit() and int(custom_url) != profile.profile_id:
                 flash('Your custom URL cannot be made up of numbers only', category='error')
             elif len(password1) > 0 and check_password_hash(current_user.password, password1):
                 flash('The new password you entered is the same as your previous password!', category='error')
@@ -103,11 +102,10 @@ def update_profile():
                 if custom_url != "":
                     profile.custom_url = custom_url
                 else:
-                    profile.custom_url = None
+                    profile.custom_url = profile.profile_id
                 profile.first_name = first_name
                 profile.last_name = last_name
                 profile.bio = user_bio
-                print("BIO IS " + profile.bio)
                 
                 if profile.temp_pic is not None:
                     profile.profile_pic = profile.temp_pic
@@ -178,8 +176,8 @@ def profile_sub():
         message = "user " + str(user_id) + " has subscribed to " + str(profile_id)
     # code for unsubscribing
     elif str(sub_status) == '"Subscribe"':
-        del_subbed = Subscriber.query.filter_by(subscriber_id = user_id, contains = profile_id).first()
-        del_subber = Subscribed.query.filter_by(subscribed_id = profile_id, contains = user_id).first()
+        del_subber= Subscriber.query.filter_by(subscriber_id = user_id, contains = profile_id).first()
+        del_subbed = Subscribed.query.filter_by(subscribed_id = profile_id, contains = user_id).first()
         db.session.delete(del_subbed)
         db.session.delete(del_subber)
         message = "user " + str(user_id) + " has unsubscribed to " + str(profile_id)
@@ -187,6 +185,7 @@ def profile_sub():
     db.session.commit()
     return (message)
 
+# subscribers list
 @profile.route('/<custom_url>/subscribers', methods=["GET", "POST"])
 def subscriber_list(custom_url):
     try:    
@@ -196,24 +195,35 @@ def subscriber_list(custom_url):
         flash("No user exists with this username or id.", category="error")
         return redirect(url_for('views.home'))
 
-    if public_profile.profile_pic == "/static/default_user.jpg":
-        image_file = url_for('static', filename='default_user.jpg') 
-        backdrop_image = url_for('static', filename='default_backdrop.png')
-    else:
-        image_file = s3.generate_presigned_url('get_object',
-                                                    Params={'Bucket': 'comp3900-w18b-sheeesh','Key': public_profile.profile_pic})
-        backdrop_image = url_for('static', filename='default_backdrop.png')
-
-        
-   # subs = Subscriber.query.filter_by(contains = public_profile.profile_id).all()
-   # subbed = Subscribed.query.filter_by(contains = public_profile.profile_id).all()
     subbers = profile_subs.query.filter_by(contains = public_profile.profile_id).all()
     sub_count = profile_subs.query.filter_by(contains = public_profile.profile_id).count()
     for sub in subbers:
         sub.sub_count = profile_subs.query.filter_by(contains = sub.profile_id).count()
         sub.recipe_count = Recipes.query.filter_by(creates=sub.profile_id).count()
+
     # add code for profiles with no subs
-    return render_template("subscriber_list.html", profile=public_profile, user=public_user, image_file=image_file, backdrop_image=backdrop_image, query=subbers, sub_count=sub_count)
+    type = "subscribers"
+    return render_template("subscriber_list.html", profile=public_profile, user=public_user, query=subbers, sub_count=sub_count, type=type)
+
+# subscribed-to list
+@profile.route('/<custom_url>/subscriptions', methods=["GET", "POST"])
+def subscribed_list(custom_url):
+    try:    
+        public_profile = Profiles.query.filter_by(custom_url=custom_url).first()
+        public_user = Users.query.filter_by(id=public_profile.profile_id).first()
+    except:
+        flash("No user exists with this username or id.", category="error")
+        return redirect(url_for('views.home'))
+    
+    subbed = profile_subbed.query.filter_by(contains = public_profile.profile_id).all()
+    sub_count = profile_subbed.query.filter_by(contains = public_profile.profile_id).count()
+    for sub in subbed:
+        sub.sub_count = profile_subs.query.filter_by(contains = sub.profile_id).count()
+        sub.recipe_count = Recipes.query.filter_by(creates=sub.profile_id).count()
+
+    # add code for profiles with no subs
+    type = "subscriptions"
+    return render_template("subscriber_list.html", profile=public_profile, user=public_user, query=subbed, sub_count=sub_count)
 
 @profile.route('/<int:id>', methods=["GET", "POST"]) # public view of profile based off id 
 def view_profile(id):
@@ -236,7 +246,7 @@ def view_profile(id):
         # display personal recipes
         query = Recipes.query.filter_by(creates=public_user.id)
         
-        return render_template("public_profile.html", profile=public_profile, user=public_user, image_file=image_file, backdrop_image=backdrop_image, query=query)
+        return view_profile1(public_profile.custom_url)
     else:
         flash("No user exists with this id.", category="error")
         return redirect(url_for('views.home'))

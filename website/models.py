@@ -26,6 +26,7 @@ class Profiles(db.Model, UserMixin):
     bio = db.Column(db.String(150))
     custom_url = db.Column(db.String(150), unique=True)
     owns = db.Column(db.Integer, db.ForeignKey('users.id'))
+    sub_count = db.Column(db.Integer)
     
     
     
@@ -145,5 +146,15 @@ class profile_subs(db.Model, UserMixin):
     custom_url = db.Column(db.String(150), unique=True)
     subscriber_id = db.Column(db.Integer, primary_key=True) #initialise to subscriber's id
     contains = db.Column(db.Integer, primary_key=True) # profile (focus)
-    
+
+class profile_subbed(db.Model, UserMixin):
+    profile_id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(150))
+    last_name = db.Column(db.String(150))
+    display_name = db.Column(db.String(150))
+    profile_pic = db.Column(db.String(150))
+    bio = db.Column(db.String(150))
+    custom_url = db.Column(db.String(150), unique=True)
+    subscribed_id = db.Column(db.Integer, primary_key=True) #initialise to subscriber's id
+    contains = db.Column(db.Integer, primary_key=True) # profile (focus)    
     

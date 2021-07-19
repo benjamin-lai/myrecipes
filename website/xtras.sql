@@ -50,6 +50,12 @@ From
     profiles as p
     LEFT JOIN subscriber as s on p.profile_id = s.subscriber_id;
 
+create view profile_subbed as
+Select p.profile_id, p.first_name, p.last_name, p.display_name, p.profile_pic, p.bio, p.custom_url, p.sub_count, p.recipe_count, s.subscribed_id, s.contains
+From
+    profiles as p
+    LEFT JOIN subscribed as s on p.profile_id = s.subscribed_id;
+
 class profiles_subs(db.Model, UserMixin):
     profile_id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(150))

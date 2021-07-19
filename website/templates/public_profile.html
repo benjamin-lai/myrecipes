@@ -7,6 +7,13 @@
   <div class="media">
     <div class="media-body" align="left">
       <header>
+        {% if profile.profile_id == current_user.id %}
+          <form action="my/edit" method="GET">
+            <button class="btn btn-success pull-right" type="submit">
+              Edit Profile
+            </button>
+          </form>
+        {% endif %}
         <!-- Background image hardcoded-->
         <div
           class="p-5 text-center bg-image"
@@ -77,7 +84,11 @@
 
                     </h1>
                     <!-- Subscriber count: Need to create a list and link-->
-                    <h4 class="text-info" ><a href="{{profile.custom_url}}/subscribers">Subscribers: {{subs}}</a></h4>
+                    {% if profile.custom_url == None %}
+                      <h4 class="text-info" ><a href="{{profile.profile_id}}/subscribers">Subscribers: {{subs}}</a></h4>
+                    {% else %}
+                      <h4 class="text-info" ><a href="{{profile.custom_url}}/subscribers">Subscribers: {{subs}}</a></h4>
+                    {% endif %}
                   </div>
                 </div>      
               </div>
@@ -89,7 +100,13 @@
     </div>
     
       <h1 class="account-heading">{{profile.first_name}} {{profile.last_name}}</h1>
+      {% if profile.custom_url == None %}
+        <a href="{{profile.profile_id}}/subscriptions" class="badge badge-secondary">Subscriptions</a> <!-- Have it relink to subscriber_list html but use if statements to change title etc...-->
+      {% else %}
+        <a href="{{profile.custom_url}}/subscriptions" class="badge badge-secondary">Subscriptions</a> 
+      {% endif %} 
       <p class="text-secondary">{{user.email}}</p>
+
     
       <p class="lead">Contributed Recipes: {{query.count()}}</p>
       <!-- User Bio-->
@@ -99,10 +116,7 @@
           class="form-control"
           id="exampleFormControlTextarea4"
           rows="3"
-          readonly=""
-        >
-      {{profile.bio}}</textarea
-        >
+          readonly="">{{profile.bio}}</textarea>
       </div>
   </div>
   <!-- FORM HERE -->
