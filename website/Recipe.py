@@ -1000,6 +1000,19 @@ def delete_recipe():
     if recipe.creates != current_user.id:
         flash("You are not the owner of this recipe", 'error')
         return redirect(url_for('recipes.view_recipe',recipeName = recipe.name,recipeId = recipe.id ))
+
+    # Delete associated likes
+    likes = Likes.query.filter_by(own=current_user.id).all()
+    for like in likes:
+        db.session.delete(like)
+
+
+    # Delete associated comments
+    comments = Comments.query.filter_by(owns=current_user.id).all()
+    for comment in comments:
+        print(comment)
+        db.session.delete(comment)
+
     #delete ingredient
     ingre = Ingredient.query.filter_by(recipe_id=recipe_id).all()
     if ingre != None:
@@ -1027,19 +1040,6 @@ def delete_recipe():
         for s in methods:
             if s.recipe_id == recipe_id:
                 db.session.delete(s)
-
-    
-    # Delete associated likes
-    likes = Likes.query.filter_by(own=current_user.id).all()
-    for like in likes:
-        db.session.delete(like)
-
-
-    # Delete associated comments
-    comments = Comments.query.filter_by(owns=current_user.id).all()
-    for comment in comments:
-        db.session.delete(comment)
-
 
     #delete recipe
     recipe = Recipes.query.filter_by(id=recipe_id).first()
