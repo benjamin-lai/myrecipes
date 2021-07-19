@@ -234,51 +234,8 @@ def recipe_cards():
 
 @recipes.route('/recipes', methods = ['GET','POST'])
 def recipe():
-    recipe_id = request.form.get('recipe_id')
-    #print(f"recipe id is  {recipe_id}")
-    #print(Savelist["RecipeId"])
-    print(Savelist["RecipeId"])
-    print("recipe below")
-    recipe_data = Recipes.query.filter_by(id = 38).first()
-    print(recipe_data.photo)
-    print(recipe_data.name)
-    image1 = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe_data.photo})
-    print(image1)
-    print(recipe_data.id)
-    ingredient_data = Ingredient.query.filter_by(recipe_id=recipe_data.id).first()
-    print("haha")
-    
-    button1 = request.form.get('edit_recipe')
-    print(button1)
-    if button1 != None:
-        print("nana")
-        print(button1)
-
-        return render_template("edit_recipe.html", user=current_user)
-    print("return recipe")
-    
-    #delete this recipe
-    deletebutton = request.form.get('Delete_recipe')
-    print(f"this is delete   !!{deletebutton}")
-    if deletebutton != None:
-        print("nanananna")
-        #delete recipe
-        obj = Recipes.query.filter_by(id = recipe_id).first()
-        name = obj.name
-        db.session.delete(obj)
-        #delete step
-        obj = Recipestep.query.filter_by(recipe_id = recipe_id).all()
-        for o in obj:
-            db.session.delete(obj)
-        #delete ingredients
-        obj = Ingredient.query.filter_by(recipe_id = recipe_id).all()
-        for o in obj:
-            db.session.delete(obj)
-        db.session.commit()
-        print("finish delete")
-        return render_template("delete_recipe.html",user = current_user, recipe_id = recipe_id, name = name)
-    else:
-        return render_template("recipe.html", user=current_user, name=recipe_data.name, Descriptions=recipe_data.description, image1 = image1)
+    recipe = Recipes.query.all()
+    return render_template("projects-grid-cards.html",user = current_user,res = recipe)
 
 @recipes.route('/Add discription', methods=['GET', 'POST'])
 def add_discription():

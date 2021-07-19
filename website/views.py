@@ -39,7 +39,8 @@ CORS(views)
 
 @views.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template("home.html", user=current_user)
+    recipe = Recipes.query.all()
+    return render_template("home.html", user=current_user, res = recipe)
 
 
 

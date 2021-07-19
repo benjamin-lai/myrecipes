@@ -1,0 +1,46 @@
+{% extends "base.html" %} {% block title %}MyRecipes{% endblock %}
+<!-- Overwrites title-->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Projects - Brand</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
+</head>
+{% block content %}
+
+
+<body>
+    <main class="page projects-page">
+        <section class="portfolio-block projects-cards">
+            <div class="container">
+                <div class="heading">
+                    <h2>Hello</h2>
+                </div>
+                <div class="row">
+                    {% for res in res %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card border-0">
+                            <div class="zoom">
+                            <a href="#"><img class="card-img-top scale-on-hover" src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{res.photo}}" alt="Card Image"></a></div>
+                            <div class="card-body">
+                                <h6><a href="#">Lorem Ipsum</a></h6>
+                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quam urna.</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="page-footer">
+        <div class="container">
+            <div class="links"><a href="#">About me</a><a href="#">Contact me</a><a href="#">Projects</a></div>
+            <div class="social-icons"><a href="#"><i class="icon ion-social-facebook"></i></a><a href="#"><i class="icon ion-social-instagram-outline"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a></div>
+        </div>
+    </footer>
+</body>
+
+{% endblock %}

@@ -2,6 +2,15 @@
 <!-- Overwrites title-->
 
 {% block content %}
+<head>
+  <style>
+    .img-fit img{
+    width:100%;
+    height: 100%;
+    object-fit:cover; 
+    }
+  </style>
+</head>
 <!-- Header -->
 <div class="container">
   <div class="jumbotron page-header" style="margin-bottom: 0px">
@@ -9,4 +18,37 @@
     <p class="my-4">Sharing Recipes</p>
   </div>
 </div>
+
+<body>
+  <main class="page projects-page">
+      <section class="portfolio-block projects-cards">
+          <div class="container">
+              <div class="heading">
+                  <h2>Hello</h2>
+              </div>
+              <div class="row">
+                  {% for res in res %}
+                  <div class="col-md-6 col-lg-4">
+                      <div class="card border-0">
+                          <div class="zoom img-fit">
+                          <a href="/recipe.{{res.name}}.{{res.id}}"><img class="card-img-top scale-on-hover" src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{res.photo}}" alt="Card Image"></a></div>
+                          <div class="card-body">
+                              <h6><a href="/recipe.{{res.name}}.{{res.id}}">{{res.name}}</a></h6>
+                              <h7 class="card-text">{{res.description[0:100]}}</h7>
+                          </div>
+                      </div>
+                  </div>
+                  {% endfor %}
+                  
+              </div>
+          </div>
+      </section>
+  </main>
+  <footer class="page-footer">
+      <div class="container">
+          <div class="links"><a href="#">About me</a><a href="#">Contact me</a><a href="#">Projects</a></div>
+          <div class="social-icons"><a href="#"><i class="icon ion-social-facebook"></i></a><a href="#"><i class="icon ion-social-instagram-outline"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a></div>
+      </div>
+  </footer>
+</body
 {% endblock %}
