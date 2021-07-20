@@ -40,9 +40,11 @@ CORS(views)
 @views.route('/', methods=['GET', 'POST'])
 def home():
     recipe = Recipes.query.all()
-    user = Profiles.query.filter_by(owns = current_user.id).first()
-    return render_template("home.html", user=current_user, res = recipe, userName = user.first_name)
-
+    if current_user.is_authenticated is True:
+        user = Profiles.query.filter_by(owns = current_user.id).first()
+        return render_template("home.html", user=current_user, res = recipe, userName = user.first_name)
+    return render_template("home.html", user=current_user, res = recipe)
+    
 
 
 
