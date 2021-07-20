@@ -232,10 +232,11 @@ def recipe_cards():
     query = Recipes.query.order_by(Recipes.id.desc()).all()
     return render_template("Recipe_card.html", query=query, type="recent")
 
+#for testing now
 @recipes.route('/recipes', methods = ['GET','POST'])
 def recipe():
     recipe = Recipes.query.all()
-    return render_template("projects-grid-cards.html",user = current_user,res = recipe)
+    return render_template("test.html",user = current_user)
 
 @recipes.route('/Add discription', methods=['GET', 'POST'])
 def add_discription():
