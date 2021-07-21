@@ -3,6 +3,7 @@ from flask_login import UserMixin
 
 from . import db
 
+from datetime import datetime
 # IDK what userMixin is but its important for flask-login module
 # Just remember you still need to create the tables on your server.
 # Refer to schema.sql to compare Users for sqlalchemy and Users for postgresql
@@ -40,6 +41,8 @@ class Recipes(db.Model):
     num_of_likes = db.Column(db.Integer)
     num_of_dislikes = db.Column(db.Integer)
     meal_type = db.Column(db.String(150))
+    creation_time = db.Column(db.String(150))
+    creation_date = db.Column(db.String(150))
 
     def __init__(self,name,description,serving,creates, creator, meal_type):
         self.name = name
@@ -51,6 +54,8 @@ class Recipes(db.Model):
         self.num_of_likes = 0
         self.num_of_dislikes = 0
         self.meal_type = meal_type
+        self.creation_time = datetime.time(datetime.now())
+        self.creation_date = datetime.date(datetime.now())
 
 #Ingredient temp dictionary
 #Ingredientslist = []

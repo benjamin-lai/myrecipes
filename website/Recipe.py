@@ -17,6 +17,7 @@ from .review import create_comment, retrieve_comments
 from . import db
 from sqlalchemy import desc
 from sqlalchemy import func
+from sqlalchemy import and_
 import base64
 import boto3
 from datetime import datetime
@@ -68,8 +69,9 @@ Savelist["color_4"] = ''
 def trending_section():
     recipes = Recipes.query.order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
+    current_date = datetime.date(datetime.now())
     for i in recipes:
-        if i.num_of_likes > i.num_of_dislikes:
+        if i.num_of_likes > i.num_of_dislikes and (i.creation_date - current_date).days <= 7:
             trending.append(i)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "All types")
 
@@ -78,8 +80,9 @@ def trending_section_Starter():
     print("Starter")
     recipes = Recipes.query.filter_by(meal_type = "Starter").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
+    current_date = datetime.date(datetime.now())
     for i in recipes:
-        if i.num_of_likes > i.num_of_dislikes:
+        if i.num_of_likes > i.num_of_dislikes and (i.creation_date - current_date).days <= 7:
             trending.append(i)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Starter")
     
@@ -88,8 +91,9 @@ def trending_section_Main():
     print("Main")
     recipes = Recipes.query.filter_by(meal_type = "Main").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
+    current_date = datetime.date(datetime.now())
     for i in recipes:
-        if i.num_of_likes > i.num_of_dislikes:
+        if i.num_of_likes > i.num_of_dislikes and (i.creation_date - current_date).days <= 7:
             trending.append(i)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Main")
 
@@ -98,8 +102,9 @@ def trending_section_Dessert():
     print("Dessert")
     recipes = Recipes.query.filter_by(meal_type = "Dessert").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
+    current_date = datetime.date(datetime.now())
     for i in recipes:
-        if i.num_of_likes > i.num_of_dislikes:
+        if i.num_of_likes > i.num_of_dislikes and (i.creation_date - current_date).days <= 7:
             trending.append(i)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Dessert")
 
@@ -108,8 +113,9 @@ def trending_section_Snack():
     print("Snack")
     recipes = Recipes.query.filter_by(meal_type = "Snack").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
+    current_date = datetime.date(datetime.now())
     for i in recipes:
-        if i.num_of_likes > i.num_of_dislikes:
+        if i.num_of_likes > i.num_of_dislikes and (i.creation_date - current_date).days <= 7:
             trending.append(i)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Snack")
 
@@ -118,8 +124,9 @@ def trending_section_Breakfastk():
     print("Breakfast")
     recipes = Recipes.query.filter_by(meal_type = "Breakfast").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
+    current_date = datetime.date(datetime.now())
     for i in recipes:
-        if i.num_of_likes > i.num_of_dislikes:
+        if i.num_of_likes > i.num_of_dislikes and (i.creation_date - current_date).days <= 7:
             trending.append(i)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Breakfastk")
 
@@ -128,14 +135,15 @@ def trending_section_Drink():
     print("Drink")
     recipes = Recipes.query.filter_by(meal_type = "Drink").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
+    current_date = datetime.date(datetime.now())
     for i in recipes:
-        if i.num_of_likes > i.num_of_dislikes:
+        if i.num_of_likes > i.num_of_dislikes and (i.creation_date - current_date).days <= 7:
             trending.append(i)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Drink")
 
 @recipes.route('/history', methods = ['GET','POST'])
 def history():
-    histories = History.query.filter_by(userid = current_user.id).order_by(History.last_view_time.desc()).all()
+    histories = History.query.filter_by(userid = current_user.id).order_by(History.last_view_date.desc(), History.last_view_time.desc()).all()
     query = []
     for i in histories:
         recipes = Recipes.query.filter_by(id = i.recipe).all()
@@ -827,8 +835,10 @@ def view_recipe(recipeName, recipeId):
         return redirect(url_for('views.home'))
 
     #find recipe success
+    RecipeImage = None
     Contents = generate_ingreStr_by_recipeId(recipe.id)
-    RecipeImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe.photo})
+    if recipe.photo != None:
+        RecipeImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe.photo})
     
     #fetch steps from db
     Steps = ""
@@ -955,9 +965,23 @@ def delete_recipe():
     recipe = Recipes.query.filter_by(id=recipe_id).first()
         
     #find recipe success
-    if recipe.creates != current_user.id:
-        flash("You are not the owner of this recipe", 'error')
-        return redirect(url_for('recipes.view_recipe',recipeName = recipe.name,recipeId = recipe.id ))
+    if recipe != None:
+        if recipe.creates != current_user.id:
+            flash("You are not the owner of this recipe", 'error')
+            return redirect(url_for('recipes.view_recipe',recipeName = recipe.name,recipeId = recipe.id ))
+
+    # Delete associated likes about recipe
+    likes = Likes.query.filter_by(has=recipe_id).all()
+    for like in likes:
+        db.session.delete(like)
+
+
+    # Delete associated comments about recipe
+    comments = Comments.query.filter_by(has=recipe_id).all()
+    for comment in comments:
+        print(comment)
+        db.session.delete(comment)
+
 
     # Delete associated likes
     likes = Likes.query.filter_by(own=current_user.id).all()
