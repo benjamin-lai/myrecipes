@@ -55,6 +55,7 @@ def update_profile():
                     Filename=filename,
                     Key = filename
                 )
+                os.remove(filename)
                 profile.temp_pic = filename
                 db.session.commit()
     

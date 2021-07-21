@@ -272,6 +272,7 @@ def add_discription():
                         Filename=filename,
                         Key = filename
                     )
+                    os.remove(filename)
                     image_datas2_read = file_data.read()
                     image2 = base64.b64encode(image_datas2_read).decode('ascii')
                     image_datas2 = image2
@@ -417,6 +418,7 @@ def Add_ingredient():
                         Filename=filename,
                         Key = filename
                     )
+                    os.remove(filename)
                     image_datas1_read = file_data.read()
                     image1 = base64.b64encode(image_datas1_read).decode('ascii')
                     db.session.commit()
@@ -471,6 +473,7 @@ def upload_image():
                         Filename=filename,
                         Key = filename
                     )
+                    os.remove(filename)
                     image_datas1_read = file_data.read()
                     image1 = base64.b64encode(image_datas1_read).decode('ascii')
                     db.session.commit()
@@ -668,6 +671,7 @@ def edit_recipe():
                         Filename=filename,
                         Key = filename
                     )
+                    os.remove(filename)
                     db.session.commit()
 
                     Savelist["image_name1"] = filename
@@ -714,6 +718,7 @@ def edit_recipe():
                         Filename=filename,
                         Key = filename
                     )
+                    os.remove(filename)
                     image_datas2_read = file_data.read()
                     image2 = base64.b64encode(image_datas2_read).decode('ascii')
                     image_datas2 = image2
