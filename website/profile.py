@@ -1,4 +1,5 @@
 # Profile Page, I haven't done anything that cool yet.
+import os
 from typing import BinaryIO
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
@@ -55,6 +56,7 @@ def update_profile():
                     Filename=filename,
                     Key = filename
                 )
+                os.remove(filename)
                 profile.temp_pic = filename
                 db.session.commit()
     
