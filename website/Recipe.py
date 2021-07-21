@@ -12,7 +12,7 @@ from tkinter import messagebox
 import ctypes 
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
-from .models import Users, Recipes, Ingredient, Contents, Recipestep, Profiles, Method, History
+from .models import Users, Recipes, Ingredient, Contents, Recipestep, Profiles, Method, History, Likes, Comments
 from .review import create_comment, retrieve_comments
 from . import db
 from sqlalchemy import desc
@@ -194,7 +194,7 @@ def history():
                             from history h
                             join ingredient i on i.recipe_id = h.recipe
                             where userid=5) i2
-
+                            
                         on lower(concat('%%', i2.ingredient, '%%')) like lower(concat( '%%', i1.ingredient, '%%')))) s2
                 
                     
@@ -232,53 +232,11 @@ def recipe_cards():
     query = Recipes.query.order_by(Recipes.id.desc()).all()
     return render_template("Recipe_card.html", query=query, type="recent")
 
+#for testing now
 @recipes.route('/recipes', methods = ['GET','POST'])
 def recipe():
-    recipe_id = request.form.get('recipe_id')
-    #print(f"recipe id is  {recipe_id}")
-    #print(Savelist["RecipeId"])
-    print(Savelist["RecipeId"])
-    print("recipe below")
-    recipe_data = Recipes.query.filter_by(id = 38).first()
-    print(recipe_data.photo)
-    print(recipe_data.name)
-    image1 = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe_data.photo})
-    print(image1)
-    print(recipe_data.id)
-    ingredient_data = Ingredient.query.filter_by(recipe_id=recipe_data.id).first()
-    print("haha")
-    
-    button1 = request.form.get('edit_recipe')
-    print(button1)
-    if button1 != None:
-        print("nana")
-        print(button1)
-
-        return render_template("edit_recipe.html", user=current_user)
-    print("return recipe")
-    
-    #delete this recipe
-    deletebutton = request.form.get('Delete_recipe')
-    print(f"this is delete   !!{deletebutton}")
-    if deletebutton != None:
-        print("nanananna")
-        #delete recipe
-        obj = Recipes.query.filter_by(id = recipe_id).first()
-        name = obj.name
-        db.session.delete(obj)
-        #delete step
-        obj = Recipestep.query.filter_by(recipe_id = recipe_id).all()
-        for o in obj:
-            db.session.delete(obj)
-        #delete ingredients
-        obj = Ingredient.query.filter_by(recipe_id = recipe_id).all()
-        for o in obj:
-            db.session.delete(obj)
-        db.session.commit()
-        print("finish delete")
-        return render_template("delete_recipe.html",user = current_user, recipe_id = recipe_id, name = name)
-    else:
-        return render_template("recipe.html", user=current_user, name=recipe_data.name, Descriptions=recipe_data.description, image1 = image1)
+    recipe = Recipes.query.all()
+    return render_template("test.html",user = current_user)
 
 @recipes.route('/Add discription', methods=['GET', 'POST'])
 def add_discription():
@@ -871,6 +829,7 @@ def view_recipe(recipeName, recipeId):
     #find recipe success
     Contents = generate_ingreStr_by_recipeId(recipe.id)
     RecipeImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe.photo})
+    
     #fetch steps from db
     Steps = ""
     obj = Recipestep.query.filter_by(recipe_id = recipe.id).all()
@@ -894,18 +853,19 @@ def view_recipe(recipeName, recipeId):
     methods = Method.query.filter_by(recipe_id=Savelist["RecipeId"]).all()
 
     #Create recipe view history
-    exist_history = History.query.filter_by(userid = current_user.id, recipe = recipeId).first()
-    if exist_history != None:
-        print("duplicate browsing")
-        date = datetime.date(datetime.now())
-        time = datetime.time(datetime.now())
-        exist_history.last_view_time = time
-        exist_history.last_view_date = date
-        db.session.commit()
-    else:
-        history = History(userid = current_user.id, recipe = recipe.id)
-        db.session.add(history)
-        db.session.commit()
+    if current_user.is_authenticated:
+        exist_history = History.query.filter_by(userid = current_user.id, recipe = recipeId).first()
+        if exist_history != None:
+            print("duplicate browsing")
+            date = datetime.date(datetime.now())
+            time = datetime.time(datetime.now())
+            exist_history.last_view_time = time
+            exist_history.last_view_date = date
+            db.session.commit()
+        else:
+            history = History(userid = current_user.id, recipe = recipe.id)
+            db.session.add(history)
+            db.session.commit()
     
     
     
@@ -974,13 +934,16 @@ def view_recipe(recipeName, recipeId):
     # for res in res:
     #     print(res)
     
+    #to tell which image should use for user
+    if len(get_user_image(recipeId)) == 24:
+        UserImage = get_default_user_img()
+    else:
+        UserImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': get_user_image(recipeId)})
     
-    
-    
-
     return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
-    recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", meal_type = recipe.meal_type, methods=methods, res=res)
-        
+    recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", 
+    meal_type = recipe.meal_type, methods=methods, res=res, UserImage = UserImage, UserName = recipe.creator)
+         
 
 
 
@@ -995,34 +958,47 @@ def delete_recipe():
     if recipe.creates != current_user.id:
         flash("You are not the owner of this recipe", 'error')
         return redirect(url_for('recipes.view_recipe',recipeName = recipe.name,recipeId = recipe.id ))
+
+    # Delete associated likes
+    likes = Likes.query.filter_by(own=current_user.id).all()
+    for like in likes:
+        db.session.delete(like)
+
+
+    # Delete associated comments
+    comments = Comments.query.filter_by(owns=current_user.id).all()
+    for comment in comments:
+        print(comment)
+        db.session.delete(comment)
+
     #delete ingredient
     ingre = Ingredient.query.filter_by(recipe_id=recipe_id).all()
     if ingre != None:
         for i in ingre:
             if i.recipe_id == recipe_id:
                 db.session.delete(i)
-        db.session.commit()
+
     #delete steps
     steps = Recipestep.query.filter_by(recipe_id=recipe_id).all()
     if steps != None:
         for s in steps:
             if s.recipe_id == recipe_id:
                 db.session.delete(s)
-        db.session.commit()
+
     #delete history
     historys = History.query.filter_by(recipe=recipe_id).all()
     if historys != None:
         for s in historys:
             if s.recipe == recipe_id:
                 db.session.delete(s)
-        db.session.commit()
+
     #delete Method
     methods = Method.query.filter_by(recipe_id=recipe_id).all()
     if methods != None:
         for s in methods:
             if s.recipe_id == recipe_id:
                 db.session.delete(s)
-        db.session.commit() 
+
     #delete recipe
     recipe = Recipes.query.filter_by(id=recipe_id).first()
     if recipe != None:
@@ -1139,3 +1115,13 @@ def initial():
     Savelist["color_2"] = ''
     Savelist["color_3"] = ''
     Savelist["color_4"] = ''
+#find user image by userId
+def get_user_image(recipeId):
+    recipe = Recipes.query.filter_by(id = recipeId).first()
+    user = Profiles.query.filter_by(owns = recipe.creates).first()
+    print(f"1 {len(user.profile_pic)}")
+    return user.profile_pic
+
+def get_default_user_img():
+    image_file = url_for('static', filename='default_user.jpg')
+    return image_file
