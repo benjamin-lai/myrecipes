@@ -80,5 +80,6 @@ def send_email(email, topic, body):
         sender='w18b.sheeesh@gmail.com',
         recipients=[email])
     msg.body = body
+    msg.html = render_template("home.html", user=current_user)
             
     mail.send(msg)

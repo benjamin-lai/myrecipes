@@ -935,10 +935,10 @@ def view_recipe(recipeName, recipeId):
     #     print(res)
     
     #to tell which image should use for user
-    if len(get_user_image()) == 24:
+    if len(get_user_image(recipeId)) == 24:
         UserImage = get_default_user_img()
     else:
-        UserImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': get_user_image()})
+        UserImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': get_user_image(recipeId)})
     
     return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
     recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", 

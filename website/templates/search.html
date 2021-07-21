@@ -24,8 +24,11 @@
         .dropdown:hover .dropdown-menu {
           display: block;
         }
+        body{
+          height: 100%;
+        }
     </style>
-
+</head>
 <body>
   <!-- Our navbar, caters for desktop and mobile -->
   <!-- Nav bar that has a dark bg, and changes when the screen is no longer small-->
@@ -310,9 +313,11 @@
     type="text/javascript"
     src="{{ url_for('static', filename='index.js') }}"
   ></script>
-</body>
+
 </html>
 
+<br>
+<h6>{{queryLen}} results founded</h6>
 <h1 align="center">{{message}}</h1>
   <!--for loop to add card, copied from recipe card-->
   {% for recipes in query %}
@@ -332,9 +337,9 @@
             <h5 class="card-title">{{recipes.name}} </h5>
     
   </td>
-  <td>
-    <p class="card-text">{{recipes.description}}</p>
-  </td>
+  <div>
+    <h7 class="card-text">{{recipes.description}}</h7>
+  </div>
   <td>
         <!-- want to change thise so it displays profile based off profile_id-->
         <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.display_name}}"> {{recipes.creator}}</a></u></small></p>
@@ -349,4 +354,7 @@
 {% endfor %}
 
 </div>
+</body>
+
+
 {% endblock %}

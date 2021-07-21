@@ -66,7 +66,7 @@ def search_result():
             #find the query based on search_input
             query = find_query_by_name(searchInput)
             return render_template("search.html",user = current_user,
-                search_input = searchInput,query = query,search_value = searchInput)
+                search_input = searchInput,query = query,search_value = searchInput,queryLen = len(query))
         
         
 
@@ -175,16 +175,16 @@ def search_result():
             print(f"query {query}")
             return render_template("search.html",user = current_user,
                 search_input = searchInput,query = query,search_value = searchInput,
-                contents = Contents, include_ingreList = include_contents, exclude_ingreList = exclude_contents)
+                contents = Contents, include_ingreList = include_contents,queryLen = len(query), exclude_ingreList = exclude_contents)
         else:
             message = f"No Recipe be Founded  {searchInput}"
             return render_template("search.html",user = current_user,
                 search_input = searchInput,query = query,search_value = searchInput,
                 contents = Contents, include_ingreList = include_contents, 
-                exclude_ingreList = exclude_contents,message = message)
+                exclude_ingreList = exclude_contents,message = message,queryLen = len(query))
     message = f"No Recipe be Founded  {searchInput}"
     return render_template("search.html",user = current_user,search_input = searchInput
-        ,message = message)
+        ,message = message,queryLen = len(query))
     
 
 
