@@ -1,4 +1,3 @@
-import os
 from flask import Blueprint, render_template, flash, request, current_app as app
 from flask_login import current_user
 from flask_cors import CORS
@@ -42,7 +41,6 @@ def supports():
                             Filename=filename,
                             Key = filename
                         )
-                        os.remove(filename)
 
                 # Send information over to our email.
                 flash('Successfully sent email!', category='success')
