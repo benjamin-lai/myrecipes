@@ -98,6 +98,7 @@ create table CookBooks_Lists (
 );
 
 
+
 create table Starred_Recipes (
     recipe_id       integer      not null,
     contains        integer     not null,   -- contains is profile_id
@@ -141,3 +142,4 @@ create table Newsletters (
     own             integer     not null,
     foreign key (own) references Users(id)             
 );
+

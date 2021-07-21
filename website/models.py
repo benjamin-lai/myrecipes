@@ -155,3 +155,8 @@ class Newsletters(db.Model):
     trending = db.Column(db.Boolean)
     subscribed_to = db.Column(db.Boolean)       # This is for subscribed to 
     own = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+class Cookbooks_lists(db.Model,UserMixin):
+    cookbook_id = db.Column(db.Integer, primary_key=True, unique = True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
+    contains = db.Column(db.Integer,db.ForeignKey('profiles.profile_id'), primary_key=True)

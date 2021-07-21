@@ -5,7 +5,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from flask_cors import CORS
 from . import db
-from .models import Users, Profiles
+from .models import Users, Profiles, Cookbooks_lists
 from .validate_email import validate_email
 import boto3
 from werkzeug.utils import secure_filename
@@ -180,6 +180,26 @@ def view_profile(id):
         return redirect(url_for('views.home'))
 '''
 
+
+#cookbook in profile
+@profile.route('/cookbook', methods=['GET','POST']) # public view of profile based off name and id
+def cook_book():
+    #implementing create
+
+    #delete
+
+    #name changing
+
+    #add recipes
+
+    #delete recipes
+
+
+    cookbook_all = Cookbooks_lists.query.all()
+    return render_template("cookbook.html",user = current_user)
+
+
+
 # todo:
 # 1) recipes function
 #
@@ -198,3 +218,5 @@ def view_profile(id):
 # Quality improvements
 # 1) Fix up code for view public profile, try/except the whole thing
 # 2) add a button to personal profile page that allows them to check how their profile looks in public (similar to facebook)
+
+
