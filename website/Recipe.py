@@ -67,28 +67,53 @@ Savelist["color_4"] = ''
 
 @recipes.route('/Trending Section', methods = ['GET','POST'])
 def trending_section():
+    filter = request.form.get('filter')
+    choose = request.form.get('choose')
+    if choose:
+        redirect(url_for('recipes.Trending_Section'))
     recipes = Recipes.query.order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
     current_date = datetime.date(datetime.now())
     for i in recipes:
-        if i.num_of_likes > i.num_of_dislikes and (i.creation_date - current_date).days <= 7:
-            trending.append(i)
+        if i.num_of_likes > i.num_of_dislikes:
+            if filter == 'Day':
+                if (i.creation_date - current_date).days <= 1:
+                    trending.append(i)
+            else:
+                if (i.creation_date - current_date).days <= 7:
+                    trending.append(i)
+
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "All types")
 
 @recipes.route('/Trending Section.Starter', methods = ['GET','POST'])
 def trending_section_Starter():
     print("Starter")
+    filter = request.form.get('filter')
+    choose = request.form.get('choose')
+    if choose:
+        redirect(url_for('recipes.Trending Section.Starter'))
+
     recipes = Recipes.query.filter_by(meal_type = "Starter").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
     current_date = datetime.date(datetime.now())
     for i in recipes:
-        if i.num_of_likes > i.num_of_dislikes and (i.creation_date - current_date).days <= 7:
-            trending.append(i)
+       if i.num_of_likes > i.num_of_dislikes:
+            if filter == 'Day':
+                if (i.creation_date - current_date).days <= 1:
+                    trending.append(i)
+            else:
+                if (i.creation_date - current_date).days <= 7:
+                    trending.append(i)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Starter")
     
 @recipes.route('/Trending Section.Main', methods = ['GET','POST'])
 def trending_section_Main():
     print("Main")
+    filter = request.form.get('filter')
+    choose = request.form.get('choose')
+    if choose:
+        redirect(url_for('recipes.Trending Section.Main'))
+
     recipes = Recipes.query.filter_by(meal_type = "Main").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
     current_date = datetime.date(datetime.now())
@@ -100,6 +125,11 @@ def trending_section_Main():
 @recipes.route('/Trending Section.Dessert', methods = ['GET','POST'])
 def trending_section_Dessert():
     print("Dessert")
+    filter = request.form.get('filter')
+    choose = request.form.get('choose')
+    if choose:
+        redirect(url_for('recipes.Trending Section.Dessert'))
+
     recipes = Recipes.query.filter_by(meal_type = "Dessert").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
     current_date = datetime.date(datetime.now())
@@ -111,6 +141,11 @@ def trending_section_Dessert():
 @recipes.route('/Trending Section.Snack', methods = ['GET','POST'])
 def trending_section_Snack():
     print("Snack")
+    filter = request.form.get('filter')
+    choose = request.form.get('choose')
+    if choose:
+        redirect(url_for('recipes.Trending Section.Snack'))
+
     recipes = Recipes.query.filter_by(meal_type = "Snack").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
     current_date = datetime.date(datetime.now())
@@ -122,6 +157,11 @@ def trending_section_Snack():
 @recipes.route('/Trending Section.Breakfast', methods = ['GET','POST'])
 def trending_section_Breakfastk():
     print("Breakfast")
+    filter = request.form.get('filter')
+    choose = request.form.get('choose')
+    if choose:
+        redirect(url_for('recipes.Trending Section.Breakfast'))
+
     recipes = Recipes.query.filter_by(meal_type = "Breakfast").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
     current_date = datetime.date(datetime.now())
@@ -133,6 +173,11 @@ def trending_section_Breakfastk():
 @recipes.route('/Trending Section.Drink', methods = ['GET','POST'])
 def trending_section_Drink():
     print("Drink")
+    filter = request.form.get('filter')
+    choose = request.form.get('choose')
+    if choose:
+        redirect(url_for('recipes.Trending Section.Drink'))
+
     recipes = Recipes.query.filter_by(meal_type = "Drink").order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
     current_date = datetime.date(datetime.now())

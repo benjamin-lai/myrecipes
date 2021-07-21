@@ -3,6 +3,7 @@
 {% block title %}Recipe_card{% endblock %} {% block content %}
 <h2>Trending Section</h2>
 <html>
+<form>
 <style>
 .btn-group a {
   background-color: #04AA6D; /* Green background */
@@ -39,7 +40,13 @@
   <a href="/Trending Section.Breakfast" name="Breakfast" type="add" class="btn btn-primary">Breakfast</a>
   <a href="/Trending Section.Drink" name="Drink" type="add" class="btn btn-primary">Drink</a>
 </div>
-  
+
+<select style="margin-left:280px" name="filter" id="filter" style="margin-left:5px">
+  <option value="Week">Week</option>
+  <option value="Day">Day</option>
+</select>
+<button name="choose" type="add" class="btn btn-primary">Choose</button>
+</form>
 </body>
 <head>
     <title>Page Title</title>
