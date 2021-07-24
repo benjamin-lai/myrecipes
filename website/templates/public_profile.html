@@ -43,34 +43,40 @@
                         <script type = text/javascript>
                           function subState() {
                             var toggle = document.getElementById("subscribe");
+                            var post = 0;
                             if (toggle.innerHTML == "Subscribe"){
                               toggle.innerHTML = "Subscribed"
                               toggle.style.backgroundColor = "rgb(220, 53, 69, 0.6)"
+                              post = 1
                             }
                             else {
                               // Add an alert so users have to confirm unsubscribing maybe use ajax
-                              toggle.innerHTML = "Subscribe"
-                              toggle.style.backgroundColor = "rgb(220, 53, 69, 1)"   
+                              if (confirm("unsubscribe to {{profile.display_name}}?") == true) {
+                                toggle.innerHTML = "Subscribe"
+                                toggle.style.backgroundColor = "rgb(220, 53, 69, 1)"   
+                                post = 1
+                              } 
                             }
-                            
-                            $.ajax({
-                                type : "POST", // http method
-                                url : "{{url_for('profile.profile_sub')}}", // the endpoint
-                                data : {status: JSON.stringify(toggle.innerHTML), 
-                                    user: JSON.parse({{current_user.id}}), 
-                                    profile: JSON.parse({{profile.profile_id}})
-                                }, // data sent with the post request
+                            if (post == 1) {
+                              $.ajax({
+                                  type : "POST", // http method
+                                  url : "{{url_for('profile.profile_sub')}}", // the endpoint
+                                  data : {status: JSON.stringify(toggle.innerHTML), 
+                                      user: JSON.parse({{current_user.id}}), 
+                                      profile: JSON.parse({{profile.profile_id}})
+                                  }, // data sent with the post request
 
-                                // handle a successful response
-                                success : function() {
-                                    console.log("success"); // another sanity check
-                                },
+                                  // handle a successful response
+                                  success : function() {
+                                      console.log("success"); // another sanity check
+                                  },
 
-                                // handle a non-successful response
-                                error : function(xhr,errmsg,err) {
-                                    console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-                                }
-                            });
+                                  // handle a non-successful response
+                                  error : function(xhr,errmsg,err) {
+                                      console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                                  }
+                              });
+                            }
 
                           }
                         </script>
