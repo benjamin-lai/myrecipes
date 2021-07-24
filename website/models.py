@@ -3,6 +3,7 @@ from flask_login import UserMixin
 
 from . import db
 
+from datetime import datetime
 # IDK what userMixin is but its important for flask-login module
 # Just remember you still need to create the tables on your server.
 # Refer to schema.sql to compare Users for sqlalchemy and Users for postgresql
@@ -41,6 +42,8 @@ class Recipes(db.Model):
     num_of_likes = db.Column(db.Integer)
     num_of_dislikes = db.Column(db.Integer)
     meal_type = db.Column(db.String(150))
+    creation_time = db.Column(db.String(150))
+    creation_date = db.Column(db.String(150))
 
     def __init__(self,name,description,serving,creates, creator, meal_type):
         self.name = name
@@ -52,6 +55,8 @@ class Recipes(db.Model):
         self.num_of_likes = 0
         self.num_of_dislikes = 0
         self.meal_type = meal_type
+        self.creation_time = datetime.time(datetime.now())
+        self.creation_date = datetime.date(datetime.now())
 
 #Ingredient temp dictionary
 #Ingredientslist = []
@@ -122,7 +127,10 @@ class Newsfeeds(db.Model, UserMixin):
     display_name = db.Column(db.String(150))
     creation_time = db.Column(db.String(150))
     creation_date = db.Column(db.String(150))
-
+    
+class newsletter_email(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(150), unique=True)
 
 
 class Likes(db.Model):
@@ -158,3 +166,25 @@ class profile_subbed(db.Model, UserMixin):
     subscribed_id = db.Column(db.Integer, primary_key=True) #initialise to subscriber's id
     contains = db.Column(db.Integer, primary_key=True) # profile (focus)    
     
+class History(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer, primary_key=True)
+    recipe = db.Column(db.Integer, primary_key=True)
+    last_view_time = db.Column(db.String(150))
+    last_view_date = db.Column(db.String(150))
+    
+class Codes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    reset_code = db.Column(db.Integer)
+    own = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+class Newsletters(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    trending = db.Column(db.Boolean)
+    subscribed_to = db.Column(db.Boolean)       # This is for subscribed to 
+    own = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+class Cookbooks_lists(db.Model,UserMixin):
+    cookbook_id = db.Column(db.Integer, primary_key=True, unique = True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
+    contains = db.Column(db.Integer,db.ForeignKey('profiles.profile_id'), primary_key=True)

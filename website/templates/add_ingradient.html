@@ -1,0 +1,129 @@
+{% extends "base.html" %} {% block title %}Create Recipe{% endblock %}
+<!-- Overwrites title-->
+{% block content %}
+<section class="container-fluid">
+  <section class="row justify-content-center">
+    <style>
+        .btn-group a {
+        background-color: #04AA6D; /* Green background */
+        border: 1px solid green; /* Green border */
+        color: white; /* White text */
+        padding: 10px 24px; /* Some padding */
+        cursor: pointer; /* Pointer/hand icon */
+        float: left; /* Float the buttons side by side */
+        }
+
+        /* Clear floats (clearfix hack) */
+        .btn-group:after {
+        content: "";
+        clear: both;
+        display: table;
+        }
+
+        .btn-group button:not(:last-child) {
+        border-right: none; /* Prevent double borders */
+        }
+
+        /* Add a background color on hover */
+        .btn-group button:hover {
+        background-color: #3e8e41;
+        }
+
+        .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
+        border: 3px solid green; 
+        }
+    </style>
+    <body>
+
+        <div class="btn-group">
+            <a href="/Create recipe" name="Create recipe" type="add" class="btn btn-primary" style = "color:{{color1}}">Create recipe</a>
+            <a href="/upload image" name="upload image" type="add" class="btn btn-primary" style = "color:{{color2}}">upload image</a>
+            <a href="/Add ingredient" name="Add ingredient" type="add" class="btn btn-primary" style = "color:{{color3}}">Add ingredient</a>
+            <a href="/Add discription" name="Add discription" type="add" class="btn btn-primary" style = "color:{{color4}}">Add discription</a>
+        </div>
+    
+    </body>
+    
+    <!-- Shadow-->
+    <div class="shadow p-3 mb-5 bg-white rounded" style="width: 80rem">
+      <div class="card-body">
+        <br />
+        <h3 align="center">MyRecipe</h3>
+        <h5 align="center">
+          Create Recipe
+        </h5>
+        <br />
+
+        <!-- Ingredients -->
+        <form method="POST" name="part3" id="part3" enctype=multipart/form-data>
+        <h4 align="left">Step 3</h4>
+        <p style="color:blue;">{{IngreContents}}<p>
+        <h6 align="left" style="color:red; margin-left:90px;">Add Ingredients</h6>
+
+        <!-- I think form-inline screws with place, avoid using it  and use bootstrap grids -->
+        <div class="btn-group" id="rightDiv" style="float:left"></div>
+          <label for="dosage" style="margin-left:90px;">Unit</label>
+          <label for="unit_name" style="margin-left:60px">Unit Name</label>
+          <label for="unit_name" style="margin-left:20px">Ingredients</label>
+        </div>
+
+        <!-- No clue -->
+        <div class="form-inline" id="rightDiv" style="float:left">
+          <INPUT  id="dosage" 
+                  name="dosage"
+                  TYPE="NUMBER" 
+                  MIN="0" 
+                  MAX="10" 
+                  STEP="1" 
+                  VALUE="0" 
+                  SIZE="0" 
+                  class="form-control" 
+                  style="margin-left:110px">
+        </div>
+
+        <!-- No clue -->
+        <div class="form-inline" id="rightDiv" style="float:left">
+          <select name="Unit Name" id="Unit Name" style="margin-left:5px">
+            <option value="cups">cups</option>
+            <option value="g">g</option>
+            <option value="fl oz">fl oz</option>
+            <option value="tsp">tsp</option>
+            <option value="tbsp">tbsp</option>
+            <option value="bags">bags</option>
+            <option value="bar">bar</option>
+            <option value="bulb">bulb</option>
+            <option value="capsule">capsule</option>
+            <option value="cl">cl</option>
+            <option value="clove">clove</option>
+            <option value="cob">cob</option>
+            <option value="dash">dash</option>
+            <option value="drop">drop</option>
+            <option value="gallon">gallon</option>
+            <option value="head">head</option>
+            <option value="kg">kg</option>
+          </select>
+        </div>
+
+        <!-- No clue -->
+        <div class="form-inline" id="rightDiv" style="float:left">
+          <input
+          type="Ingredient Name"
+          class="form-control"
+          id="Ingredient Name"
+          name="Ingredient Name"
+          placeholder="Ingredient Name"
+          style="width:200px; color:black;margin-left:5px"
+          />
+        </div>
+        <button name="button1" type="add" class="btn btn-primary">Add</button>
+
+        <br />
+        </form> 
+    </div>
+  </section>
+</section>
+{% endblock %}

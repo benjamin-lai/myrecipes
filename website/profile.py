@@ -1,10 +1,11 @@
 # Profile Page, I haven't done anything that cool yet.
+import os
 from typing import BinaryIO
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from flask_cors import CORS
 from . import db
-from .models import Recipes, Users, Profiles, Subscribed, Subscriber, profile_subs, profile_subbed
+from .models import Recipes, Users, Profiles, Subscribed, Subscriber, profile_subs, profile_subbed, Cookbooks_lists
 from .validate_email import validate_email
 import boto3
 from werkzeug.utils import secure_filename
@@ -56,6 +57,7 @@ def update_profile():
                     Filename=filename,
                     Key = filename
                 )
+                os.remove(filename)
                 profile.temp_pic = filename
                 db.session.commit()
     
@@ -251,6 +253,26 @@ def view_profile(id):
         flash("No user exists with this id.", category="error")
         return redirect(url_for('views.home'))
 
+
+#cookbook in profile
+@profile.route('/cookbook', methods=['GET','POST']) # public view of profile based off name and id
+def cook_book():
+    #implementing create
+
+    #delete
+
+    #name changing
+
+    #add recipes
+
+    #delete recipes
+
+
+    cookbook_all = Cookbooks_lists.query.all()
+    return render_template("cookbook.html",user = current_user)
+
+
+
 # todo:
 
 # Edit display recipes
@@ -270,3 +292,5 @@ def view_profile(id):
 # Quality improvements
 # 1) Fix up code for view public profile, try/except the whole thing
 # 2) add a button to personal profile page that allows them to check how their profile looks in public (similar to facebook)
+
+

@@ -1,7 +1,7 @@
 <!-- Overrides base.html -->
 {% extends "base.html" %}
 <!-- Overrides tab name-->
-{% block title %}Login{% endblock %} {% block content%}
+{% block title %}Recover Password{% endblock %} {% block content%}
 <!-- Display login related content, will change later card form -->
 <br />
 <section class="container-fluid">
@@ -11,14 +11,17 @@
       <div class="card-body">
         <h3 align="center">MyRecipe</h3>
         <h5 align="center">
-          Not a member? <a href="/sign-up" class="link-primary">Sign Up</a>
+          Already a member? <a href="/login" class="link-primary">Sign In</a>
         </h5>
         <br />
 
         <form method="POST">
           <!-- Email -->
           <div class="form-group">
-            <label for="email">Email Address</label>
+            <label for="email"
+              >Please enter your email address to search for your
+              account.</label
+            >
             <input
               type="email"
               class="form-control"
@@ -27,26 +30,11 @@
               placeholder="Enter email"
             />
           </div>
-          <!-- Password-->
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              name="password"
-              placeholder="Enter password"
-            />
+          <div align="center">
+            <button type="submit" class="btn btn-primary">Search</button>
           </div>
           <br />
-          <a href="/recover" class="link-primary">Forgot Password?</a>
-          <div align="right">
-            <button type="submit" class="btn btn-primary">Login</button>
-          </div>
-          <hr />
         </form>
-        <!-- Google sign-in option available to users -->
-        <div class="g-signin2" align="center" data-onsuccess="onSignIn"></div>
       </div>
     </div>
   </section>

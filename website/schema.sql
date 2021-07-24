@@ -35,6 +35,16 @@ create table Recipes (
     foreign key (creates) references Users(id)     
 );
 
+create table History (
+    id                   serial      primary key,
+    userid               integer        not null,
+    recipe               integer        not null,
+    last_view_time       time           default DATE_TRUNC('second', localtime),
+    last_view_date       date           default current_date,
+    foreign key (userid) references Users(id),
+    foreign key (recipe) references Recipes(id)
+);
+
 create table Ingredient (
     id              serial      primary key,
     recipe_id integer references Recipes(id),
@@ -89,13 +99,7 @@ create table CookBooks_Lists (
     foreign key (recipe_id) references Recipes(id)      -- added this line, but not sure if necessary, will just check if the id exists in recipes
 );
 
-create table History_Lists (
-    recipe_id       integer      not null,
-    contains        integer     not null,   -- contains is profile_id
-    primary key (recipe_id, contains),
-    foreign key (contains) references Profiles(profile_id),
-    foreign key (recipe_id) references Recipes(id)      -- added this line, but not sure if necessary, will just check if the id exists in recipes
-);
+
 
 create table Starred_Recipes (
     recipe_id       integer      not null,
@@ -126,4 +130,18 @@ create table Likes (
     foreign key (has) references Recipes(id)
 );
 
+create table Codes (
+    id              serial      primary key,
+    reset_code      integer     not null,
+    own             integer     not null,
+    foreign key (own) references Users(id)
+);
+
+create table Newsletters (
+    id              serial      primary key,
+    trending        boolean     not null,
+    subscribed_to   boolean     not null,
+    own             integer     not null,
+    foreign key (own) references Users(id)             
+);
 

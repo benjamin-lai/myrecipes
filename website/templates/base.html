@@ -4,6 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    <!-- Client ID for our app, used for google sign in -->
+    <meta
+      name="google-signin-client_id"
+      content="784040491472-6uu3o01ngln967vcfpu45eo1in3he4m0.apps.googleusercontent.com"
+    />
+
     <!-- Import Bootstrap. Links to CDN which gives access to all the bootstrap designs -->
     <link
       rel="stylesheet"
@@ -23,7 +29,8 @@
       }
 
       .sticky-offset {
-        top: 56px;
+        top: 55px;
+        z-index: 100;
       }
     </style>
 
@@ -51,7 +58,18 @@
         <div class="collapse navbar-collapse" id="navbar">
           <!-- First nav bar to hold content to the left-->
           <div class="navbar-nav">
-            <a class="navbar-brand" href="/">MyRecipe</a>
+            <a class="myrecipes" href="/">
+              <li>
+                <img
+                  border="0"
+                  align="left"
+                  src="{{ url_for('static',filename = 'images/my-recipes.svg')}}"
+                  alt="facebook"
+                  height="40"
+                  width="100"
+                />
+              </li>
+            </a>
           </div>
 
           <!-- Second navbar to move content to the right-->
@@ -62,6 +80,30 @@
             <!-- Recipe creation stuff & random recipe -->
             <a class="nav-item nav-link" id="#" href="/recipe/random">Surprise me!</a>
             <a class="nav-item nav-link" id="#" href="#">Recipe Stuff</a> 
+            <!--search form-->
+            <form class="d-flex" action="/search_result" method="POST">
+              <input
+                class="form-control me-2"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+                id="Search"
+                name="Search"
+                autocomplete="on"
+                value="{{search_value}}"
+              />
+              <button class="btn btn-outline-success" type="submit">
+                Search
+              </button>
+            </form>
+
+            <!-- Recipe creation stuff  -->
+            <a
+              class="nav-item nav-link"
+              id="Create recipe"
+              href="/Create recipe"
+              >New Recipe</a
+            >
 
             <!-- Dropdown -->
             <li class="nav-item dropdown">
@@ -91,9 +133,33 @@
                   href="/Create recipe"
                   >New Recipe</a
                 >
+
                 <a class="dropdown-item" id="Recipe cards" href="/Recipe cards"
                   >Recipes</a
                 >
+                <a class="dropdown-item" id="history" href="/history"
+                  >History</a
+                >
+                <a
+                  class="dropdown-item"
+                  id="Trending Section"
+                  href="/Trending Section"
+                  >Trending Section</a
+                >
+
+                <!-- Newsletter and support tabs -->
+                <div class="dropdown-divider"></div>
+                <a
+                  class="dropdown-item"
+                  id="newsletter"
+                  href="/manage_newsletters"
+                  >Newsletters</a
+                >
+                <a class="dropdown-item" id="support" href="/support"
+                  >Support</a
+                >
+
+                <!-- Logout option -->
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" id="logout" href="/logout">Logout</a>
               </div>
@@ -123,6 +189,7 @@
         sticky-top sticky-offset
       "
       role="alert"
+      align="center"
     >
       {{ message }}
       <button type="button" class="close" data-dismiss="alert">
@@ -139,6 +206,7 @@
         sticky-top sticky-offset
       "
       role="alert"
+      align="center"
     >
       {{ message }}
       <button type="button" class="close" data-dismiss="alert">
@@ -148,6 +216,9 @@
     {% endif %} {% endfor %} {% endif %} {% endwith %}
 
     <div class="container">{% block content %} {% endblock %}</div>
+
+    
+
 
     <!-- Bootstrap. All the javascript required for the css components to work -->
     <script
@@ -166,6 +237,9 @@
       crossorigin="anonymous"
     ></script>
     
+
+    <!-- Google Platform Library for integrating Google sign-in -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 
     <!-- Script that loads static, js or maybe css into our html file -->
     <script

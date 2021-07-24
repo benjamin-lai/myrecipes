@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+<!-- Overwrites title-->
+{% block title %}Recipe_card{% endblock %} {% block content %}
+<h2>History</h2>
+{% for recipes in query %}
+<tr>
+    <td>
+      <div class="card mb-3" style="max-width: 1000px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <div class="zoom">
+              <a href="/recipe.{{recipes.name}}.{{recipes.id}}">
+                <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipes.photo}}" class="image">
+              </a>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{recipes.name}} </h5>
+      
+    </td>
+    <td>
+      <h6 class="card-text">{{recipes.description}}</h6>
+    </td>
+    <td>
+          <!-- want to change thise so it displays profile based off profile_id-->
+          <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.display_name}}"> {{recipes.creator}}</a></u></small></p>
+          <a href="/history.{{recipes.id}}" class="btn btn-primary">delete it in history</a>
+        </div>
+      </div>
+    </div>
+  </div>
+    </td>
+  </tr>
+{% endfor %} 
+
+
+<!--
+<div class="sidebar">
+  <h1 style="font-size:19px">Similar Recipes</h1>
+  {% for res in res %}
+    <tr>
+      <td>
+        
+        <div class="feed_zoom">
+          <a href="/recipe.{{res[2]}}.{{res[0]}}">
+            <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{res[3]}}" class="feed_image">
+          </a>
+          <p style="font-size:9px; text-align:center;">{{res[2]}}</p>
+        </div>
+        <p><br></p>
+      </td>
+    </tr>
+-->
+  {% endfor %}
+</div>
+
+{% endblock %}

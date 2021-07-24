@@ -50,6 +50,16 @@ From
     profiles as p
     LEFT JOIN subscriber as s on p.profile_id = s.subscriber_id;
 
+
+
+
+Select p.profile_id, p.first_name, p.last_name, p.display_name, p.profile_pic, p.bio, p.custom_url, p.sub_count, p.recipe_count, s.subscriber_id, s.contains
+From
+    profiles as p
+    LEFT JOIN subscriber as s on p.profile_id = s.subscriber_id;
+
+
+
 create view profile_subbed as
 Select p.profile_id, p.first_name, p.last_name, p.display_name, p.profile_pic, p.bio, p.custom_url, p.sub_count, p.recipe_count, s.subscribed_id, s.contains
 From

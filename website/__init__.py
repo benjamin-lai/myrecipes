@@ -1,14 +1,26 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_cors import CORS
 
+# Initialising database and parameters
 db = SQLAlchemy()
 DB_NAME = "rec"
 DB_PASSWORD = 'aa'
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
     app.config['SECRET_KEY'] = 'amongus'
+
+    # Mail parameters
+    app.config.update(
+        MAIL_SERVER= 'smtp.gmail.com',
+        MAIL_PORT= 465,
+        MAIL_USE_SSL= True,
+        MAIL_USERNAME = 'w18b.sheeesh@gmail.com',
+        MAIL_PASSWORD = "sheeesh3900"
+    )
 
     # Connects us to our database when we initialise the application.
     app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://postgres:{DB_PASSWORD}@localhost/{DB_NAME}'
@@ -20,6 +32,9 @@ def create_app():
     from .Recipe import recipes
     from .newsfeed import newsfeed
     from .review import review
+    from .search import search
+    from .newsletter import newsletter
+    from .support import support
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
@@ -27,6 +42,10 @@ def create_app():
     app.register_blueprint(recipes, url_prefix='/')
     app.register_blueprint(newsfeed, url_prefix='/')
     app.register_blueprint(review, url_prefix='/')
+    app.register_blueprint(search, url_prefix='/')
+    app.register_blueprint(newsletter, url_prefix='/')
+    app.register_blueprint(support, url_prefix='/')
+    
 
     from .models import Users
 
