@@ -14,11 +14,13 @@ CORS(newsfeed)
 # default is date, then like, then time, by the spec
 @newsfeed.route('/newsfeed', methods=['GET', 'POST'])
 def Newsfeed():
-    query = Newsfeeds.query.filter_by(contains=current_user.id).order_by(Newsfeeds.creation_date.desc()).order_by((Newsfeeds.likes-Newsfeeds.dislikes).desc()).order_by(Newsfeeds.creation_time.desc()).all()
-    type = '#'
-    if Newsfeeds.query.filter_by(contains=current_user.id).order_by(Newsfeeds.creation_date.desc()).order_by((Newsfeeds.likes-Newsfeeds.dislikes).desc()).order_by(Newsfeeds.creation_time.desc()).count() == 0:
-        type = 'empty'
-    return render_template("newsfeed.html", user=current_user, query=query, type=type)
+    if current_user.is_authenticated:   
+        query = Newsfeeds.query.filter_by(contains=current_user.id).order_by(Newsfeeds.creation_date.desc()).order_by((Newsfeeds.likes-Newsfeeds.dislikes).desc()).order_by(Newsfeeds.creation_time.desc()).all()
+        type = '#'
+        if Newsfeeds.query.filter_by(contains=current_user.id).order_by(Newsfeeds.creation_date.desc()).order_by((Newsfeeds.likes-Newsfeeds.dislikes).desc()).order_by(Newsfeeds.creation_time.desc()).count() == 0:
+            type = 'empty'
+        return render_template("newsfeed.html", user=current_user, query=query, type=type)
+    return render_template("restricted_access.html")
 
 
 # just by date and time

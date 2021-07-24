@@ -235,6 +235,14 @@
         {{ recipe.num_of_dislikes }}
       </div>
     </div>
+
+    <!-- Rating method for recipes that works off number of likes and dislikes on recipes. -->
+    <div class="row">
+      <div class="col">
+        <label>Rating: {{ rating }}</label>
+      </div>
+    </div>
+
     
     <div> 
       <h3 style="margin-top:40px", style="margin-left:40px">Ingredients</h3>
@@ -268,7 +276,7 @@
     <!-- Displays the ability to comment when the user is logged in-->
     {% if current_user.is_authenticated %}
       <div align="center">
-        <button type="button" class="btn btn-primary" onClick="createComment2({{ recipe_id }})">Post a new recipe!</button>
+        <button type="button" class="btn btn-primary" onClick="createComment2({{ recipe_id }})">Post a new Comment!</button>
       </div>
     {% endif %}
 
@@ -277,23 +285,24 @@
 
     <ul class="list-group list-group-flush" id="reviews">
       <!-- Iterate through comments for the recipe and display associated name and comment. -->
-      {% for comment_display_name, review in comments %}
-      {{ comment_display_name }}
+      {% for name, id, review in comments %}
+      <a href="#">{{ name }}</a>
       <li class="list-group-item">
+        
         {{ review.comment }}
           
         <!-- Displays the abiltiy to delete comments if either they are the recipe owner or person who made the comment -->
         {% if creates == current_user.id or current_user.id == review.owns %}
-          <button type="button" class="close" onClick="deleteComment({{ review.comment_id }})">
-            <span aria-hidden="true">&times;</span>
-          </button>
-
         <!-- Only the person who made the comment can modify it -->
           {% if current_user.id == review.owns %}
             <button type="button" class="btn btn-secondary float-right" onClick="modifyComment({{ review.comment_id }})">
               Modify
             </button>
           {% endif %}
+
+          <button type="button" class="close" onClick="deleteComment({{ review.comment_id }})">
+            <span aria-hidden="true">&times;</span>
+          </button>
           
         {% endif %}
       </li>
