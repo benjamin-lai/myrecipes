@@ -16,11 +16,19 @@
           <p>Feel free to leave a comment or message us about any enquiries.</p>
           <br />
 
-          <!-- Display current email address -->
-          <label><b>Email Address: </b> {{ user.email }}</label>
-          <hr />
-
           <form method="POST" enctype="multipart/form-data">
+            <!-- Email Address -->
+            <h4>Email Address</h4>
+            <div class="form-group">
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                placeholder="Enter email"
+              />
+            </div>
+
             <h4>Topic</h4>
             <br />
             <select

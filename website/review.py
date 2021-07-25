@@ -32,15 +32,15 @@ def create_comment():
 # Retrieves comments given recipe_id
 def retrieve_comments(recipe_id):
     # Create a list that stores both the display_name of comment creator and comments themselves.
-    name_and_list_comments = []
+    details = []
     list_comments = Comments.query.filter_by(has = recipe_id).all()
     for comments in list_comments:
         # Instead of adding display name to comments table, we find it here given comments.own
         # Creates a lot of overhead right now, needs to be fixed later
         profile = Profiles.query.filter_by(owns=comments.owns).first()
-        name_and_comment = (profile.display_name, comments)
-        name_and_list_comments.append(name_and_comment)
-    return name_and_list_comments
+        user_information = (profile.display_name, profile.profile_id, comments)
+        details.append(user_information)
+    return details
 
 @review.route('/delete-comment', methods=['POST'])
 def delete_comment():
@@ -163,3 +163,12 @@ def update_like_status(recipe, new_status, likes):
             likes.like_status = 0               # Update like_status to new_status
 
     db.session.commit()
+
+# Get the rating of the current recipe
+# Returns a string.
+def get_rating(likes, dislikes):
+    if likes != 0:
+        return str(round(likes/ (likes + dislikes) * 100, 2)) + '%'
+    elif likes == 0 and dislikes != 0:
+        return str(0) + '%'
+    return "No Rating"

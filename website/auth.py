@@ -37,10 +37,11 @@ def login_fn(email, password):
 
 
 @auth.route('/logout')
-@login_required
 def logout():
-    logout_user()
-    return redirect(url_for('auth.login'))
+    if current_user.is_authenticated:   
+        logout_user()
+        return redirect(url_for('auth.login'))
+    return render_template("restricted_access.html")
 
 
 
