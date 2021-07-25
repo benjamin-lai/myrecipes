@@ -5,7 +5,7 @@ from flask_mail import Mail, Message
 import json
 
 from . import db
-from .models import Subscriber_Lists, Users, Profiles, Newsfeeds, Newsletters
+from .models import Subscriber, Users, Profiles, Newsfeeds, Newsletters
 
 
 newsletter = Blueprint('newsletter', __name__)
@@ -91,7 +91,7 @@ def send_new_recipe_emails(recipe):
     user = Profiles.query.filter_by(owns=recipe.creates).first()
     
     # Get user's subscriber list
-    subscriber_list = Subscriber_Lists.query.filter_by(contains=user.profile_id).all()
+    subscriber_list = Subscriber.query.filter_by(contains=user.profile_id).all()
 
     # Get subscribers profile's emails
     emailing_list = get_profile_emails(subscriber_list)
