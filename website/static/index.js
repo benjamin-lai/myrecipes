@@ -95,3 +95,26 @@ function subscribeToNewsletters() {
     window.location.reload(true);
   });
 }
+
+function deleteIngredient(ingredient_id) {
+  if (confirm("Are you sure you want to delete this ingredient?"))
+    alert(ingredient_id)
+    fetch("/edit ingredient", {
+      method: 'POST',
+      body: JSON.stringify({ ingredient_id: ingredient_id }),
+    }).then((_res) => {
+      window.location.reload(true);
+    });
+}
+
+function modifyIngredient(comment_id) {
+  var new_comment = prompt("Enter new comment to change.");
+  if (new_comment != null) {
+    fetch("/edit ingredient", {
+      method: "POST",
+      body: JSON.stringify({ comment_id: comment_id, comment: new_comment }),
+    }).then((_res) => {
+      window.location.reload(true);
+    });
+  }
+}

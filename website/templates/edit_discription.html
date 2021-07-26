@@ -1,0 +1,87 @@
+{% extends "base.html" %} {% block title %}Create Recipe{% endblock %}
+<!-- Overwrites title-->
+{% block content %}
+<section class="container-fluid">
+  <section class="row justify-content-center">
+    <style>
+        .btn-group a {
+        background-color: #04AA6D; /* Green background */
+        border: 1px solid green; /* Green border */
+        color: white; /* White text */
+        padding: 10px 24px; /* Some padding */
+        cursor: pointer; /* Pointer/hand icon */
+        float: left; /* Float the buttons side by side */
+        }
+
+        /* Clear floats (clearfix hack) */
+        .btn-group:after {
+        content: "";
+        clear: both;
+        display: table;
+        }
+
+        .btn-group button:not(:last-child) {
+        border-right: none; /* Prevent double borders */
+        }
+
+        /* Add a background color on hover */
+        .btn-group button:hover {
+        background-color: #3e8e41;
+        }
+
+        .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
+        border: 3px solid green; 
+        }
+    </style>
+    <body>
+
+        <div class="btn-group">
+            <a href="/edit recipe" name="Create recipe" type="add" class="btn btn-primary" style = "color:{{color1}}">Create recipe</a>
+            <a href="/edit recipe image" name="upload image" type="add" class="btn btn-primary" style = "color:{{color2}}">upload image</a>
+            <a href="/edit ingredient" name="Add ingredient" type="add" class="btn btn-primary" style = "color:{{color3}}">Add ingredient</a>
+            <a href="/edit discription" name="Add discription" type="add" class="btn btn-primary" style = "color:{{color4}}">Add discription</a>
+          </div>
+    
+    </body>
+    
+    <!-- Shadow-->
+
+    <div class="shadow p-3 mb-5 bg-white rounded" style="width: 80rem">
+      <div class="card-body">
+        <br />
+        <h3 align="center">MyRecipe</h3>
+        <h5 align="center">
+          Create Recipe
+        </h5>
+        <br />
+
+        <form method="POST" name="part3" id="part4" enctype=multipart/form-data style="margin-left:80px">
+            <h4 align="left" style = "margin-top:30px">Step 4</h4>
+            <h6 align="left" style="color:red;">Upload photos and discriptions for your recipe</h6>
+            <div class="form-group">
+              <label for="step_number">Step No</label>
+              <INPUT id="step_number" name="step_number" value={{Step_Number}} TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="0" >
+                <button name="find" type="add" class="btn btn-primary">Find</button>
+            </div id="parentDiv" class="form-inline">
+            
+            <!-- Description -->
+            <h6 align="left" style="color:red;">Add Discriptions</h6>
+            <div align="left" style="color:blue;">discriptions<br> <textarea name="discriptions" cols="30" rows="3" value={{current_step.step_comment}}></textarea></div>
+            <div align="left" > <input type="reset" name="Submit2" value="Clear" style="float:left; margin-left:0px"> </div>
+      
+            </br>
+            <h4 align="left" style = "margin-top:10px; margin-left:0px">Upload Step photos</h4>
+            <input style = "margin-left:0px" type=file name=file2>
+            <input name = "button4" type=submit value=Upload>
+            <br />
+            <button  style = "margin-top:0px; margin-left:0px" name="Submit" type="add" class="btn btn-primary">Submit Recipe</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</section>
+{% endblock %}

@@ -62,13 +62,16 @@ class Recipes(db.Model):
 Contents = "empty"
 
 class Ingredient(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
+    step = db.Column(db.Integer)
     dosage = db.Column(db.Integer)
     unit_name = db.Column(db.String(150))
     ingredient = db.Column(db.String(150), primary_key=True)
 
-    def __init__(self,recipe_id,dosage,unit_name,ingredient):
+    def __init__(self,recipe_id,dosage,unit_name,ingredient,step):
         self.recipe_id = recipe_id
+        self.step = step
         self.dosage = dosage
         self.unit_name = unit_name
         self.ingredient = ingredient
