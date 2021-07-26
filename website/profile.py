@@ -1,15 +1,16 @@
 # Profile Page, I haven't done anything that cool yet.
 import os
 from typing import BinaryIO
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for,jsonify
 from flask_login import login_required, current_user
+import json
 from flask_cors import CORS
 from . import db
-from .models import Users, Profiles, Cookbooks_lists
+from .models import Users, Profiles,Cookbooks, Cookbooks_lists
 from .validate_email import validate_email
 import boto3
 from werkzeug.utils import secure_filename
-
+from .review import create_cookbook, delete_book
 
 profile = Blueprint('profile', __name__)
 CORS(profile)
@@ -181,24 +182,26 @@ def view_profile(id):
 '''
 
 
-#cookbook in profile
-@profile.route('/cookbook', methods=['GET','POST']) # public view of profile based off name and id
+#cookbook center in profile
+@profile.route('/cookbook', methods=['GET','POST']) 
 def cook_book():
     #implementing create
-
     #delete
+    #name changing                  in  review.py
 
-    #name changing
+    #user can only view the recipe of their own
+    cookbook_all = Cookbooks.query.filter_by(contains = current_user.id).all()
+    print(cookbook_all)
+    return render_template("cookbook.html",user = current_user, books = cookbook_all)
 
+
+#cookbook
+@profile.route('/cookbook.<book_name>.<int:book_id>', methods=['GET','POST'])
+def cook_book2(book_name,book_id):
     #add recipes
 
     #delete recipes
-
-
-    cookbook_all = Cookbooks_lists.query.all()
-    return render_template("cookbook.html",user = current_user)
-
-
+    return render_template("cookbook_content.html",user = current_user)
 
 # todo:
 # 1) recipes function

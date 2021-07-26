@@ -88,13 +88,19 @@ create table Subscribed_To_Lists (
     foreign key (contains) references Profiles(profile_id)
 );
 
-create table CookBooks_Lists (
-    cookbook_id     integer      not null,
-    recipe_id       integer      not null,
+create table CookBooks (
+    id              serial      not null    unique,
+    name            text        not null,
     contains        integer     not null,   -- contains is profile_id
-    primary key (cookbook_id, recipe_id, contains),   -- duplicate recipes cant be put into the same cookbook for a given user
-    foreign key (contains) references Profiles(profile_id),
-    foreign key (recipe_id) references Recipes(id)      -- added this line, but not sure if necessary, will just check if the id exists in recipes
+    primary key (id, contains),   -- duplicate recipes cant be put into the same cookbook for a given user
+    foreign key (contains) references Users(id)
+);
+
+create table CookBooks_Lists (
+    cookbook_id     serial      references CookBooks(id),
+    recipe_id       integer      not null,
+    primary key (cookbook_id),   -- duplicate recipes cant be put into the same cookbook for a given user
+    foreign key (recipe_id) references Recipes(id)      -- added this line, but not sure if necessary, will just check if the id exists in recipes 
 );
 
 

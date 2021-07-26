@@ -1,12 +1,66 @@
 # This is contains helper functions to create, modify and delete messages.
-from flask import Blueprint, request, flash, jsonify
+from flask import Blueprint, request, flash, jsonify,redirect, url_for, render_template
 from flask_login import login_required, current_user
 import json
 
-from .models import Comments, Profiles, Likes, Recipes
+from .models import Comments, Profiles, Likes, Recipes, Cookbooks, Cookbooks_lists
 from . import db
 
 review = Blueprint('review', __name__)
+
+
+#cookbook in profile
+@review.route('/cookbook_create', methods=['POST']) 
+def create_cookbook():
+    #implementing create
+    print(request.method)
+    if request.method == 'POST':
+        cookbook = json.loads(request.data)
+        cookbook_name = cookbook['name']
+        print(f"cookbook {cookbook['name']}")
+
+        if len(cookbook_name) < 1:
+            flash('name is too short!', category='error')
+        else:
+            new_book = Cookbooks(name = cookbook_name, contains = current_user.id)
+            db.session.add(new_book)
+            db.session.commit()
+            flash('CookBook added!', category='success')
+        return jsonify({})
+
+#delete cookbook
+@review.route('/delete_book', methods=['POST'])
+def delete_book():
+    if request.method == 'POST':
+        delete = json.loads(request.data)
+        print(delete)
+        book_id = delete['book_id']
+        print(book_id)
+        cookbook = Cookbooks.query.filter_by(id = book_id).first()
+
+        db.session.delete(cookbook)
+        db.session.commit()
+        flash('Deleted cookbook successfully!', category='success')
+        return jsonify({})
+
+#edit the name of cookbook
+@review.route('/edit_bookname', methods=['POST'])
+def edit_name():
+    if request.method == 'POST':
+        cookbook = json.loads(request.data)
+        book_id = cookbook['book_id']
+        new_name = cookbook['name']
+        print(f"book   {cookbook}")
+        if len(new_name) < 1:    
+            flash('Name is too short!', category='error')
+        else:
+            cookbook = Cookbooks.query.filter_by(id = book_id).first()
+            cookbook.name = new_name
+            db.session.commit()
+            flash('Modified book name successfully!', category='success')
+
+        return jsonify({})
+
 
 # Creates a comment given the recipe_id
 # Already checks http request 
