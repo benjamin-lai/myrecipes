@@ -1,6 +1,10 @@
+<<<<<<< HEAD
+website/__pycache__/*
+=======
  */__pycache__/*
 myenv
 .vscode
 website/__pycache__
 .gitignore
 rec.dump
+>>>>>>> dev

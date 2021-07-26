@@ -1,0 +1,101 @@
+<html>
+{% extends "base.html" %} {% block title %}Starred Recipes{% endblock %}
+
+{% block content %}
+
+<body>
+    <h1>Starred Recipes</h1>
+
+    {% if type == '#' %}
+
+  {% elif type == 'empty' %}
+  <br><br><br><br><br><br>
+    <h1 style="color: red">Heart you're favourite recipes to see them here!</h1>
+  {% endif %}
+
+
+    {% for recipes in query %}
+    <tr>
+      <td>
+        <div class="card mb-3" style="max-width: 1000px;">
+          <div class="row g-0">
+            <div class="col-md-4">
+              <div class="zoom">
+                <a href="/recipe.{{recipes.name}}.{{recipes.id}}">
+                  <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipes.photo}}" class="image">
+                </a>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">{{recipes.name}} </h5>
+                <div id="favourite" style="float:right">
+                  <div id="heart"></div> 
+                  <div id="heartwhite" onclick="star_state();" title={{recipes.id}} style="opacity: 0; cursor: pointer;"></div>
+                  <!-- Recipe Star Button -->
+                  
+                    <script type = text/javascript>
+                      function star_state(event) {
+                        if (!event)
+                          event=window.event;
+                        
+                        var toggle = (event.srcElement);
+                        
+                        console.log("CLICKITY CLACK")
+
+                        console.log(toggle.id)
+                        console.log(toggle.title)
+                        
+                        
+                        if (toggle.style.opacity == "1") {
+                          toggle.style.opacity = "0";
+                          status = "starred"
+                        }
+                        else if (toggle.style.opacity = "0") {
+                          toggle.style.opacity = "1";
+                          status = "unstarred"
+                        }              
+                        $.ajax({
+                          type : "POST", 
+                          url : "{{url_for('recipes.star_recipe')}}", 
+                          data : {status: JSON.stringify(status), 
+                              user: JSON.stringify({{current_user.id}}), 
+                              recipe: JSON.parse(toggle.title)
+                          }, 
+                          success : function() {
+                              console.log("success"); 
+                          },
+                          error : function(xhr,errmsg,err) {
+                              console.log(xhr.status + ": " + xhr.responseText); 
+                          }
+                        }); 
+                    } 
+                                      
+                    </script> 
+                </div>
+                <p class="card-text"><small class="text-muted">Posted: {{recipes.creation_time}} {{recipes.creation_date}}</small></p>
+
+                <p>Likes: {{recipes.likes}} Dislikes: {{recipes.dislikes}}</p>
+      </td>
+      <td>
+        <p class="card-text">{{recipes.description}}</p>
+      </td>
+      <td>
+            <!-- want to change thise so it displays profile based off profile_id-->
+
+            <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.custom_url}}"> {{recipes.creator}}</a></u></small></p>
+            <a href="/recipe.{{recipes.name}}.{{recipes.id}}" class="btn btn-primary">Get the Recipe</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% endfor %}
+
+
+
+
+  {% endblock %}
+</body>
+
+</html>

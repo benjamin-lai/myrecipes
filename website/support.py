@@ -17,45 +17,47 @@ CORS(support)
 
 @support.route('/support', methods=['GET', 'POST'])
 def supports():
-    if current_user.is_authenticated: 
-        if request.method == 'POST':
-        # Getting list of integers, that correspond to content they want in their newsletters
-            topic = request.form.get('topic_select')
-            body = request.form['email-body']
-            uploaded_files = request.files.getlist('files')
-            
-            if topic is None:
-                flash('Please select a topic', category='error')
+    if request.method == 'POST':
+    # Getting list of integers, that correspond to content they want in their newsletters
+        email = request.form.get('email')
+        topic = request.form.get('topic_select')
+        body = request.form['email-body']
+        uploaded_files = request.files.getlist('files')
+        
+        if email is None:
+            flash('Invalid Email address', category='error')
 
-            elif body is None:
-                flash('Please enter some description', category='error')
+        if topic is None:
+            flash('Please select a topic', category='error')
 
-            else:
-                # Given the uploaded_files save it into boto3
-                for f in uploaded_files:
-                    if f:
-                        filename = secure_filename(f.filename)
-                        f.save(filename)
-                        s3.upload_file(
-                            Bucket = 'comp3900-w18b-sheeesh',
-                            Filename=filename,
-                            Key = filename
-                        )
+        elif body is None:
+            flash('Please enter some description', category='error')
 
-                # Send information over to our email.
-                flash('Successfully sent email!', category='success')
-                send_email(current_user.email, topic, body, uploaded_files)
+        else:
+            # Given the uploaded_files save it into boto3
+            for f in uploaded_files:
+                if f:
+                    filename = secure_filename(f.filename)
+                    f.save(filename)
+                    s3.upload_file(
+                        Bucket = 'comp3900-w18b-sheeesh',
+                        Filename=filename,
+                        Key = filename
+                    )
 
-        return render_template("support.html", user=current_user)
-    return render_template("restricted_access.html")
+            # Send information over to our email.
+            flash('Successfully sent email!', category='success')
+            send_email(email, topic, body, uploaded_files)
 
+    return render_template("support.html", user=current_user)
+
+# Function that sends the query email over to our group email.
 def send_email(email, topic, body, files):
     mail = Mail(app)
     msg = Message(topic,
         sender=email,
         recipients=['w18b.sheeesh@gmail.com'])
-    msg.body = body
-
+    msg.body = f"Email from {email}\n\n" + body
     # Go through the attached files again and attach it to our email.
     for f in files:
         if f:

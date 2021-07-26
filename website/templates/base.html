@@ -77,6 +77,9 @@
             <!-- Viewing condition for logged in and logged out users-->
             {% if current_user.is_authenticated %}
 
+            <!-- Recipe creation stuff & random recipe -->
+            <a class="nav-item nav-link" id="#" href="/recipe/random">Surprise me!</a>
+            <a class="nav-item nav-link" id="#" href="#">Recipe Stuff</a> 
             <!--search form-->
             <form class="d-flex" action="/search_result" method="POST">
               <input
@@ -121,9 +124,14 @@
                 <a class="dropdown-item" id="profile" href="/profile/my"
                   >Profile</a
                 >
-
-                <a class="dropdown-item" id="newsfeed" href="/newsfeed"
-                  >Personalised Newsfeed</a
+                <a class="dropdown-item" id="#" href="#">Newsletters</a>
+                <a class="dropdown-item" id="newsfeed" href="/newsfeed">Personalised Newsfeed</a>
+                <a class="dropdown-item" id="starred_recipes" href="/recipes/starred">Starred Recipes</a>
+                <a
+                  class="dropdown-item"
+                  id="Create recipe"
+                  href="/Create recipe"
+                  >New Recipe</a
                 >
 
                 <a class="dropdown-item" id="Recipe cards" href="/Recipe cards"
@@ -228,6 +236,7 @@
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
     ></script>
+    
 
     <!-- Google Platform Library for integrating Google sign-in -->
     <script src="https://apis.google.com/js/platform.js" async defer></script>
@@ -237,5 +246,6 @@
       type="text/javascript"
       src="{{ url_for('static', filename='index.js') }}"
     ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </body>
 </html>

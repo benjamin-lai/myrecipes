@@ -25,8 +25,9 @@ class Profiles(db.Model, UserMixin):
     profile_pic = db.Column(db.String(150))
     temp_pic = db.Column(db.String(150))
     bio = db.Column(db.String(150))
-    custom_url = db.Column(db.String(150))
+    custom_url = db.Column(db.String(150), unique=True)
     owns = db.Column(db.Integer, db.ForeignKey('users.id'))
+    sub_count = db.Column(db.Integer)
     
     
     
@@ -99,15 +100,15 @@ class Meal_Type(db.Model, UserMixin):
      recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
      meal_type = db.Column(db.String(150), primary_key=True)
 
-#contains is profiles.id 
-class Subscriber_Lists(db.Model, UserMixin):
+# subscriber lists
+class Subscriber(db.Model, UserMixin):
     subscriber_id = db.Column(db.Integer, primary_key=True) #initialise to subscriber's id
-    contains = db.Column(db.Integer, primary_key=True)
+    contains = db.Column(db.Integer, primary_key=True) # profile (focus)
     
-    
-class Subscribed_To_Lists(db.Model, UserMixin):
-    subscribed_id = db.Column(db.Integer, primary_key=True)
-    contains = db.Column(db.Integer, primary_key=True)
+# subscribed to lists
+class Subscribed(db.Model, UserMixin):
+    subscribed_id = db.Column(db.Integer, primary_key=True) # profile
+    contains = db.Column(db.Integer, primary_key=True) # user (focus)
     
 
 
@@ -138,6 +139,33 @@ class Likes(db.Model):
     has = db.Column(db.Integer, db.ForeignKey('recipes.id'))
     own = db.Column(db.Integer, db.ForeignKey('users.id'))
 
+class StarredRecipes(db.Model, UserMixin):
+    recipe_id = db.Column(db.Integer, primary_key=True) # Recipe
+    contains = db.Column(db.Integer, primary_key=True) # User that stars the recipe
+
+# view - A way to access subscriber's profile details
+class profile_subs(db.Model, UserMixin):
+    profile_id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(150))
+    last_name = db.Column(db.String(150))
+    display_name = db.Column(db.String(150))
+    profile_pic = db.Column(db.String(150))
+    bio = db.Column(db.String(150))
+    custom_url = db.Column(db.String(150), unique=True)
+    subscriber_id = db.Column(db.Integer, primary_key=True) #initialise to subscriber's id
+    contains = db.Column(db.Integer, primary_key=True) # profile (focus)
+
+class profile_subbed(db.Model, UserMixin):
+    profile_id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(150))
+    last_name = db.Column(db.String(150))
+    display_name = db.Column(db.String(150))
+    profile_pic = db.Column(db.String(150))
+    bio = db.Column(db.String(150))
+    custom_url = db.Column(db.String(150), unique=True)
+    subscribed_id = db.Column(db.Integer, primary_key=True) #initialise to subscriber's id
+    contains = db.Column(db.Integer, primary_key=True) # profile (focus)    
+    
 class History(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     userid = db.Column(db.Integer, primary_key=True)

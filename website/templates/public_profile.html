@@ -1,6 +1,5 @@
-{% extends "base.html" %} {% block title %}{{profile.display_name}}{% endblock
-%}
-<!-- Overwrites title-->
+{% extends "base.html" %} {% block title %}{{profile.display_name}}{% endblock %}
+<!-- Same as profile but no edit button, have the option to subscribe-->
 
 {% block content %}
 
@@ -8,6 +7,13 @@
   <div class="media">
     <div class="media-body" align="left">
       <header>
+        {% if profile.profile_id == current_user.id %}
+          <form action="my/edit" method="GET">
+            <button class="btn btn-success pull-right" type="submit">
+              Edit Profile
+            </button>
+          </form>
+        {% endif %}
         <!-- Background image hardcoded-->
         <div
           class="p-5 text-center bg-image"
@@ -24,41 +30,138 @@
                     <!-- Account info-->
                     <h1 class="mb-3">{{profile.display_name}}
                         <small class='text-muted'>#{{profile.profile_id}}</small>
+
+                        <!-- Subscribe Button-->
+                        {% if sub_status == "unsubbed" %}
+                        <a href=#><button class="btn btn-danger" id="subscribe" onclick="subState()" type="submit" method="POST">Subscribe</button></a>
+                        {% elif sub_status == "subbed" %}                    
+                        <a href=#><button class="btn btn-danger" style="background-color:rgb(220, 53, 69, 0.6)" id="subscribe" onclick="subState()" type="submit" method="POST">Subscribed</button></a>
+                        {% endif %}
+
+                        <!-- javascript function that changes the state of the subscribe button-->
+                        {% if current_user.is_authenticated %}
+                        <script type = text/javascript>
+                          function subState() {
+                            var toggle = document.getElementById("subscribe");
+                            var post = 0;
+                            if (toggle.innerHTML == "Subscribe"){
+                              toggle.innerHTML = "Subscribed"
+                              toggle.style.backgroundColor = "rgb(220, 53, 69, 0.6)"
+                              post = 1
+                            }
+                            else {
+                              // Add an alert so users have to confirm unsubscribing maybe use ajax
+                              if (confirm("unsubscribe to {{profile.display_name}}?") == true) {
+                                toggle.innerHTML = "Subscribe"
+                                toggle.style.backgroundColor = "rgb(220, 53, 69, 1)"   
+                                post = 1
+                              } 
+                            }
+                            if (post == 1) {
+                              $.ajax({
+                                  type : "POST", // http method
+                                  url : "{{url_for('profile.profile_sub')}}", // the endpoint
+                                  data : {status: JSON.stringify(toggle.innerHTML), 
+                                      user: JSON.parse({{current_user.id}}), 
+                                      profile: JSON.parse({{profile.profile_id}})
+                                  }, // data sent with the post request
+
+                                  // handle a successful response
+                                  success : function() {
+                                      console.log("success"); // another sanity check
+                                  },
+
+                                  // handle a non-successful response
+                                  error : function(xhr,errmsg,err) {
+                                      console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                                  }
+                              });
+                            }
+
+                          }
+                        </script>
+                        {% else %}
+                        <script type = text/javascript>
+                          function subState(){
+                            window.alert("Please sign in first so you can heart your favourite recipes!")
+                          }
+                        </script>
+                        {% endif %}
+
                     </h1>
                     <!-- Subscriber count: Need to create a list and link-->
-                    <h4 class="text-info">Subscribers: X</h4>
+                    {% if profile.custom_url == None %}
+                      <h4 class="text-info" ><a href="{{profile.profile_id}}/subscribers">Subscribers: {{subs}}</a></h4>
+                    {% else %}
+                      <h4 class="text-info" ><a href="{{profile.custom_url}}/subscribers">Subscribers: {{subs}}</a></h4>
+                    {% endif %}
                   </div>
                 </div>      
               </div>
-            </div>
+
           </div>
         </div>
         <!-- Background image -->
       </header>
     </div>
+    
+      <h1 class="account-heading">{{profile.first_name}} {{profile.last_name}}</h1>
+      {% if profile.custom_url == None %}
+        <a href="{{profile.profile_id}}/subscriptions" class="badge badge-secondary">Subscriptions</a> <!-- Have it relink to subscriber_list html but use if statements to change title etc...-->
+      {% else %}
+        <a href="{{profile.custom_url}}/subscriptions" class="badge badge-secondary">Subscriptions</a> 
+      {% endif %} 
+      <p class="text-secondary">{{user.email}}</p>
+
+    
+      <p class="lead">Contributed Recipes: {{query.count()}}</p>
+      <!-- User Bio-->
+      <div class="form-group purple-border">
+        <label for="exampleFormControlTextarea4">Personal Bio</label>
+        <textarea
+          class="form-control"
+          id="exampleFormControlTextarea4"
+          rows="3"
+          readonly="">{{profile.bio}}</textarea>
+      </div>
   </div>
   <!-- FORM HERE -->
 </div>
-
-<h1 class="account-heading">
-  {{profile.display_name}}
-  <small class="text-muted">#{{profile.profile_id}}</small>
-</h1>
-<p class="text-secondary">{{user.email}}</p>
-
-<p class="lead">{{profile.first_name}} {{profile.last_name}}</p>
-<!-- User Bio-->
-<div class="form-group purple-border">
-  <label for="exampleFormControlTextarea4">Personal Bio</label>
-  <textarea
-    class="form-control"
-    id="exampleFormControlTextarea4"
-    rows="3"
-    readonly=""
-  >
-{{profile.bio}}</textarea
-  >
+<br>
 </div>
 <!-- User Bio-->
 
+<div class="container-fluid">
+  <div class='row card-group'>
+    {% for recipes in query %}
+      <div class="col-lg-3 d-flex align-items-stretch">
+        <div class="card" style="width: 18.75rem;">
+          <div class="zoom">
+            <a href="/recipe.{{recipes.name}}.{{recipes.id}}">
+              <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipes.photo}}" class="image">
+            </a>
+          </div>
+
+          <div class="card-body">
+            <h5 class="card-title">{{recipes.name}} </h5>
+            <p class="card-text"><small class="text-muted">Posted: {{recipes.creation_time}} {{recipes.creation_date}}</small></p>
+            <p>Likes: {{recipes.likes}} Dislikes: {{recipes.dislikes}}</p>
+            <p class="card-text">{{recipes.description}}</p>
+            <!-- want to change thise so it displays profile based off profile_id-->
+            <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{profile.custom_url}}"> {{recipes.creator}}</a></u></small></p>
+            <a href="/recipe.{{recipes.name}}.{{recipes.id}}" class="btn btn-primary">Get the Recipe</a>
+            
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">Last updated X mins ago</small>
+          </div>
+        </div>
+      </div>
+      <br>
+      <p></p>
+    {% endfor %}
+    </div>
+
+</div>
 {% endblock %}
+

@@ -6,7 +6,7 @@ from flask_cors import CORS
 from flask_mail import Mail, Message
 from random import randint
 
-from .models import Users, Profiles, Codes
+from .models import Subscribed, Subscriber, Users, Profiles, Codes
 from .validate_email import validate_email
 from . import db
 
@@ -37,10 +37,11 @@ def login_fn(email, password):
 
 
 @auth.route('/logout')
-@login_required
 def logout():
-    logout_user()
-    return redirect(url_for('auth.login'))
+    if current_user.is_authenticated:   
+        logout_user()
+        return redirect(url_for('auth.login'))
+    return render_template("restricted_access.html")
 
 
 
@@ -84,7 +85,8 @@ def sign_up_fn(email, first_name, last_name, password1, password2):
         image_file = url_for('static', filename='default_user.jpg')      
 
         # Create default profile for new user
-        new_profile = Profiles(first_name=first_name, last_name=last_name, display_name=first_name + ' ' +  last_name, profile_pic=image_file, bio=bio, owns=new_user.id)
+        new_profile = Profiles(first_name=first_name, last_name=last_name, display_name=first_name + ' ' + 
+            last_name, profile_pic=image_file, bio=bio, custom_url=None, owns=new_user.id)
 
         db.session.add(new_profile)
         db.session.commit()             # Commits changes

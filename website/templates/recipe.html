@@ -123,6 +123,94 @@
 </head>
 <!--content of recipe-->
 <body>
+    <div class="jumbotron">
+        <div class="container">
+          <p style="color:blue;">Meal Type : {{meal_type}}</p>
+          <h1>
+            {{RecipeName}}
+            <!-- Recipe Star Button-->
+            <div id="favourite" style="float:right">
+              <div id="heart"></div> 
+              <a><div id="heartwhite" onclick="star_state();" style="cursor: pointer;"></div></a>
+
+
+              {% if star_status == "starred" %}
+                <script type = text/javascript>
+                  document.getElementById("heartwhite").style.opacity = 0;
+                </script>
+              {% endif %}
+
+              <!-- toggle the star button from starred to unstarred-->
+              {% if current_user.is_authenticated %}
+              <script type = text/javascript>          
+                function star_state() {
+                  var toggle = document.getElementById("heartwhite");
+                  var status = "";
+                  // Set the opacity to 1 by default
+                  if (toggle.style.opacity == "")
+                    toggle.style.opacity = 1;
+                  
+                  // Alternate between being transparent and visible
+                  if (toggle.style.opacity == "1") {
+                    toggle.style.opacity = "0";
+                    status = "starred"
+                  }
+                  else if (toggle.style.opacity = "0") {
+                    toggle.style.opacity = "1";
+                    status = "unstarred"
+                  }
+
+                  
+                  // Post to backend                 
+                  $.ajax({
+                      type : "POST", // http method
+                      url : "{{url_for('recipes.star_recipe')}}", // the endpoint
+                      data : {status: JSON.stringify(status), 
+                          user: JSON.stringify({{current_user.id}}), 
+                          recipe: JSON.stringify({{recipe_id}})
+                      }, // data sent with the post request
+
+                      // handle a successful response
+                      success : function() {
+                          console.log("success"); // another sanity check
+                      },
+
+                      // handle a non-successful response
+                      error : function(xhr,errmsg,err) {
+                          console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                      }
+                  });
+
+
+                }
+              </script>
+              {% else %}
+              <script type = text/javascript>
+                function star_state(){
+                  window.alert("Please sign in first so you can heart your favourite recipes!")
+                }
+              </script>
+              {% endif %}
+
+            </div>
+          </h1>
+          <p>id : {{recipe_id}}</p>
+          <h6>
+          Cooking methods:
+          </h6>
+          
+
+
+
+          {% for method in methods %}
+          <tr>
+            <td>
+              <p class="card-text"style="color:DarkOrange;">{{method.method}}</p>
+            </td>
+          </tr>
+          {% endfor %}
+          <br />
+        </div>
   
   <!--cover photo-->
   <div class = "img-fit">
@@ -235,6 +323,14 @@
         {{ recipe.num_of_dislikes }}
       </div>
     </div>
+
+    <!-- Rating method for recipes that works off number of likes and dislikes on recipes. -->
+    <div class="row">
+      <div class="col">
+        <label>Rating: {{ rating }}</label>
+      </div>
+    </div>
+
     
     <div> 
       <h3 style="margin-top:40px", style="margin-left:40px">Ingredients</h3>
@@ -268,7 +364,7 @@
     <!-- Displays the ability to comment when the user is logged in-->
     {% if current_user.is_authenticated %}
       <div align="center">
-        <button type="button" class="btn btn-primary" onClick="createComment2({{ recipe_id }})">Post a new recipe!</button>
+        <button type="button" class="btn btn-primary" onClick="createComment2({{ recipe_id }})">Post a new Comment!</button>
       </div>
     {% endif %}
 
@@ -277,23 +373,24 @@
 
     <ul class="list-group list-group-flush" id="reviews">
       <!-- Iterate through comments for the recipe and display associated name and comment. -->
-      {% for comment_display_name, review in comments %}
-      {{ comment_display_name }}
+      {% for name, id, review in comments %}
+      <a href="#">{{ name }}</a>
       <li class="list-group-item">
+        
         {{ review.comment }}
           
         <!-- Displays the abiltiy to delete comments if either they are the recipe owner or person who made the comment -->
         {% if creates == current_user.id or current_user.id == review.owns %}
-          <button type="button" class="close" onClick="deleteComment({{ review.comment_id }})">
-            <span aria-hidden="true">&times;</span>
-          </button>
-
         <!-- Only the person who made the comment can modify it -->
           {% if current_user.id == review.owns %}
             <button type="button" class="btn btn-secondary float-right" onClick="modifyComment({{ review.comment_id }})">
               Modify
             </button>
           {% endif %}
+
+          <button type="button" class="close" onClick="deleteComment({{ review.comment_id }})">
+            <span aria-hidden="true">&times;</span>
+          </button>
           
         {% endif %}
       </li>

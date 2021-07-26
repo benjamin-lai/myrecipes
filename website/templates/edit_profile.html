@@ -7,16 +7,6 @@
     <h3 align="center">Update Profile</h3>
     <div class="container-fluid" style="border:1px solid #cecece;">
         <div class="form-group">
-        <label for="email">Email Address</label>
-        <input
-            type="email"
-            class="form-control"
-            id="email"
-            name="email"
-            value={{current_user.email}}
-        />
-        </div>
-        <div class="form-group">
         <label for="username">Display Name</label>
         <input
             type="text"
@@ -26,6 +16,50 @@
             value="{{profile.display_name}}"
         />
         </div>
+        <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            value={{current_user.email}}
+        />
+        </div>
+        {% if profile.custom_url == None %}
+        <div class="form-group">
+            <label for="custom_url">Custom URL</label>
+            <input
+                type="text"
+                class="form-control"
+                id="custom_url"
+                name="custom_url"
+                onkeyup="urlKeyPress()"
+            />
+            </div>
+            <div style="color:grey;font-size:15px" id="demo_url">Your profile will be available at http://127.0.0.1:5000/profile/{{profile.profile_id}}</div>
+        {% else %}
+        <div class="form-group">
+            <label for="custom_url">Custom URL</label>
+            <input
+                type="text"
+                class="form-control"
+                id="custom_url"
+                name="custom_url"
+                value={{profile.custom_url}}
+                onkeyup="urlKeyPress()"
+            />
+            </div>
+            <div style="color:grey;font-size:15px" id="demo_url">Your profile will be available at http://127.0.0.1:5000/profile/{{profile.custom_url}}</div>
+        {% endif %}
+        <script type="text/javascript">
+        function urlKeyPress() {
+            document.getElementById("demo_url").innerHTML = "Your profile will be available at http://127.0.0.1:5000/profile/" 
+                +document.getElementById("custom_url").value
+        }
+        
+        </script>
+        <hr>
         <div class="form-group">
             <label for="first_name">First name</label>
             <input
@@ -74,9 +108,8 @@
             type="text"
             class="form-control"
             id="user_bio"
-            name="user_bio"
-            rows="5"
-            value={{profile.bio}}
+            name="user_bio"     
+            value="{{profile.bio}}"
             />
         </div>
         <!-- Upload Profile Picture. Can do the same for banner feature-->
