@@ -93,7 +93,8 @@ create table Subscribed (
 create table CookBooks (
     id              serial      not null    unique,
     name            text        not null,
-    contains        integer     not null,   -- contains is profile_id
+    description     text,
+    contains        integer     not null,   -- contains is user id
     primary key (id, contains),   -- duplicate recipes cant be put into the same cookbook for a given user
     foreign key (contains) references Users(id)
 );

@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from flask_cors import CORS
 from . import db
-from .models import Users, Profiles
+from .models import Users, Profiles, Cookbooks, Cookbooks_lists
 from .validate_email import validate_email
 import boto3
 from werkzeug.utils import secure_filename
@@ -44,9 +44,9 @@ def search_result():
         search_input = request.form.get('Search')
         if search_input is not None:
             if len(search_input) < 1:
-                flash("search input can not be empty!", category='error')
-                #clear query
-                query = []
+                #if not searching, display every recipes in db
+                query = Recipes.query.all()
+                searchInput = ""
             else:
                 searchInput = search_input  #put into global variable
                 reset_all()
@@ -65,11 +65,11 @@ def search_result():
             #go back to same search page without any filters
             #find the query based on search_input
             query = find_query_by_name(searchInput)
+            
             return render_template("search.html",user = current_user,
                 search_input = searchInput,query = query,search_value = searchInput,queryLen = len(query))
         
-        
-
+    
         #ingredient filter
         addIngre = request.form.get('IngreAdd') 
         if addIngre is not None: #if None means not clicked, not None means clicked
@@ -175,7 +175,8 @@ def search_result():
             print(f"query {query}")
             return render_template("search.html",user = current_user,
                 search_input = searchInput,query = query,search_value = searchInput,
-                contents = Contents, include_ingreList = include_contents,queryLen = len(query), exclude_ingreList = exclude_contents)
+                contents = Contents, include_ingreList = include_contents,queryLen = len(query),
+                exclude_ingreList = exclude_contents)
         else:
             message = f"No Recipe be Founded  {searchInput}"
             return render_template("search.html",user = current_user,
