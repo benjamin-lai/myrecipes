@@ -59,63 +59,101 @@
         <br />
 
         <!-- Ingredients -->
-        <form method="POST" name="part3" id="part3" enctype=multipart/form-data>
         <h4 align="left">Step 3</h4>
         <p style="color:blue;">{{IngreContents}}<p>
-
+        <div>
+        <div class="btn-group" id="titile" style="float:left"></div>
+          <label for="dosage" style="margin-left:30px;">Unit</label>
+          <label for="unit_name" style="margin-left:60px">Unit Name</label>
+          <label for="unit_name" style="margin-left:20px">Ingredients</label>
+        </div>
         <div>
         <ul class="list-group list-group-flush" id="edit ingredient">
+        
         {% for ingre in ingredients %}
-        <li class="list-group-item">
-            {{ ingre.dosage}}
-            {{ ingre.unit_name}}
-            {{ ingre.ingredient }}
-            {{ ingre.id }}
-            <button type="button" class="close" onClick="deleteIngredient({{ ingre.id }})">
+        <li class="list-group-item">  
+            <div class="form-inline" id="rightDiv" style="float:left">
+            <form id="frm1">
+            <INPUT  id="dosage" 
+                    name="dosage"
+                    TYPE="NUMBER" 
+                    MIN="0" 
+                    MAX="10" 
+                    STEP="1" 
+                    VALUE={{ ingre.ingredient.dosage }} 
+                    SIZE="0" 
+                    class="form-control" 
+                    style="margin-left:10px">
+            </div>
+            </form>
+            <div class="form-inline" id="rightDiv" style="float:left">
+            <form id="frm2">
+            <select name="Unit Name" id="Unit Name" style="margin-left:5px">
+                <option value="" selected disabled hidden>{{ ingre.ingredient.unit_name}}</option>
+                <option value="cups">cups</option>
+                <option value="g">g</option>
+                <option value="fl oz">fl oz</option>
+                <option value="tsp">tsp</option>
+                <option value="tbsp">tbsp</option>
+                <option value="bags">bags</option>
+                <option value="bar">bar</option>
+                <option value="bulb">bulb</option>
+                <option value="capsule">capsule</option>
+                <option value="cl">cl</option>
+                <option value="clove">clove</option>
+                <option value="cob">cob</option>
+                <option value="dash">dash</option>
+                <option value="drop">drop</option>
+                <option value="gallon">gallon</option>
+                <option value="head">head</option>
+                <option value="kg">kg</option>
+            </select>
+            </form>
+            </div>
+            <div class="form-inline" id="rightDiv" style="float:left">
+            <form id="frm3">
+            <input
+            type="Ingredient Name"
+            class="form-control"
+            id="Ingredient Name"
+            name="Ingredient Name"
+            value = {{ ingre.ingredient.ingredient }} 
+            style="width:200px; color:black;margin-left:5px"
+            />
+            </form>
+            </div>
+            
+            
+            
+            <button type="button" class="close" onClick="deleteIngredient({{ ingre.ingredient.id }})">
                 <span aria-hidden="true">&times;</span>
             </button>
 
+            <button name="button1" type="add" class="btn btn-secondary float-right" onClick="modifyIngredient({{ ingre.ingredient.id }}, {{ ingre.order }})">Modify</button>
             
-
-
-
-
-            <button type="button" class="btn btn-secondary float-right" onClick="modifyIngredient({{ ingre.id }})">
-            Change
-            </button>
             
         </li>
         {% endfor %}
         </ul>
         </div>
         
-        <h6 align="left" style="color:red; margin-left:90px;">Add Ingredients</h6>
+        <hr>
+        <form method="POST" name="part3" id="part3" enctype=multipart/form-data>
+        
+        <h3 align="left" style="color:red; margin-left:0px; margin-top:30px">Add Ingredients</h3>
 
         <!-- I think form-inline screws with place, avoid using it  and use bootstrap grids -->
         <div class="btn-group" id="rightDiv" style="float:left"></div>
-          <label for="number" style="margin-left:90px;">No.</label>
-          <label for="dosage" style="margin-left:70px;">Unit</label>
+          <label for="dosage" style="margin-left:0px; margin-top:30px">Unit</label>
           <label for="unit_name" style="margin-left:60px">Unit Name</label>
           <label for="unit_name" style="margin-left:20px">Ingredients</label>
         </div>
 
-        <div class="form-inline" id="rightDiv" style="float:left">
-            <INPUT id="order_number" 
-                    name="order_number" 
-                    value={{order_number}} 
-                    TYPE="NUMBER" 
-                    MIN="1" 
-                    MAX="10" 
-                    STEP="1" 
-                    VALUE="0" 
-                    SIZE="0"
-                    style="margin-left:110px">
-          </div>
 
         <!-- No clue -->
         <div class="form-inline" id="rightDiv" style="float:left">
-          <INPUT  id="dosage" 
-                  name="dosage"
+          <INPUT  id="number of dosage" 
+                  name="number of dosage"
                   TYPE="NUMBER" 
                   MIN="0" 
                   MAX="10" 
@@ -123,12 +161,12 @@
                   VALUE="0" 
                   SIZE="0" 
                   class="form-control" 
-                  style="margin-left:10px">
+                  style="margin-left:20px">
         </div>
 
         <!-- No clue -->
         <div class="form-inline" id="rightDiv" style="float:left">
-          <select name="Unit Name" id="Unit Name" style="margin-left:5px">
+          <select name="Unit" id="Unit" style="margin-left:5px">
             <option value="cups">cups</option>
             <option value="g">g</option>
             <option value="fl oz">fl oz</option>
@@ -150,19 +188,20 @@
         </div>
 
         <!-- No clue -->
-        <div class="form-inline" id="rightDiv" style="float:left">
+        <div class="form-inline" id="right_2" style="float:left">
           <input
-          type="Ingredient Name"
+          type="Ingredient"
           class="form-control"
-          id="Ingredient Name"
-          name="Ingredient Name"
+          id="Ingredient"
+          name="Ingredient"
           placeholder="Ingredient Name"
           style="width:200px; color:black;margin-left:5px"
           />
         </div>
-        <button name="button1" type="add" class="btn btn-primary">Add</button>
+        <button name="button_edit" type="add" class="btn btn-primary float-right" onClick="AddIngredient()">Add</button>
+        <br/>
+        
 
-        <br />
         </form> 
     </div>
   </section>

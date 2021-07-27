@@ -45,7 +45,6 @@ create table History (
 
 create table Ingredient (
     id              serial      primary key,
-    step            int,
     recipe_id integer references Recipes(id),
     ingredient      text,
     dosage          int,

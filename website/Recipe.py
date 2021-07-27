@@ -43,6 +43,7 @@ CORS(recipes)
 
 IngredientList = []
 Savelist = {}
+Savelist["Is_creating"] = False
 Savelist["Serving"] = None
 Savelist["RecipeName"] = None
 Savelist["RecipeId"] = None
@@ -57,12 +58,19 @@ Savelist["Step_Des"] = None
 Savelist["image_name2"] = None
 Savelist["image_name1"] = None
 Savelist["edit_ingredient"] = False
+Savelist["already_delete"] = False
 Savelist["contents"] = ''
 
 Savelist["color_1"] = ''
 Savelist["color_2"] = ''
 Savelist["color_3"] = ''
 Savelist["color_4"] = ''
+
+
+class ingre:
+    def __init__(self, ingredient, order):
+        self.ingredient = ingredient
+        self.order = order
 
 @recipes.route('/Trending Section', methods = ['GET','POST'])
 def trending_section():
@@ -265,19 +273,26 @@ def history():
     
     return render_template("history.html", query=query, type="recent", res=res)
 
-@recipes.route('/history.<int:recipeId>', methods=['GET', 'POST'])
-def delete_history(recipeId):
-    delete_histories = History.query.filter_by(userid = current_user.id, recipe = recipeId).first()
-    db.session.delete(delete_histories)
-    db.session.commit()
-    histories = History.query.filter_by(userid = current_user.id).order_by(History.last_view_time.asc()).all()
-    query = []
-    for i in histories:
-        recipes = Recipes.query.filter_by(id = i.recipe).all()
-        for j in recipes:
-            query.append(j)
-    return redirect(url_for('recipes.history'))
-    #return render_template("history.html", query=query, type="recent")
+@recipes.route('/delete history', methods=['GET', 'POST'])
+def delete_history():
+    if request.method == 'POST':
+        browsing_history = json.loads(request.data)
+        print(request.data)
+        print(browsing_history)
+
+        recipeId = browsing_history['id']
+        print("recipeId: ", recipeId)
+        delete_histories = History.query.filter_by(userid = current_user.id, recipe = recipeId).first()
+        db.session.delete(delete_histories)
+        db.session.commit()
+        histories = History.query.filter_by(userid = current_user.id).order_by(History.last_view_time.asc()).all()
+        query = []
+        for i in histories:
+            recipes = Recipes.query.filter_by(id = i.recipe).all()
+            for j in recipes:
+                query.append(j)
+        return redirect(url_for('recipes.history'))
+    
 
 @recipes.route('/Recipe cards', methods = ['GET','POST'])
 def recipe_cards():
@@ -376,11 +391,7 @@ def add_discription():
         if recipe_data.photo == None:
             flash(f"Please upload photo for recipe", 'error')
         else:
-            #get the latest id of this recipeName
-            #obj = Recipes.query.filter_by(name= Savelist["RecipeName"]).all()
-            #recipe_id = obj[-1].id
-            #Savelist["RecipeId"] = recipe_id
-            add_ingredient_to_db(recipe_id)
+            
             #fetch description from db
             Description = Recipes.query.filter_by(id = recipe_id).first().description
             #fetch steps from db
@@ -411,7 +422,6 @@ def add_discription():
             image1 = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe_data.photo})
             print(image1)
 
-            Contents = take_ingredientList_into_str()
             IngredientList.clear()#reset
             print("reset2")
             print(IngredientList)
@@ -437,79 +447,24 @@ def add_discription():
 
 @recipes.route('/Add ingredient', methods=['GET', 'POST'])
 def Add_ingredient():
-    order = request.form.get('order_number')
-    Contents = Savelist["contents"]
-    Dosage = request.form.get('dosage')
-    UnitName = request.form.get('Unit Name')
-    MyIngredient = request.form.get('Ingredient Name')
-    if check_create(Savelist["RecipeName"],current_user.id) is True:    #is true, already created recipe
-        if Savelist["image_name1"] == None:
-            flash("Please upload photo!", 'error')
-            return redirect(url_for('recipes.upload_image'))
-        print(f"{Dosage} + {UnitName} + {MyIngredient}")
-        button3 = request.form.get('button3')
-        if button3 != None:
-            file1 = request.files['file1']
-    
-            # if user does not select file, browser also
-            # submit an empty part without filename
-            if file1 != None:
-                file_data = file1
-                #Savelist["image_datas1"] = file_data
-                #image_datas1=file_data.read()
-                if file1.filename == '':
-                    flash('Continue to create recipe')
-                    return redirect(request.url)
-                if file1 and allowed_file(file1.filename):
-                    filename = secure_filename(file1.filename)
-                    recipe_data = Recipes.query.filter_by(id=Savelist["RecipeId"]).first()
-                    recipe_data.photo = filename
-
-                    file1.save(filename)
-                    s3.upload_file(
-                        Bucket = 'comp3900-w18b-sheeesh',
-                        Filename=filename,
-                        Key = filename
-                    )
-                    image_datas1_read = file_data.read()
-                    image1 = base64.b64encode(image_datas1_read).decode('ascii')
-                    db.session.commit()
-
-                    image_datas1 = image1
-                    Savelist["image_name1"] = filename
-                    
-                    if recipe_data.photo != None:
-                        flash(f"Recipe photo upload Successfully!")
-        
-        if Dosage and UnitName and MyIngredient:
-            #edit ingredient
-            order_number = int((len(IngredientList) + 1))
-            if int(order) > order_number:
-                flash("Please add ingredient in order", 'error')
-                take_ingredientList_into_str()
-            elif int(order) < order_number:
-                Dict = dict({'Dosage' : Dosage, 'UnitName' : UnitName, 'Ingredient' : MyIngredient})
-                IngredientList[int(order)-1] = Dict
-                Contents = take_ingredientList_into_str()
-            else:
-                #we can begin to add ingredients
-                print(f"before {IngredientList}")
-                add_ingredients_to_list(Dosage,UnitName,MyIngredient)
-                print(IngredientList)
-                Contents = take_ingredientList_into_str()
-                Savelist["contents"] = Contents
-                print(f"after {IngredientList}")
-                flash(f"added ingredient {MyIngredient} successfully!")
-                Savelist["color_3"] = "red"
-    else:
+    if check_create(Savelist["RecipeName"],current_user.id) is False:
         flash(f"Please create the recipe first!", 'error')
         return redirect(url_for('recipes.create_recipe'))
-
+    IngredientList = []
+    IngredientList.clear()
+    Ingredients = Ingredient.query.filter_by(recipe_id=Savelist["RecipeId"]).order_by(Ingredient.id.asc()).all()
+    for ingre in Ingredients:
+        Dict = dict({'Dosage' : ingre.dosage, 'UnitName' : ingre.unit_name, 'Ingredient' : ingre.ingredient})
+        IngredientList.append(Dict) 
+            
+        
+    Contents = take_ingredientList_into_str(IngredientList)
     print(len(IngredientList))
-    order_number = (len(IngredientList) + 1)
+    Ingredients = get_ingre_in_order()
     return render_template("add_ingradient.html", user=current_user, IngreContents = Contents, color1 = Savelist["color_1"],
-            color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"], order_number = order_number)
-
+            color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"], ingredients =  Ingredients)
+    
+   
 @recipes.route('/upload image', methods=['GET', 'POST'])
 def upload_image():
     
@@ -563,6 +518,7 @@ def upload_image():
 @recipes.route('/Create recipe', methods=['GET', 'POST'])
 def create_recipe():
     
+    Savelist["Is_creating"] = True
     print("reset1")
     print(IngredientList)
     
@@ -755,61 +711,131 @@ def edit_photo():
     return render_template("edit_recipe_image.html", user=current_user, recipename = recipename, color1 = Savelist["color_1"],
             color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"])
 
-@recipes.route('/edit ingredient', methods = ['POST', 'GET'])
-def edit_ingredient():
+@recipes.route('/delete ingredient', methods = ['POST', 'GET'])
+def delete_ingredient():
     if request.method == 'POST':
         ingredient = json.loads(request.data)
         print(request.data)
         print(ingredient)
+
         ingredient_id = ingredient['ingredient_id']
-        ingredient_delete = Ingredient.query.get(ingredient_id)
+        print("ingredient_id: ", ingredient_id)
+        ingredient_delete = Ingredient.query.filter_by(id = ingredient_id).first()
 
         db.session.delete(ingredient_delete)
         db.session.commit()
-        flash('Deleted ingredient successfully!', category='success')
-
-    order = request.form.get('order_number')
-    Contents = Savelist["contents"]
-    Dosage = request.form.get('dosage')
-    UnitName = request.form.get('Unit Name')
-    MyIngredient = request.form.get('Ingredient Name')
         
-    ingredients = Ingredient.query.filter_by(recipe_id=Savelist["RecipeId"]).all()
+        IngredientList.clear()
+        Ingredients = Ingredient.query.filter_by(recipe_id=Savelist["RecipeId"]).order_by(Ingredient.id.asc()).all()
+        for ingre in Ingredients:
+            Dict = dict({'Dosage' : ingre.dosage, 'UnitName' : ingre.unit_name, 'Ingredient' : ingre.ingredient})
+            IngredientList.append(Dict) 
+        flash('Deleted ingredient successfully!', category='success')
+        if Savelist["Is_creating"] == False:
+            return redirect(url_for('recipes.edit_ingredient'))
+        return redirect(url_for('recipes.Add_ingredient'))
 
+@recipes.route('/modify ingredient', methods = ['POST', 'GET'])
+def modify_ingredient():
+    if request.method == 'POST':
+        #order = request.form.get('order_number')
+        Contents = Savelist["contents"]
+        
+        ingredient = json.loads(request.data)
+        print(request.data)
+        
 
-    # for debug
-    for i in ingredients:
-        print("ingredient id:")
-        print(i.id)    
-    #
+        ingredient_id = ingredient['ingredient_id']
+        Dosage = ingredient['Dosage']
+        UnitName = ingredient['UnitName']
+        MyIngredient = ingredient['MyIngredient']
 
-    print(f"{Dosage} + {UnitName} + {MyIngredient}")
-    
-    if Dosage and UnitName and MyIngredient:
-        #edit ingredient
-        order_number = int((len(IngredientList) + 1))
-        if int(order) > order_number:
-            flash("Please add ingredient in order", 'error')
-            
-        elif int(order) < order_number:
-            Dict = dict({'Dosage' : Dosage, 'UnitName' : UnitName, 'Ingredient' : MyIngredient})
-            IngredientList[int(order)-1] = Dict
-            
-        else:
+        print("ingredient_id: ", ingredient_id)
+        print("Dosage: ", Dosage)
+        print("UnitName: ", UnitName)
+        print("MyIngredien: ", MyIngredient)
+        
+        ingredient_edit = Ingredient.query.filter_by(id = ingredient_id).first()
+
+        if Dosage:
+            ingredient_edit.dosage = Dosage
+        if UnitName:
+            ingredient_edit.unit_name = UnitName
+        if MyIngredient:
+            print("editing ingredients")
+            ingredient_edit.ingredient = MyIngredient
+        db.session.commit()
+        Savelist["contents"] = Contents
+        print(f"after {IngredientList}")
+        Savelist["color_3"] = "red"
+        IngredientList.clear()
+        Ingredients = Ingredient.query.filter_by(recipe_id=Savelist["RecipeId"]).order_by(Ingredient.id.asc()).all()
+        for ingre in Ingredients:
+            Dict = dict({'Dosage' : ingre.dosage, 'UnitName' : ingre.unit_name, 'Ingredient' : ingre.ingredient})
+            IngredientList.append(Dict) 
+        flash(f"Update ingredient {MyIngredient} successfully!")
+        if Savelist["Is_creating"] == False:
+            return redirect(url_for('recipes.edit_ingredient'))
+        return redirect(url_for('recipes.Add_ingredient'))
+
+#Add ingrdient
+@recipes.route('/push ingredient', methods = ['POST', 'GET'])
+def push_ingredient():
+    if request.method == 'POST':
+        Contents = Savelist["contents"]
+        ingredient = json.loads(request.data)
+        print(request.data)
+        
+        Dosage = ingredient['Dosage']
+        UnitName = ingredient['UnitName']
+        Ingredient_name = ingredient['MyIngredient']
+
+        print("Dosage: ", Dosage)
+        print("UnitName: ", UnitName)
+        print("MyIngredient: ", Ingredient_name)
+
+        print(f"{Dosage} + {UnitName} + {Ingredient_name}")
+        
+        if Dosage and UnitName and Ingredient_name:
+            #edit ingredient
+            print("In old edit ingredient")
             #we can begin to add ingredients
-            print(f"before {IngredientList}")
-            add_ingredients_to_list(Dosage,UnitName,MyIngredient)
-            print(IngredientList)
+            
             Savelist["contents"] = Contents
             print(f"after {IngredientList}")
-            flash(f"Update ingredient {MyIngredient} successfully!")
             Savelist["color_3"] = "red"
+            new_ingredient = Ingredient(recipe_id = Savelist["RecipeId"], dosage = Dosage, unit_name = UnitName,
+            ingredient = Ingredient_name)
+            db.session.add(new_ingredient)
+            db.session.commit()
+
+            # Update IngredientList
+            IngredientList.clear()
+            Ingredients = Ingredient.query.filter_by(recipe_id=Savelist["RecipeId"]).order_by(Ingredient.id.asc()).all()
+            for ingre in Ingredients:
+                Dict = dict({'Dosage' : ingre.dosage, 'UnitName' : ingre.unit_name, 'Ingredient' : ingre.ingredient})
+                IngredientList.append(Dict)
+            if Savelist["Is_creating"] == False:
+                return redirect(url_for('recipes.edit_ingredient'))
+            return redirect(url_for('recipes.Add_ingredient'))
     
-    Contents = take_ingredientList_into_str()
+#Add ingrdient
+@recipes.route('/edit ingredient', methods = ['POST', 'GET'])
+def edit_ingredient():
+    # Update IngredientList
+    IngredientList = []
+    IngredientList.clear()
+    Ingredients = Ingredient.query.filter_by(recipe_id=Savelist["RecipeId"]).order_by(Ingredient.id.asc()).all()
+    for ingre in Ingredients:
+        Dict = dict({'Dosage' : ingre.dosage, 'UnitName' : ingre.unit_name, 'Ingredient' : ingre.ingredient})
+        IngredientList.append(Dict) 
+            
+        
+    Contents = take_ingredientList_into_str(IngredientList)
     print(len(IngredientList))
-    order_number = (len(IngredientList) + 1)
+    Ingredients = get_ingre_in_order()
     return render_template("edit_ingredient.html", user=current_user, IngreContents = Contents, color1 = Savelist["color_1"],
-            color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"], order_number = order_number, ingredients = ingredients)
+            color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"], ingredients =  Ingredients)
 
 @recipes.route('/edit discription', methods = ['GET', 'POST'])
 def edit_discription():
@@ -890,15 +916,6 @@ def edit_discription():
     Submit = request.form.get('Submit')
     if Submit != None:
         recipe_id = Savelist["RecipeId"]
-        ingre = Ingredient.query.filter_by(recipe_id=recipe_id).all()
-        for i in ingre:
-            if i.recipe_id == recipe_id:
-                db.session.delete(i)
-        db.session.commit()
-        print(Savelist["RecipeId"])
-        add_ingredient_to_db(recipe_id)
-        #fetch description from db
-        Description = Recipes.query.filter_by(id = recipe_id).first().description
         #fetch steps from db
         Steps = ""
         obj = Recipestep.query.filter_by(recipe_id = recipe_id).all()
@@ -922,8 +939,7 @@ def edit_discription():
         print(recipe_data.photo)
         image1 = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe_data.photo})
         print(image1)
-
-        Contents = take_ingredientList_into_str()
+        
         IngredientList.clear()#reset
         print("reset2")
         print(IngredientList)
@@ -947,274 +963,8 @@ def edit_discription():
     return render_template("edit_discription.html", user=current_user, current_step = current_step, Step_Number = (Step_Number+1), color1 = Savelist["color_1"],
             color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"])
 
-@recipes.route('/edit recipe2', methods = ['GET', 'POST'])
-def edit_recipe2():
-    recipe_id = Savelist["RecipeId"]
-    print(recipe_id)
-    recipe = Recipes.query.filter_by(id=recipe_id).first()
-        
-    #find recipe success
-    if recipe.creates != current_user.id:
-        flash("You are not the owner of this recipe", 'error')
-        return redirect(url_for('recipes.view_recipe',recipeName = recipe.name,recipeId = recipe.id ))
 
-    Contents = generate_ingreStr_by_recipeId(recipe.id)
-    #RecipeImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe.photo})
-    #fetch steps from db
-    Steps = ""
-    obj = Recipestep.query.filter_by(recipe_id = recipe.id).all()
-    if request.method == 'POST':
-        print("in edit recipe")
-        
-        
-    
-        RecipeName = request.form.get('Recipe Name')
-        Description = request.form.get('Recipe Des')
-        Serving = request.form.get('Servings')
-        Dosage = request.form.get('dosage')
-        UnitName = request.form.get('Unit Name')
-        MyIngredient = request.form.get('Ingredient Name')
-        StepNo = request.form.get('step_number')
-        StepDes = request.form.get('discriptions')
-        Meal_type = request.form.get('Meal type')
-        Baking = request.form.get('Baking')
-        Frying = request.form.get('Frying')
-        Grilling = request.form.get('Grilling')
-        Steaming = request.form.get('Steaming')
-        Braising = request.form.get('Braising')
-        Stewing = request.form.get('Stewing')
 
-        button_create = request.form.get('create')
-        if button_create != None:
-            '''
-            Savelist["Serving"] = Serving
-            Savelist["RecipeName"] = RecipeName
-            Savelist["Number"] = Number
-            Savelist["Dosage"] = Dosage
-            Savelist["UnitName"] = UnitName
-            Savelist["MyIngredient"] = MyIngredient
-            '''
-            if Meal_type:
-                recipe.meal_type = Meal_type
-                db.session.commit()
-                flash(f"Meal type updated Successfully!")
-            if RecipeName:
-                recipe.name = RecipeName
-                db.session.commit()
-                flash(f"Recipe name updated Successfully!")
-            if Description:
-                recipe.description = Description
-                flash(f"Description updated Successfully!")
-                db.session.commit()
-            if Serving and (Serving != 0):
-                recipe.serving = Serving
-                db.session.commit()
-                flash(f"Serving updated Successfully!")
-            if Baking or Frying or Grilling or Steaming or Braising:
-                methods = Method.query.filter_by(recipe_id=recipe_id).all()
-                for i in methods:
-                    if i.recipe_id == recipe_id:
-                        db.session.delete(i)
-                db.session.commit()
-                if Baking:
-                    Baking = Method(recipe_id = Savelist["RecipeId"], method=Baking)
-                    db.session.add(Baking)
-                    db.session.commit()    
-                if Frying:
-                    Frying = Method(recipe_id = Savelist["RecipeId"], method=Frying)
-                    db.session.add(Frying)
-                    db.session.commit() 
-                if Grilling:
-                    Grilling = Method(recipe_id = Savelist["RecipeId"], method=Grilling)
-                    db.session.add(Grilling)
-                    db.session.commit() 
-                if Steaming:
-                    Steaming = Method(recipe_id = Savelist["RecipeId"], method=Steaming)
-                    db.session.add(Steaming)
-                    db.session.commit()
-                if Braising:
-                    Braising = Method(recipe_id = Savelist["RecipeId"], method=Braising)
-                    db.session.add(Braising)
-                    db.session.commit()
-    
-             
-        button3 = request.form.get('button3')
-        if button3 != None:
-            file1 = request.files['file1']
-            # if user does not select file, browser also
-            # submit an empty part without filename
-            if file1 != None:
-                if file1.filename == '':
-                    flash('Continue to create recipe')
-                    return redirect(request.url)
-                if file1 and allowed_file(file1.filename):
-                    filename = secure_filename(file1.filename)
-                    recipe_data = Recipes.query.filter_by(id=Savelist["RecipeId"]).first()
-                    recipe_data.photo = filename
-
-                    file1.save(filename)
-                    s3.upload_file(
-                        Bucket = 'comp3900-w18b-sheeesh',
-                        Filename=filename,
-                        Key = filename
-                    )
-                    db.session.commit()
-
-                    Savelist["image_name1"] = filename
-                    
-                    if recipe_data.photo != None:
-                        flash(f"Recipe photo updated Successfully!")
-
-        button1 = request.form.get('button1')
-        if button1 != None:
-            if Savelist["edit_ingredient"] == False:
-                ingre = Ingredient.query.filter_by(recipe_id=recipe_id).all()
-                for i in ingre:
-                    if i.recipe_id == recipe_id:
-                        db.session.delete(i)
-                db.session.commit()
-                Savelist["edit_ingredient"] = True
-                IngredientList.clear()
-                
-            #ingre = Ingredient.query.filter_by(recipe_id=recipeId, dosage=Dosage, unit_name=UnitName, ingredient=MyIngredient).first()
-            if Dosage and UnitName and MyIngredient:
-                #we can begin to add ingredients
-                add_ingredients_to_list(Dosage,UnitName,MyIngredient)
-                Contents = take_ingredientList_into_str()
-
-                flash(f"Update ingredient {MyIngredient} successfully!")
-
-        button4 = request.form.get('button4')
-        if button4 != None:
-            file2 = request.files['file2']
-            if file2 != None:
-                file_data = file2
-                #Savelist["image_datas2"] = file_data
-
-                if file2.filename == '':
-                    flash('Continue to create recipe')
-                    return redirect(request.url)
-                if file2 and allowed_file(file2.filename):
-                    filename = secure_filename(file2.filename)
-                
-
-                    file2.save(filename)
-                    s3.upload_file(
-                        Bucket = 'comp3900-w18b-sheeesh',
-                        Filename=filename,
-                        Key = filename
-                    )
-                    image_datas2_read = file_data.read()
-                    image2 = base64.b64encode(image_datas2_read).decode('ascii')
-                    image_datas2 = image2
-                    Savelist["image_name2"] = filename
-
-                    Savelist["Step_number"] = StepNo
-                    Savelist["Step_Des"] = StepDes
-            no_list = []
-            obj = Recipestep.query.filter_by(recipe_id = Savelist["RecipeId"]).all()
-            for o in obj:
-                no_list.append(int(o.step_no))
-                if int(Savelist["Step_number"]) == int(o.step_no):
-                    if StepNo:
-                        o.step_no = StepNo
-                    if StepDes:
-                        o.step_comment = StepDes
-                    if Savelist["image_name2"]:
-                        o.photo = Savelist["image_name2"]
-                    db.session.commit()
-
-            print(no_list)
-            if int(Savelist["Step_number"]) not in no_list:
-                if StepNo and StepDes and Savelist["image_name2"]:
-                    # we can begin to add steps
-                    print(f"step + {StepDes}, No. + {StepNo}")
-                    #get the latest id of this recipeName
-                    #obj = Recipes.query.filter_by(name = Savelist["RecipeId"]).all()
-                    recipe_id = Savelist["RecipeId"]
-                    print("begin to add to db")
-                    print(f"Step des {StepDes}")
-                    new_step = Recipestep(recipe_id = recipe_id, step_no = StepNo, step_comment = StepDes, photo = Savelist["image_name2"])
-                    db.session.add(new_step)
-                    db.session.commit()             # Commits changes
-                    flash(f"Added comment at Step.{StepNo}!")
-
-        Submit = request.form.get('Submit')
-        if Submit != None:
-
-            #recipe_id = Savelist["RecipeId"]
-            print(Savelist["RecipeId"])
-            add_ingredient_to_db(recipe_id)
-            #fetch description from db
-            Description = Recipes.query.filter_by(id = recipe_id).first().description
-            #fetch steps from db
-            Steps = ""
-            obj = Recipestep.query.filter_by(recipe_id = recipe_id).all()
-
-            step_list = []
-            image_list = []
-            for o in obj:
-                Steps = f"Step.{o.step_no} --> {o.step_comment}  \n"
-                step_list.append(Steps)
-                image_temp = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': o.photo})
-                image_list.append(image_temp)
-            length1 = len(step_list)
-            while length1 < 4:
-                step_list.append(f"Step.{length1}  \n")
-                image_list.append(None)
-                length1 += 1
-            print(step_list)
-            print(image_list)
-            print("Yeeeeeea")
-            recipe_data = Recipes.query.filter_by(id = recipe_id).first()
-            print(recipe_data.photo)
-            image1 = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe_data.photo})
-            print(image1)
-
-            Contents = take_ingredientList_into_str()
-            IngredientList.clear()
-            return redirect(url_for('recipes.view_recipe',recipeName = recipe_data.name,recipeId = recipe_data.id ))
-            """return render_template("recipe.html", user=current_user, Descriptions=Description, 
-                RecipeName = recipe_data.name, MyIngredient = Contents,IngreContents = Contents, 
-                Step1 = step_list[0], Step2 = step_list[1], Step3 = step_list[2], Step4 = step_list[3],
-                image2 = image_list[0], image3 = image_list[1], image4 = image_list[2], image5 = image_list[3], 
-                recipe_id = recipe_data.id, image1=image1)"""
-        else:
-            #get the latest id of this recipeName
-            print("NOooooo")
-            Step_No = None
-            Step_Number = 0
-            if Savelist["RecipeId"]:
-                Step_No = db.session.query(func.max(Recipestep.step_no)).filter_by(recipe_id = Savelist["RecipeId"]).first()
-            print("Step_No:")
-            print(Step_No)
-            if Step_No != None:
-                if Step_No[0] != None:
-                    Step_Number = Step_No[0]
-                else:
-                    Step_Number = 0
-            else:
-                Step_Number = 0
-            return render_template("edit_recipe_base2.html", user=current_user, IngreContents = Contents, recipe = recipe, Step_Number = (Step_Number+1))
-
-    else:
-        Step_No = None
-        Step_Number = 0
-        if Savelist["RecipeId"]:
-            Step_No = db.session.query(func.max(Recipestep.step_no)).filter_by(recipe_id = Savelist["RecipeId"]).first()
-        print("Step_No:")
-        print(Step_No)
-        if Step_No != None:
-            if Step_No[0] != None:
-                Step_Number = Step_No[0]
-            else:
-                Step_Number = 0
-        else:
-            Step_Number = 0
-        return render_template("edit_recipe_base2.html", user=current_user, IngreContents = Contents, recipe = recipe, Step_Number = (Step_Number+1))
-        #return render_template("create_recipe.html", user=current_user)
-
-    
 @recipes.route('/<recipeName>.<int:recipeId>', methods=['GET', 'POST'])
 def view_recipe(recipeName, recipeId):
     IngredientList.clear()
@@ -1225,7 +975,11 @@ def view_recipe(recipeName, recipeId):
     Savelist["edit_ingredient"] = False
     recipe = Recipes.query.filter_by(id=recipeId).first()
     print(recipe)
-    if recipe is None:
+    if Savelist["already_delete"] == True:
+        flash("Delete successfully")
+        Savelist["already_delete"] = False
+        return redirect(url_for('views.home'))
+    if recipe is None and Savelist["already_delete"] == False:
         flash("No recipe exists with this name and id.", category="error")
         return redirect(url_for('views.home'))
 
@@ -1425,6 +1179,7 @@ def delete_recipe():
         db.session.delete(recipe)
         db.session.commit()
     flash("Delete successfully")
+    Savelist["already_delete"] = True
     return redirect(url_for('views.home'))
 
 
@@ -1445,7 +1200,7 @@ def create_recipe (RecipeName, Description, Serving, Meal_type):
     user = Profiles.query.filter_by(owns = current_user.id).first()
 
     new_recipe = Recipes(name = RecipeName, description = Description, 
-        serving = Serving, creates = current_user.id, creator = user.first_name, meal_type=Meal_type)
+        serving = Serving, creates = current_user.id, creator = (user.first_name+" "+user.last_name), meal_type=Meal_type)
 
     
     db.session.add(new_recipe)
@@ -1476,7 +1231,7 @@ def add_ingredient_to_db(recipe_id):
         print(Dosage)
         print(UnitName)
         print(MyIngredient)
-        new_ingredient = Ingredient(recipe_id = recipe_id, step = step, dosage = Dosage, unit_name = UnitName,
+        new_ingredient = Ingredient(recipe_id = recipe_id, dosage = Dosage, unit_name = UnitName,
             ingredient = MyIngredient)
         db.session.add(new_ingredient)
         db.session.commit()             # Commits changes
@@ -1484,10 +1239,10 @@ def add_ingredient_to_db(recipe_id):
         print(IngredientList)
         step += 1
 
-def take_ingredientList_into_str():
+def take_ingredientList_into_str(IngredientLists):
     Contents = ""
     counter = 1
-    for item in IngredientList:
+    for item in IngredientLists:
         Dosage = item.get('Dosage')
         UnitName = item.get('UnitName')
         MyIngredient = item.get('Ingredient')
@@ -1536,6 +1291,7 @@ def initial():
     Savelist["color_2"] = ''
     Savelist["color_3"] = ''
     Savelist["color_4"] = ''
+    Savelist["Is_creating"] = False
 #find user image by userId
 def get_user_image(recipeId):
     recipe = Recipes.query.filter_by(id = recipeId).first()
@@ -1546,3 +1302,14 @@ def get_user_image(recipeId):
 def get_default_user_img():
     image_file = url_for('static', filename='default_user.jpg')
     return image_file
+
+# For geting ingredient order
+def get_ingre_in_order():
+    Ingredients = Ingredient.query.filter_by(recipe_id=Savelist["RecipeId"]).order_by(Ingredient.id.asc()).all()
+    order = 0
+    lst = []
+    for i in Ingredients:
+        ingre_order = ingre(i, order)
+        lst.append(ingre_order)
+        order += 1
+    return lst

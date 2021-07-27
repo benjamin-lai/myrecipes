@@ -98,8 +98,7 @@ function subscribeToNewsletters() {
 
 function deleteIngredient(ingredient_id) {
   if (confirm("Are you sure you want to delete this ingredient?"))
-    alert(ingredient_id)
-    fetch("/edit ingredient", {
+    fetch("/delete ingredient", {
       method: 'POST',
       body: JSON.stringify({ ingredient_id: ingredient_id }),
     }).then((_res) => {
@@ -107,14 +106,48 @@ function deleteIngredient(ingredient_id) {
     });
 }
 
-function modifyIngredient(comment_id) {
-  var new_comment = prompt("Enter new comment to change.");
-  if (new_comment != null) {
-    fetch("/edit ingredient", {
-      method: "POST",
-      body: JSON.stringify({ comment_id: comment_id, comment: new_comment }),
+function modifyIngredient(ingredient_id, order) {
+  var x = document.getElementsByName("dosage")[order].value;
+  var y = document.getElementsByName("Unit Name")[order].value;
+  var z = document.getElementsByName("Ingredient Name")[order].value;
+  
+  fetch("/modify ingredient", {
+    method: "POST",
+    body: JSON.stringify({ ingredient_id: ingredient_id, Dosage: x, UnitName: y, MyIngredient: z }),
+  }).then((_res) => {
+    window.location.reload(true);
+  });
+}
+
+function AddIngredient() {
+  var a = document.getElementsByName("number of dosage")[0].value;
+  var b = document.getElementsByName("Unit")[0].value;
+  var c = document.getElementsByName("Ingredient")[0].value;
+  fetch("/push ingredient", {
+    method: "POST",
+    body: JSON.stringify({ Dosage: a, UnitName: b, MyIngredient: c }),
+  }).then((_res) => {
+    window.location.reload(true);
+  });
+
+}
+
+function recipe_delete() {
+  if (confirm("Are you sure you want to delete this recipe?"))
+  fetch("/Delete recipe", {
+    
+  }).then((_res) => {
+    window.location.reload(true);
+  });
+
+}
+
+function history_delete(id) {
+if (confirm("Are you sure you want to delete this browsing history?"))
+    fetch("/delete history", {
+      method: 'POST',
+      body: JSON.stringify({ id: id }),
     }).then((_res) => {
       window.location.reload(true);
     });
-  }
 }
