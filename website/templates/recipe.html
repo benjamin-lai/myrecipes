@@ -157,9 +157,9 @@
         <button class="btn btn-success pull-right" type="submit" >Edit</button>
       </form> 
       
-      <form action="Delete recipe " method="POST">
-        <button class="btn btn-success pull-right" type="submit">Delete</button>
-      </form>
+      
+      <button class="btn btn-success pull-right" type="submit" onClick="recipe_delete()">Delete</button>
+      
     </div>
     {% endif %}
   </div>
@@ -271,7 +271,7 @@
         {{Descriptions}}
       </span>
     </div>
-    <h2 style="margin-left: 40px;">{{UserName}}</h2>
+    <a href="http://127.0.0.1:5000/profile/{{UserName}}" style="margin-left: 40px;">{{UserName}}</a>
 
     <!--star rating begin-->
     <link href=.rating-list li {
