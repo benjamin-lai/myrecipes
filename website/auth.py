@@ -86,7 +86,7 @@ def sign_up_fn(email, first_name, last_name, password1, password2):
 
         # Create default profile for new user
         new_profile = Profiles(first_name=first_name, last_name=last_name, display_name=first_name + ' ' + 
-            last_name, profile_pic=image_file, bio=bio, custom_url=None, owns=new_user.id)
+            last_name, profile_pic=image_file, bio=bio, custom_url=new_user.id, owns=new_user.id)
 
         db.session.add(new_profile)
         db.session.commit()             # Commits changes
