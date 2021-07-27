@@ -94,13 +94,13 @@ def send_new_recipe_emails(recipe):
     subscriber_list = Subscriber.query.filter_by(contains=user.profile_id).all()
 
     # Get subscribers profile's emails
-    emailing_list = get_profile_emails(subscriber_list)
+    emailing_list = get_profile_emails(subscriber_list) 
 
     if len(emailing_list) != 0:
         topic = f"{user.display_name} has posted a new recipe called {recipe.name}."
-        body = "New recipe"
+        body = f"New recipe can be found at: /{recipe.name}.{recipe.id}"
 
-        send_email(emailing_list, topic, body)
+        # send_email(emailing_list, topic, body)
 
 # Get the list of emails who are subscribed to the user and accepts newsletters
 def get_profile_emails(sub_list):

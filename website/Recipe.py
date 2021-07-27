@@ -14,6 +14,7 @@ import ctypes
 from werkzeug.utils import secure_filename
 from .models import StarredRecipes, Users, Recipes, Ingredient, Contents, Recipestep, Profiles, Method, History, Likes, Comments
 from .review import create_comment, retrieve_comments, get_rating
+from .newsletter import send_new_recipe_emails
 from . import db
 from sqlalchemy import desc
 from sqlalchemy import func
@@ -1176,6 +1177,8 @@ def create_recipe (RecipeName, Description, Serving, Meal_type):
     db.session.add(new_recipe)
     db.session.commit()             # Commits changes
     
+    # Send new recipe notification over to all users who are subscribed to this user.
+    send_new_recipe_emails(new_recipe)
     
     recipe_id = db.session.query(func.max(Recipes.id)).first()
     print(recipe_id[0])
