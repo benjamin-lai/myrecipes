@@ -12,7 +12,7 @@ from tkinter import messagebox
 import ctypes 
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
-from .models import StarredRecipes, Users, Recipes, Ingredient, Contents, Recipestep, Profiles, Method, History, Likes, Comments
+from .models import StarredRecipes, Users, Recipes, Ingredient, Contents, Recipestep, Profiles, Method, History, Likes, Comments, Cookbooks, Cookbooks_lists
 from .review import create_comment, retrieve_comments, get_rating
 from .newsletter import send_new_recipe_emails
 from . import db
@@ -882,6 +882,18 @@ def edit_recipe():
     
 @recipes.route('/<recipeName>.<int:recipeId>', methods=['GET', 'POST'])
 def view_recipe(recipeName, recipeId):
+    #for cookbook
+    cookbook_my = Cookbooks.query.filter_by(contains = current_user.id).all()
+    #add into cookbook
+    book_add = request.form.get('cookbook')
+    print(f"bookadd  {book_add}")
+    if book_add is not None:
+        new_recipe_inbook = Cookbooks_lists(cookbook_id = book_add, recipe_id = recipeId)
+        db.session.add(new_recipe_inbook)
+        db.session.commit()
+        flash('Added into CookBook!', category='success')
+
+    
     Savelist["edit_ingredient"] = False
     recipe = Recipes.query.filter_by(id=recipeId).first()
     print(recipe)
@@ -1016,7 +1028,8 @@ def view_recipe(recipeName, recipeId):
     
     return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
         recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", 
-            meal_type = recipe.meal_type, methods=methods, star_status=star_status, res=res, UserImage = UserImage, UserName = recipe.creator, rating=rating)
+            meal_type = recipe.meal_type, methods=methods, star_status=star_status, res=res, UserImage = UserImage, UserName = recipe.creator, 
+            rating=rating, cookbook_my = cookbook_my)
         
          
 
