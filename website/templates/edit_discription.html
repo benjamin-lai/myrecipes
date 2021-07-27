@@ -68,8 +68,23 @@
                 <button name="find" type="add" class="btn btn-primary">Find</button>
             </div id="parentDiv" class="form-inline">
             
+            
+            <td>
+            <h3 class="card-text">Step.{{des_step.step_no}}</h3>
+            </td><br>
+            <div class = "atmiddle">
+            <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{des_step.photo}}" width="300" height="200" class="w3-card-4" width = "600" height = "450">
+            </div><br>
+            <div class = "right">
+            {{des_step.step_comment}}
+            </div>
+            
+            <button type="button" class="close" style = "margin-bottom:120px" onClick="deletedicription({{ des_step.recipe_id }}, {{ des_step.step_no }})">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <hr>
             <!-- Description -->
-            <h6 align="left" style="color:red;">Add Discriptions</h6>
+            <h6 align="left" style="color:red;" style = "margin-top:60px">Add Discriptions</h6>
             <div align="left" style="color:blue;">discriptions<br> <textarea name="discriptions" cols="30" rows="3" value={{current_step.step_comment}}></textarea></div>
             <div align="left" > <input type="reset" name="Submit2" value="Clear" style="float:left; margin-left:0px"> </div>
       

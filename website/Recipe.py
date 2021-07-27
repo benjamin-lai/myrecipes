@@ -59,6 +59,8 @@ Savelist["image_name2"] = None
 Savelist["image_name1"] = None
 Savelist["edit_ingredient"] = False
 Savelist["already_delete"] = False
+Savelist["can't_be_zero"] = False
+Savelist["deleting_step"] = False
 Savelist["contents"] = ''
 
 Savelist["color_1"] = ''
@@ -309,22 +311,43 @@ def recipe():
 def add_discription():
     StepNo = request.form.get('step_number')
     StepDes = request.form.get('discriptions')
+    
     if check_create(Savelist["RecipeName"],current_user.id) is True:    #is true, already created recipe
-        if Savelist["image_name1"] == None:
-            flash("Please upload photo!", 'error')
-            return redirect(url_for("recipes.upload_image"))
-        if len(IngredientList) == 0:
-            flash("Please add ingredient!", 'error')
-            return redirect(url_for("recipes.Add_ingredient"))
+        current_step = Recipestep.query.filter_by(recipe_id = Savelist["RecipeId"]).first()
+        Find = request.form.get('find')
+        obj = Recipestep.query.filter_by(recipe_id = Savelist["RecipeId"]).all()
+        # We assume there is at last one discription
+        Shown_discription = ""
+        if obj != []:
+            Shown_discription = obj[0]
+        judge = False
+        if Find != None: 
+            i = 0   
+            for current_step in obj:
+                print("StepNo", StepNo)
+                print("current_step", current_step.step_no)
+                if int(StepNo) == int(current_step.step_no):
+                    judge = True
+                    Shown_discription = obj[i]
+                    break
+                i += 1
+            if judge == False:
+                if Savelist["deleting_step"] == True:
+                    flash("successfully deleting current step")
+                    Savelist["deleting_step"] = False
+                else:
+                    flash("Don't create this step yet", 'error')
+        
+
+
         button4 = request.form.get('button4')
         if button4 != None:
             file2 = request.files['file2']
             if file2 != None:
                 file_data = file2
-                #Savelist["image_datas2"] = file_data
 
                 if file2.filename == '':
-                    flash('please upload picture for this step', 'error')
+                    flash('Continue to create recipe')
                     return redirect(request.url)
                 if file2 and allowed_file(file2.filename):
                     filename = secure_filename(file2.filename)
@@ -343,91 +366,91 @@ def add_discription():
 
                     Savelist["Step_number"] = StepNo
                     Savelist["Step_Des"] = StepDes
+            no_list = []
+            obj = Recipestep.query.filter_by(recipe_id = Savelist["RecipeId"]).all()
+            for o in obj:
+                no_list.append(int(o.step_no))
+                if int(Savelist["Step_number"]) == int(o.step_no):
+                    if StepNo:
+                        o.step_no = StepNo
+                    if StepDes:
+                        o.step_comment = StepDes
+                    if Savelist["image_name2"]:
+                        o.photo = Savelist["image_name2"]
+                    db.session.commit()
 
-        #recipe_id = db.session.query(func.max(Recipestep.step_no)).first()
-        #Recipes.query.filter_by(id = recipe_id).first()
-        no_list = []
-        obj = Recipestep.query.filter_by(recipe_id = Savelist["RecipeId"]).all()
-        for o in obj:
-            no_list.append(int(o.step_no))
-        print(no_list)
-        if Savelist["Step_number"] != None and (int(Savelist["Step_number"]) in no_list) and (button4 != None):
-            flash("Aleady complete this step", 'error') 
-        elif Savelist["Step_number"] and Savelist["Step_Des"] and Savelist["image_name2"] and (button4 != None):
-            
-            # we can begin to add steps
-            print(f"step + {StepDes}, No. + {StepNo}")
-            #get the latest id of this recipeName
-            #obj = Recipes.query.filter_by(name = Savelist["RecipeId"]).all()
-            recipe_id = Savelist["RecipeId"]
-            print("begin to add to db")
-            print(f"Step des {StepDes}")
-            new_step = Recipestep(recipe_id = recipe_id, step_no = StepNo, step_comment = StepDes, photo = Savelist["image_name2"])
-            db.session.add(new_step)
-            db.session.commit()             # Commits changes
-            flash(f"Added comment at Step.{StepNo}!")
-            Savelist["color_4"] = "red"
-        if (Savelist["Step_number"] != -1) and Savelist["Step_Des"] and (Savelist["image_name2"] == None) and (button4 != None):
-            flash(f"Please upload photo for steps!", 'error')
-            
-        if (Savelist["Step_number"] == -1) and Savelist["Step_Des"] and (Savelist["image_name2"] != None) and (button4 != None):
-            flash(f"Please add Step Number!", 'error')
-            
-        if (Savelist["Step_number"] != -1) and (Savelist["Step_Des"] == "") and (Savelist["image_name2"] != None) and (button4 != None):
-            flash(f"Please add Step Description!", 'error')
+                    # Set to current step
+                    Shown_discription = o
+
+            print(no_list)
+            if int(Savelist["Step_number"]) not in no_list:
+                if StepNo and StepDes and Savelist["image_name2"]:
+                    # we can begin to add steps
+                    print(f"step + {StepDes}, No. + {StepNo}")
+                    #get the latest id of this recipeName
+                    #obj = Recipes.query.filter_by(name = Savelist["RecipeId"]).all()
+                    recipe_id = Savelist["RecipeId"]
+                    print("begin to add to db")
+                    print(f"Step des {StepDes}")
+                    new_step = Recipestep(recipe_id = recipe_id, step_no = StepNo, step_comment = StepDes, photo = Savelist["image_name2"])
+                    db.session.add(new_step)
+                    db.session.commit()             # Commits changes
+                    # Set to current step
+                    Shown_discription = new_step
+                    flash(f"Added comment and photo at Step.{StepNo}!")
+            else:
+                if Savelist["can't_be_zero"] == True:
+                    flash("At least contain one step discription", 'error')
+                    Savelist["can't_be_zero"] = False
+                else:    
+                    flash(f"Update comment and photo at Step.{StepNo}!")
         
-
+            Savelist["color_4"] = "red"
+            if (Savelist["Step_number"] != -1) and Savelist["Step_Des"] and (Savelist["image_name2"] == None) and (button4 != None):
+                flash(f"Please upload photo for steps!", 'error')
+            
+            if (Savelist["Step_number"] == -1) and Savelist["Step_Des"] and (Savelist["image_name2"] != None) and (button4 != None):
+                flash(f"Please add Step Number!", 'error')
+                
+            if (Savelist["Step_number"] != -1) and (Savelist["Step_Des"] == "") and (Savelist["image_name2"] != None) and (button4 != None):
+                flash(f"Please add Step Description!", 'error')
     else:
         flash(f"Please create the recipe first!", 'error')
         return redirect(url_for('recipes.create_recipe'))
 
-
-        
     Submit = request.form.get('Submit')
     if Submit != None:
         recipe_id = Savelist["RecipeId"]
-        print(Savelist["RecipeId"])
+        #fetch steps from db
+        Steps = ""
+        obj = Recipestep.query.filter_by(recipe_id = recipe_id).all()
+
+        step_list = []
+        image_list = []
+        for o in obj:
+            Steps = f"Step.{o.step_no} --> {o.step_comment}  \n"
+            step_list.append(Steps)
+            image_temp = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': o.photo})
+            image_list.append(image_temp)
+        length1 = len(step_list)
+        while length1 < 4:
+            step_list.append(f"Step.{length1}  \n")
+            image_list.append(None)
+            length1 += 1
+        print(step_list)
+        print(image_list)
+        print("Yeeeeeea")
         recipe_data = Recipes.query.filter_by(id = recipe_id).first()
-        if recipe_data.photo == None:
-            flash(f"Please upload photo for recipe", 'error')
-        else:
-            
-            #fetch description from db
-            Description = Recipes.query.filter_by(id = recipe_id).first().description
-            #fetch steps from db
-            Steps = ""
-            obj = Recipestep.query.filter_by(recipe_id = recipe_id).all()
-
-            step_list = []
-            image_list = []
-            for o in obj:
-                Steps = f"Step.{o.step_no} --> {o.step_comment}  \n"
-                step_list.append(Steps)
-                image_temp = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': o.photo})
-                image_list.append(image_temp)
-            length1 = len(step_list)
-            while length1 < 4:
-                step_list.append(f"Step.{length1}  \n")
-                image_list.append(None)
-                length1 += 1
-            print(step_list)
-            print(image_list)
-            print("Yeeeeeea")
-            #image_datas1_read = Savelist["image_datas1"].read()
-            #image_datas2_read = Savelist["image_datas2"].read()
-            #image1 = base64.b64encode(image_datas1_read).decode('ascii')
-            #image2 = base64.b64encode(image_datas2_read).decode('ascii')
-            
-            print(recipe_data.photo)
-            image1 = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe_data.photo})
-            print(image1)
-
-            IngredientList.clear()#reset
-            print("reset2")
-            print(IngredientList)
-            #clean global list
-            initial()
-            return redirect(url_for('recipes.view_recipe',recipeName = recipe_data.name,recipeId = recipe_data.id ))
+        print(recipe_data.photo)
+        image1 = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe_data.photo})
+        print(image1)
+        
+        IngredientList.clear()#reset
+        print("reset2")
+        print(IngredientList)
+        #clean global list
+        initial()
+        return redirect(url_for('recipes.view_recipe',recipeName = recipe_data.name,recipeId = recipe_data.id ))
 
     Step_No = None
     Step_Number = 0
@@ -442,9 +465,13 @@ def add_discription():
             Step_Number = 0
     else:
         Step_Number = 0
-    return render_template("add_discription.html", user=current_user, Step_Number = (Step_Number+1), color1 = Savelist["color_1"],
-            color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"])
 
+    
+    return render_template("edit_discription.html", user=current_user, current_step = current_step, Step_Number = (Step_Number+1), color1 = Savelist["color_1"],
+            color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"], des_step = Shown_discription)
+
+
+    
 @recipes.route('/Add ingredient', methods=['GET', 'POST'])
 def Add_ingredient():
     if check_create(Savelist["RecipeName"],current_user.id) is False:
@@ -837,6 +864,32 @@ def edit_ingredient():
     return render_template("edit_ingredient.html", user=current_user, IngreContents = Contents, color1 = Savelist["color_1"],
             color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"], ingredients =  Ingredients)
 
+@recipes.route('/delete discription', methods = ['GET', 'POST'])
+def delete_discription():
+    if request.method == 'POST':
+        step = json.loads(request.data)
+        print(request.data)
+        print(step)
+        recipe_id = step['id']
+        step_no = step['step_no']
+        count_number = Recipestep.query.filter_by(recipe_id = recipe_id).all()
+        if len(count_number) <= 1:
+            print("count_number: ", count_number)
+            flash("At least contain one step discription", 'error')
+            Savelist["can't_be_zero"] = True
+            if Savelist["Is_creating"] == True:
+                return redirect(url_for('recipes.add_discription'))
+            return redirect(url_for('recipes.edit_discription'))
+        else:
+            step_delete = Recipestep.query.filter_by(recipe_id = recipe_id, step_no = step_no).first()
+
+            db.session.delete(step_delete)
+            db.session.commit()
+            print("deleting successfully")
+            if Savelist["Is_creating"] == True:
+                return redirect(url_for('recipes.add_discription'))
+            return redirect(url_for('recipes.edit_discription'))
+
 @recipes.route('/edit discription', methods = ['GET', 'POST'])
 def edit_discription():
     StepNo = request.form.get('step_number')
@@ -844,22 +897,36 @@ def edit_discription():
     
     current_step = Recipestep.query.filter_by(recipe_id = Savelist["RecipeId"]).first()
     Find = request.form.get('find')
+    obj = Recipestep.query.filter_by(recipe_id = Savelist["RecipeId"]).all()
+    # We assume there is at last one discription
+    Shown_discription = ""
+    if obj != []:
+        Shown_discription = obj[0]
     judge = False
-    if Find != None:
-        obj = Recipestep.query.filter_by(recipe_id = Savelist["RecipeId"]).all()
+    if Find != None: 
+        i = 0   
         for current_step in obj:
-            if StepNo == current_step.step_no:
+            print("StepNo", StepNo)
+            print("current_step", current_step.step_no)
+            if int(StepNo) == int(current_step.step_no):
                 judge = True
+                Shown_discription = obj[i]
                 break
+            i += 1
         if judge == False:
-            flash("Don't create this step yet", 'error')
+            if Savelist["deleting_step"] == True:
+                flash("successfully deleting current step")
+                Savelist["deleting_step"] = False
+            else:
+                flash("Don't create this step yet", 'error')
+    
+
 
     button4 = request.form.get('button4')
     if button4 != None:
         file2 = request.files['file2']
         if file2 != None:
             file_data = file2
-            #Savelist["image_datas2"] = file_data
 
             if file2.filename == '':
                 flash('Continue to create recipe')
@@ -894,6 +961,9 @@ def edit_discription():
                     o.photo = Savelist["image_name2"]
                 db.session.commit()
 
+                # Set to current step
+                Shown_discription = o
+
         print(no_list)
         if int(Savelist["Step_number"]) not in no_list:
             if StepNo and StepDes and Savelist["image_name2"]:
@@ -907,9 +977,15 @@ def edit_discription():
                 new_step = Recipestep(recipe_id = recipe_id, step_no = StepNo, step_comment = StepDes, photo = Savelist["image_name2"])
                 db.session.add(new_step)
                 db.session.commit()             # Commits changes
+                # Set to current step
+                Shown_discription = new_step
                 flash(f"Added comment and photo at Step.{StepNo}!")
         else:
-            flash(f"Update comment and photo at Step.{StepNo}!")
+            if Savelist["can't_be_zero"] == True:
+                flash("At least contain one step discription", 'error')
+                Savelist["can't_be_zero"] = False
+            else:    
+                flash(f"Update comment and photo at Step.{StepNo}!")
     
         Savelist["color_4"] = "red"
 
@@ -960,8 +1036,10 @@ def edit_discription():
             Step_Number = 0
     else:
         Step_Number = 0
+
+    
     return render_template("edit_discription.html", user=current_user, current_step = current_step, Step_Number = (Step_Number+1), color1 = Savelist["color_1"],
-            color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"])
+            color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"], des_step = Shown_discription)
 
 
 

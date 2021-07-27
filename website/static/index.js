@@ -151,3 +151,16 @@ if (confirm("Are you sure you want to delete this browsing history?"))
       window.location.reload(true);
     });
 }
+
+function deletedicription(id, step_no) {
+  if (confirm("Are you sure you want to delete this dicription?"))
+  alert(id)
+  alert(step_no)
+  fetch("/delete discription", {
+    method: 'POST',
+    body: JSON.stringify({ id: id, step_no: step_no}),
+  }).then((_res) => {
+    window.location.reload(true);
+  });
+}
+
