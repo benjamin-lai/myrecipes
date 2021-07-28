@@ -1211,10 +1211,14 @@ def view_recipe(recipeName, recipeId):
     else:
         UserImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': get_user_image(recipeId)})
     
+    # Link the creator's name as url
+    creator_name = recipe.creator.split(" ")
+    profile = Profiles.query.filter_by(owns = recipe.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+    
     return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
         recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", 
             meal_type = recipe.meal_type, methods=methods, star_status=star_status, res=res, UserImage = UserImage, UserName = recipe.creator, 
-            rating=rating, cookbook_my = cookbook_my)
+            rating=rating, cookbook_my = cookbook_my, profile = profile)
         
          
 
