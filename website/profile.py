@@ -1,10 +1,16 @@
 # Profile Page, I haven't done anything that cool yet.
 import os
 from typing import BinaryIO
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for,jsonify
 from flask_login import login_required, current_user
+import json
 from flask_cors import CORS
 from . import db
+from .models import Users, Profiles,Cookbooks, Cookbooks_lists
+from .validate_email import validate_email
+import boto3
+from werkzeug.utils import secure_filename
+from .review import create_cookbook, delete_book
 from .models import Recipes, Users, Profiles, Subscribed, Subscriber, profile_subs, profile_subbed, Cookbooks_lists
 from .validate_email import validate_email
 import boto3
@@ -254,24 +260,42 @@ def view_profile(id):
         return redirect(url_for('views.home'))
 
 
-#cookbook in profile
-@profile.route('/cookbook', methods=['GET','POST']) # public view of profile based off name and id
+#cookbook center in profile
+@profile.route('/cookbook', methods=['GET','POST']) 
 def cook_book():
-    #implementing create
-
-    #delete
-
-    #name changing
-
-    #add recipes
-
-    #delete recipes
+    #user can only view the recipe of their own
+    cookbook_all = Cookbooks.query.filter_by(contains = current_user.id).all()
+    print(f"all    {cookbook_all}")
+    return render_template("cookbook.html",user = current_user, books = cookbook_all)
 
 
-    cookbook_all = Cookbooks_lists.query.all()
-    return render_template("cookbook.html",user = current_user)
+#cookbook
+@profile.route('/cookbook.<book_name>.<int:book_id>', methods=['GET','POST'])
+def cook_book2(book_name,book_id):
+    #check avaliablity of name and id
+    #allowed user who is not the creator to view
+    cookbook = Cookbooks.query.filter_by(name = book_name, id = book_id).first()
+    if cookbook is None:
+        flash("No cookbook exists with this name and id.", category="error")
+        return redirect(url_for('views.home'))
 
+    #show recipe in cookboook
+    cookbook_list = Cookbooks_lists.query.filter_by(cookbook_id = book_id).all()
+    recipe_list = []
+    for book in cookbook_list:
+        recipe = Recipes.query.filter_by(id = book.recipe_id).first()
+        recipe_list.append(recipe)
 
+    print(f"recipe list  {recipe_list}")
+    #no recipe inside
+    if len(recipe_list) < 1:
+        empty = True
+    else:
+        empty = False
+
+    #remove recipes
+    return render_template("cookbook_content.html",user = current_user, empty = empty, recipe_list = recipe_list, 
+    cookbook = cookbook)
 
 # todo:
 

@@ -184,7 +184,12 @@ class Newsletters(db.Model):
     subscribed_to = db.Column(db.Boolean)       # This is for subscribed to 
     own = db.Column(db.Integer, db.ForeignKey('users.id'))
 
+class Cookbooks(db.Model,UserMixin):
+    id = db.Column(db.Integer, primary_key=True, unique = True)
+    name = db.Column(db.String(150))
+    description = db.Column(db.String(150))
+    contains = db.Column(db.Integer,db.ForeignKey('users.id'), primary_key=True)
+
 class Cookbooks_lists(db.Model,UserMixin):
-    cookbook_id = db.Column(db.Integer, primary_key=True, unique = True)
+    cookbook_id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
-    contains = db.Column(db.Integer,db.ForeignKey('profiles.profile_id'), primary_key=True)

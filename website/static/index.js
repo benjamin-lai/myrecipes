@@ -13,6 +13,24 @@ function signOut() {
   });
 }
 
+function create_book() {
+  var txt;
+  var name = prompt("CookBook Name：", "NewBook");
+  if (name == null || name == "") {
+      txt = "cancel";
+  } else {
+      txt = "Hello，" + name + "！How r u？";
+      fetch("/cookbook", {
+        method: "POST",
+        body: JSON.stringify({
+          name: txt,
+        }),
+      }).then((_res) => {
+        window.location.reload(true);
+      });
+  }
+
+
 function createComment2(recipe_id) {
   var new_comment = prompt("Create a new comment on this recipe.");
   if (new_comment != null) {

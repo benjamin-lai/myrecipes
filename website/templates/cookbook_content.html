@@ -1,0 +1,117 @@
+{% extends "base.html" %} {% block title %}MyRecipes{% endblock %}
+<!-- Overwrites title-->
+
+{% block content %}
+<!-- Header -->
+
+
+<head>  
+  <!-- Import Bootstrap. Links to CDN which gives access to all the bootstrap designs -->
+    <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+    crossorigin="anonymous"
+    />
+    <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    crossorigin="anonymous"
+    />
+
+    <!-- When hovering over dropdown menu display content (I dont know how to connect css file) -->
+    <style type="text/css">
+        .dropdown:hover .dropdown-menu {
+          display: block;
+        }
+        body{
+          height: 100%;
+        }
+    </style>
+</head>
+<h2 align = "center">{{cookbook.name}}</h2>
+<hr>
+<h4>Description</h4>
+{% if cookbook.description != None %}
+<h7>{{cookbook.description}}<h7>
+{% endif %}<br>
+<button class="btn btn-warning" type="submit" name="setDes" id = "setDes" onclick = "setDes({{cookbook.id}})">Edit/Create</button>
+<script>
+    function setDes(cookbook_id) {
+        var des = prompt("CookBook Description：");
+        if (des != null) {
+            fetch("/set_des", {
+                method: "POST",
+                body: JSON.stringify({
+                cookbook_id: cookbook_id,
+                des: des,
+                }),
+            }).then((_res) => {
+                window.location.reload(true);
+            });
+        }
+    }
+</script>
+<hr>
+<br>
+{% if empty == True %}
+<h1 align = "center">
+Empty cookbook, Go find more delicious!
+</h1>
+{% endif %}
+<br>
+<h1 align="center">{{message}}</h1>
+  <!--for loop to add card, copied from recipe card-->
+  {% for recipes in recipe_list %}
+<tr>
+    <td>
+        <div class="card mb-3" style="max-width: 1000px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+            <div class="zoom">
+                <a href="/recipe.{{recipes.name}}.{{recipes.id}}">
+                <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipes.photo}}" class="image">
+                </a>
+            </div>
+            </div>
+            <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">{{recipes.name}} </h5>
+        
+    </td>
+  <div>
+    <h7 class="card-text">{{recipes.description}}</h7>
+  </div>
+  <td>
+        <!-- want to change thise so it displays profile based off profile_id-->
+        <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.display_name}}"> {{recipes.creator}}</a></u></small></p>
+        <a href="/recipe.{{recipes.name}}.{{recipes.id}}" class="btn btn-primary">Get the Recipe</a>
+        <button class="btn btn-warning" type="submit" name="remove" id = "remove" onclick = "removeRecipe({{recipes.id}}, {{cookbook.id}})">Delete</button>
+        <script>
+            function removeRecipe(recipe_id,cookbook_id) {
+            if (confirm("Are you sure you want to remove this recipe ?"))
+                fetch("/remove_recipe", {
+                method: "POST",
+                body: JSON.stringify({
+                    recipe_id: recipe_id,
+                    cookbook_id: cookbook_id,
+                    }),
+                }).then((_res) => {
+                window.location.reload(true);
+                });
+                }
+        </script>
+      </div>
+    </div>
+  </div>
+</div>
+  </td>
+</tr>
+
+{% endfor %}
+
+</div>
+</body>
+
+
+{% endblock %}
