@@ -63,6 +63,7 @@ class Recipes(db.Model):
 Contents = "empty"
 
 class Ingredient(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
     dosage = db.Column(db.Integer)
     unit_name = db.Column(db.String(150))
@@ -187,6 +188,7 @@ class Newsletters(db.Model):
 class Cookbooks(db.Model,UserMixin):
     id = db.Column(db.Integer, primary_key=True, unique = True)
     name = db.Column(db.String(150))
+    description = db.Column(db.String(150))
     contains = db.Column(db.Integer,db.ForeignKey('users.id'), primary_key=True)
 
 class Cookbooks_lists(db.Model,UserMixin):
