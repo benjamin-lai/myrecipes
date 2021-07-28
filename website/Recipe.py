@@ -880,6 +880,7 @@ def edit_recipe():
 
     
 @recipes.route('/<recipeName>.<int:recipeId>', methods=['GET', 'POST'])
+@recipes.route('/.<int:recipeId>', methods=['GET', 'POST'])
 def view_recipe(recipeName, recipeId):
     Savelist["edit_ingredient"] = False
     recipe = Recipes.query.filter_by(id=recipeId).first()
@@ -984,28 +985,7 @@ def view_recipe(recipeName, recipeId):
     
     cursor.execute(sql, (id, id, id, id))
     res=cursor.fetchall()
-    
-    
-    
-    #sqlalchemy attemps
-    
-    #sub = Ingredient.query.filter_by(recipe_id = recipe.id).with_entities(Ingredient.recipe_id, func.count(Ingredient.recipe_id)).order_by(Ingredient.recipe_id).group_by(Ingredient.recipe_id).all()
-    # ing = Ingredient.query.filter(Ingredient.recipe_id != recipe.id).with_entities(Ingredient.ingredient).subquery()
-    # print(ing)
-    
-    # qry = Ingredient.query.outerjoin(ing, Ingredient.ingredient==ing)
-    # print(qry)
-    # sub = Ingredient.query.filter_by(recipe_id=recipe.id).all()
-    # q = ing.union(sub)
-    
-    # print(q)
-    # que = Ingredient.query.filter_by(recipe_id = recipe.id).outerjoin(sub).all()
-    # print(que)
-    #res = sub.query(func.count(sub.recipe_id)).scalar()
-    #print(res)
-    # res = Ingredient.query.filter(Ingredient.ingredient.in_(sub)).all()
-    # for res in res:
-    #     print(res)
+
     
     #to tell which image should use for user
     if len(get_user_image(recipeId)) == 24:
