@@ -2,9 +2,11 @@
 <!-- Overwrites title-->
 <!-- TODO: add containers to better group the forms to make them more aesthetic e.g. account, personal details etc-->
 {% block content %}
+
 <form method="POST">
 
     <h3 align="center">Update Profile</h3>
+
     <div class="container-fluid" style="border:1px solid #cecece;">
         <div class="form-group">
         <label for="username">Display Name</label>
@@ -122,12 +124,14 @@
                 <input name = "button" type=submit value=Upload>
             </form>      
         </div>
-    <div >
+    </div>
+
 
     <div class="mt-xl-4">    
         <button name="button" type="submit" value="Submit" class="btn btn-primary">Submit</button>
         <a class="btn btn-secondary" href="http://127.0.0.1:5000/profile/my" role="button">Cancel</a>
     </div>
+    <br>
 </form>
 
 
