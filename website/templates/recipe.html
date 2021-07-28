@@ -19,6 +19,7 @@
     margin-left: 0px;
     padding-top: 10px;
     padding-bottom: 10px;
+    width:1100px;
     }
     .wrap{
     height: 180px;
@@ -100,7 +101,7 @@
     }
 
     .mid{
-      width: 560px;
+      width: 550px;
       text-align: left;
       display: inline-block;
       vertical-align: middle;
@@ -170,7 +171,7 @@
     <div class="container">
       <h1 style="font-size:88px;">{{RecipeName}}</h1>
       <!--starred start-->
-        <div class="container">
+        <div class="container" style = "height:40px;">
             <!-- Recipe Star Button-->
             <div id="favourite" style="float:right">
               <div id="heart"></div> 
@@ -259,19 +260,21 @@
   
   <!--user image, description, rating, likes, Ingredients-->
   <div class="container">
-    <div>
-      <img
-      class="rounded-circle account-img"
-      src="{{UserImage}}"
-      width="200"
-      height="200"
-      />
+    <div class = "row">
+        <img
+        class="rounded-circle account-img"
+        src="{{UserImage}}"
+        width="200"
+        height="200"
+        />
+        
       <span class="mid">
         <h3>Description</h3>
         {{Descriptions}}
       </span>
+      <h3 align = "center;"><a href="http://127.0.0.1:5000/profile/{{UserName}}" style="margin-left: 40px;">{{UserName}}</a><h3>
     </div>
-    <a href="http://127.0.0.1:5000/profile/{{UserName}}" style="margin-left: 40px;">{{UserName}}</a>
+    
 
     <!--star rating begin-->
     <link href=.rating-list li {
