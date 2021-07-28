@@ -22,20 +22,9 @@
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       crossorigin="anonymous"
     />
-    <!-- When hovering over dropdown menu display content (I dont know how to connect css file) -->
-    <style type="text/css">
-      .dropdown:hover .dropdown-menu {
-        display: block;
-      }
-
-      .sticky-offset {
-        top: 55px;
-        z-index: 100;
-      }
-    </style>
 
     <link type="text/css" rel="stylesheet" href="/static/style.css" />
-    <title>{% block title %}Home{% endblock %}</title>
+    <title> {% block title %}Home{% endblock %} </title>
   </head>
   <body>
     <!-- Our navbar, caters for desktop and mobile -->
@@ -79,7 +68,6 @@
 
             <!-- Recipe creation stuff & random recipe -->
             <a class="nav-item nav-link" id="#" href="/recipe/random">Surprise me!</a>
-            <a class="nav-item nav-link" id="#" href="#">Recipe Stuff</a> 
             
             <!--search button direct to /search-->
             <a href="/search_result">
@@ -115,46 +103,18 @@
               >
                 Placeholder
               </a>
-              <div
-                class="dropdown-menu"
-                aria-labelledby="navbarDropdownMenuLink"
-              >
-                <a class="dropdown-item" id="profile" href="/profile/my"
-                  >Profile</a
-                >
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" id="profile" href="/profile/my">Profile</a>
                 <a class="dropdown-item" id="newsfeed" href="/newsfeed">Personalised Newsfeed</a>
                 <a class="dropdown-item" id="starred_recipes" href="/recipes/starred">Starred Recipes</a>
-                <a
-                  class="dropdown-item"
-                  id="Create recipe"
-                  href="/Create recipe"
-                  >New Recipe</a
-                >
-
-                <a class="dropdown-item" id="Recipe cards" href="/Recipe cards"
-                  >Recipes</a
-                >
-                <a class="dropdown-item" id="history" href="/history"
-                  >History</a
-                >
-                <a
-                  class="dropdown-item"
-                  id="Trending Section"
-                  href="/Trending Section"
-                  >Trending Section</a
-                >
+                <a class="dropdown-item" id="Recipe cards" href="/Recipe cards">Recipes</a>
+                <a class="dropdown-item" id="history" href="/history">History</a>
+                <a class="dropdown-item" id="Trending Section" href="/Trending Section">Trending Section</a>
 
                 <!-- Newsletter and support tabs -->
                 <div class="dropdown-divider"></div>
-                <a
-                  class="dropdown-item"
-                  id="newsletter"
-                  href="/manage_newsletters"
-                  >Newsletters</a
-                >
-                <a class="dropdown-item" id="support" href="/support"
-                  >Support</a
-                >
+                <a class="dropdown-item" id="newsletter" href="/manage_newsletters">Newsletters</a>
+                <a class="dropdown-item" id="support" href="/support">Support</a>
 
                 <!-- Logout option -->
                 <div class="dropdown-divider"></div>
@@ -163,7 +123,7 @@
             </li>
 
             {% else %}
-            <!-- ATM only authentication methods avaliable -->
+            <!-- Only have sign-in and login option available. -->
             <a class="nav-item nav-link" id="login" href="/login">Login</a>
             <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
             {% endif %}
@@ -174,46 +134,40 @@
 
     <!-- ######### Flashing Messages  ###############-->
     <!-- Get all the messages that was flashed, and display them on the screen-->
-    {% with messages = get_flashed_messages(with_categories=true) %} {% if
-    messages %} {% for category, message in messages %} {% if category ==
-    'error' %}
-    <div
-      class="
-        alert alert-danger
-        alter-dismissable
-        fade
-        show
-        sticky-top sticky-offset
-      "
-      role="alert"
-      align="center"
-    >
-      {{ message }}
-      <button type="button" class="close" data-dismiss="alert">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    {% else %}
-    <div
-      class="
-        alert alert-success
-        alter-dismissable
-        fade
-        show
-        sticky-top sticky-offset
-      "
-      role="alert"
-      align="center"
-    >
-      {{ message }}
-      <button type="button" class="close" data-dismiss="alert">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    {% endif %} {% endfor %} {% endif %} {% endwith %}
+    {% with messages = get_flashed_messages(with_categories=true) %} 
+      {% if messages %} 
+        {% for category, message in messages %} 
+          {% if category =='error' %}
+            <div
+              class=" alert alert-danger alter-dismissable fade show sticky-top sticky-offset"
+              role="alert"
+              align="center"
+            >
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          {% else %}
+            <div
+              class=" alert alert-success alter-dismissable fade show sticky-top sticky-offset"
+              role="alert"
+              align="center"
+            >
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          {% endif %} 
+        {% endfor %} 
+      {% endif %} 
+    {% endwith %}
 
     <div class="container">
-    {% block content %} {% endblock %}</div>
+    {% block content %} 
+    {% endblock %}
+    </div>
 
     
 

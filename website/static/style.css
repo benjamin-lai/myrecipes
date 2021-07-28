@@ -264,4 +264,13 @@ body{
     color: #f1f1f1;
   }
 
+
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+
+  .sticky-offset {
+    top: 55px;
+    z-index: 100;
+  }
   

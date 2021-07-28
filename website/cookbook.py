@@ -5,7 +5,6 @@ from flask_login import login_required, current_user
 from flask_cors import CORS
 from . import db
 from .models import Users, Profiles, Cookbooks, Cookbooks_lists
-from .validate_email import validate_email
 import boto3
 from werkzeug.utils import secure_filename
 from .models import Users, Recipes, Ingredient, Contents, Recipestep, Profiles,Method,Meal_Type
