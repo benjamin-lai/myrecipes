@@ -7,12 +7,12 @@ import json
 from flask_cors import CORS
 from . import db
 from .models import Users, Profiles,Cookbooks, Cookbooks_lists
-from .validate_email import validate_email
+from .auth import validate_email
 import boto3
 from werkzeug.utils import secure_filename
 from .review import create_cookbook, delete_book
 from .models import Recipes, Users, Profiles, Subscribed, Subscriber, profile_subs, profile_subbed, Cookbooks_lists
-from .validate_email import validate_email
+
 import boto3
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash

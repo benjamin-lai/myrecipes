@@ -13,7 +13,7 @@ import ctypes
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
 from .models import StarredRecipes, Users, Recipes, Ingredient, Contents, Recipestep, Profiles, Method, History, Likes, Comments, Cookbooks, Cookbooks_lists
-from .review import create_comment, retrieve_comments, get_rating
+from .review import retrieve_comments, get_rating, check_likes_exists
 from .newsletter import send_new_recipe_emails
 from . import db
 from sqlalchemy import desc
@@ -1109,13 +1109,14 @@ def view_recipe(recipeName, recipeId):
     
     methods = Method.query.filter_by(recipe_id=Savelist["RecipeId"]).all()
     if current_user.is_authenticated:
+        # Get the information on like/dislike by checking if it exists.
+        like_status = check_likes_exists(current_user.id, recipe.id) 
         if not StarredRecipes.query.filter_by(recipe_id=recipe.id, contains=current_user.id).first():
             star_status = "unstarred"
         else:
             star_status = "starred"
     else:
         star_status = "unstarred"
-
 
     #Create recipe view history
     if current_user.is_authenticated:
@@ -1206,7 +1207,7 @@ def view_recipe(recipeName, recipeId):
         UserImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': get_user_image(recipeId)})
     
     return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
-        recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", 
+        recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, likes = like_status, creates = recipe.creates, recipe=recipe, type="recent", 
             meal_type = recipe.meal_type, methods=methods, star_status=star_status, res=res, UserImage = UserImage, UserName = recipe.creator, 
             rating=rating, cookbook_my = cookbook_my)
         

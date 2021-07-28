@@ -111,15 +111,18 @@ def create_comment():
         recipe_id = recipe['recipe_id']
         comment = recipe['comment']
 
-        if len(comment) < 1:
-            flash('Comment is too short!', category='error')
+        if current_user.is_authenticated:
+            if len(comment) < 1:
+                flash('Comment is too short!', category='error')
+            else:
+                profile = Profiles.query.filter_by(owns=current_user.id).first()
+                print(profile.display_name)
+                new_comment = Comments(comment=comment, has=recipe_id, owns=current_user.id)
+                db.session.add(new_comment)
+                db.session.commit()
+                flash('Comment added!', category='success')
         else:
-            profile = Profiles.query.filter_by(owns=current_user.id).first()
-            print(profile.display_name)
-            new_comment = Comments(comment=comment, has=recipe_id, owns=current_user.id)
-            db.session.add(new_comment)
-            db.session.commit()
-            flash('Comment added!', category='success')
+            flash("You need to login first before you can review a recipe", category="error")
         return jsonify({})
 
 # Retrieves comments given recipe_id
@@ -194,6 +197,7 @@ def add_dislike():
     return jsonify({})
 
 # Process to either like or dislike recipe given the status
+@review.route('/add-like-dislike', methods=['POST'])
 def like_dislike_recipe(status):
     recipe = json.loads(request.data)
     recipe_id = recipe['recipe_id']

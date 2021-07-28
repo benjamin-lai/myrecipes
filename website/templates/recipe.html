@@ -305,10 +305,30 @@
     <!-- Like and disclick buttons with their associated counter -->
     <div class="row">
       <div class="col">
-        <button type="button" class="btn btn-primary" onClick="addLike({{ recipe_id }})">Like!</button>
-        {{ recipe.num_of_likes }}
-        <button type="button" class="btn btn-primary" onClick="addDislike({{ recipe_id }})">Dislike!</button>
-        {{ recipe.num_of_dislikes }}
+        <!-- Section checks for certain criterias when displaying the look of likes/dislikes -->
+        <!-- Checks if likes table exists for this user and if it has been liked or disliked.-->
+        {% if likes and likes.like_status != 0 %}
+          {% if likes.like_status == 1 %}
+            <button type="button" class="btn btn-success" onClick="addLike({{ recipe_id }})">Liked</button>
+            {{ recipe.num_of_likes }}
+            <button type="button" class="btn btn-primary" onClick="addDislike({{ recipe_id }})">Dislike</button>
+            {{ recipe.num_of_dislikes }}
+          {% else %}
+            <button type="button" class="btn btn-primary" onClick="addLike({{ recipe_id }})">Like</button>
+            {{ recipe.num_of_likes }}
+            <button type="button" class="btn btn-danger" onClick="addDislike({{ recipe_id }})">Disliked</button>
+            {{ recipe.num_of_dislikes }}
+          {% endif %}
+          
+        <!-- Displays normal form for non logged-in users, users who havent liked/disliked. -->
+        {% else %}
+          <button type="button" class="btn btn-primary" onClick="addLike({{ recipe_id }})">Like</button>
+          {{ recipe.num_of_likes }}
+          <button type="button" class="btn btn-primary" onClick="addDislike({{ recipe_id }})">Dislike</button>
+          {{ recipe.num_of_dislikes }}
+        {% endif %}
+
+        
       </div>
     </div>
 
@@ -369,36 +389,52 @@
 <div class="container">
     <hr>
     <h2>Comments</h2>
-    <!-- Displays the ability to comment when the user is logged in-->
-    {% if current_user.is_authenticated %}
+    <!-- Displays the ability to comment -->
+    <div class="form-group">
+      <!-- Text Area of comment section -->
+      <label for="comment_textarea">Enter a new comment!</label>
+      <textarea class="form-control" id="comment_textarea" rows="3"></textarea>
+
+      <br>
+      <!-- Button to post the comment -->
       <div align="center">
         <button type="button" class="btn btn-primary" onClick="createComment2({{ recipe_id }})">Post a new Comment!</button>
       </div>
-    {% endif %}
 
+    </div>
+    
     <!-- Displays the list of comments for the recipe-->
     <div class="text_wrapper">
 
     <ul class="list-group list-group-flush" id="reviews">
       <!-- Iterate through comments for the recipe and display associated name and comment. -->
       {% for name, id, review in comments %}
-      <a href="#">{{ name }}</a>
-      <li class="list-group-item">
-        
+      
+      <div class="d-flex flex-row align-items-center">
+        <img
+          class="rounded-circle shadow-1-strong me-3"
+          src="https://mdbootstrap.com/img/Photos/Avatars/img%20(31).jpg"
+          alt="avatar"
+          width="40"
+          height="40"
+        />
+        <a href="#">{{ name }}</a>
+      </div>
+
+        <li class="list-group-item">
         {{ review.comment }}
-          
         <!-- Displays the abiltiy to delete comments if either they are the recipe owner or person who made the comment -->
         {% if creates == current_user.id or current_user.id == review.owns %}
         <!-- Only the person who made the comment can modify it -->
-          {% if current_user.id == review.owns %}
-            <button type="button" class="btn btn-secondary float-right" onClick="modifyComment({{ review.comment_id }})">
-              Modify
-            </button>
-          {% endif %}
-
           <button type="button" class="close" onClick="deleteComment({{ review.comment_id }})">
             <span aria-hidden="true">&times;</span>
           </button>
+
+          {% if current_user.id == review.owns %}
+            <button type="button" class="btn btn-default float-right" onClick="modifyComment({{ review.comment_id }})">
+              Modify
+            </button>
+          {% endif %}
           
         {% endif %}
       </li>

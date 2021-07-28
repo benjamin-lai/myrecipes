@@ -5,9 +5,9 @@ from flask_login import login_user, login_required, logout_user, current_user
 from flask_cors import CORS
 from flask_mail import Mail, Message
 from random import randint
+from re import search
 
 from .models import Subscribed, Subscriber, Users, Profiles, Codes
-from .validate_email import validate_email
 from . import db
 
 
@@ -170,6 +170,16 @@ def send_recovery_code(email, reset_code):
         recipients=[email])
     msg.body = f'We received a request to reset your MyRecipe password.\nEnter the following password reset code {reset_code}.'
     mail.send(msg)
+
+# Function used to determine if provided email is valid or not
+# reference: https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/
+def validate_email(email):  
+    regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
+    if(search(regex,email)):
+        return True
+
+    else:
+        return False
 
 
 
