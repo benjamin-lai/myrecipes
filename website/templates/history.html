@@ -25,7 +25,8 @@
     <td>
           <!-- want to change thise so it displays profile based off profile_id-->
           <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.display_name}}"> {{recipes.creator}}</a></u></small></p>
-          <a href="/history.{{recipes.id}}" class="btn btn-primary">delete it in history</a>
+          
+          <button class="btn btn-success pull-right" type="button" onClick="history_delete({{recipes.id}})">Delete it in history</button>
         </div>
       </div>
     </div>

@@ -7,6 +7,10 @@
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">    
   <script src="{{ url_for('static',filename = 'Recipe/Like.js')}}"></script>
   <style>
+    body{
+    background-color:white;
+    }
+    
     .container button{
       margin-right: 0px;
     }
@@ -15,6 +19,7 @@
     margin-left: 0px;
     padding-top: 10px;
     padding-bottom: 10px;
+    width:1100px;
     }
     .wrap{
     height: 180px;
@@ -96,7 +101,7 @@
     }
 
     .mid{
-      width: 560px;
+      width: 550px;
       text-align: left;
       display: inline-block;
       vertical-align: middle;
@@ -153,9 +158,9 @@
         <button class="btn btn-success pull-right" type="submit" >Edit</button>
       </form> 
       
-      <form action="Delete recipe " method="POST">
-        <button class="btn btn-success pull-right" type="submit">Delete</button>
-      </form>
+      
+      <button class="btn btn-success pull-right" type="submit" onClick="recipe_delete()">Delete</button>
+      
     </div>
     {% endif %}
   </div>
@@ -166,7 +171,7 @@
     <div class="container">
       <h1 style="font-size:88px;">{{RecipeName}}</h1>
       <!--starred start-->
-        <div class="container">
+        <div class="container" style = "height:40px;">
             <!-- Recipe Star Button-->
             <div id="favourite" style="float:right">
               <div id="heart"></div> 
@@ -255,19 +260,21 @@
   
   <!--user image, description, rating, likes, Ingredients-->
   <div class="container">
-    <div>
-      <img
-      class="rounded-circle account-img"
-      src="{{UserImage}}"
-      width="200"
-      height="200"
-      />
+    <div class = "row">
+        <img
+        class="rounded-circle account-img"
+        src="{{UserImage}}"
+        width="200"
+        height="200"
+        />
+        
       <span class="mid">
         <h3>Description</h3>
         {{Descriptions}}
       </span>
+      <h3 align = "center;"><a href="http://127.0.0.1:5000/profile/{{UserName}}" style="margin-left: 40px;">{{UserName}}</a><h3>
     </div>
-    <h2 style="margin-left: 40px;">{{UserName}}</h2>
+    
 
     <!--star rating begin-->
     <link href=.rating-list li {
@@ -412,7 +419,7 @@
       <img border="0"  src="{{ url_for('static',filename = 'images/weibo2.png')}}" alt="facebook" height="140" width="140">
     </a>
     <a href="http://127.0.0.1:5000/recipe.{{RecipeName}}.{{recipe_id}}" download = "MeRecipe_{{RecipeName}}">
-      <img src="{{ url_for('static',filename = 'images/download.png')}}" width="160" height="150" alt="" />
+      <img src="{{ url_for('static',filename = 'images/download2.png')}}" width="140" height="150" alt="" />
     </a>
   </div>
 </div>

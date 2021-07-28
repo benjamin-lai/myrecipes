@@ -63,6 +63,7 @@ class Recipes(db.Model):
 Contents = "empty"
 
 class Ingredient(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)
     dosage = db.Column(db.Integer)
     unit_name = db.Column(db.String(150))
