@@ -313,6 +313,10 @@ def recipe():
 
 @recipes.route('/Add discription', methods=['GET', 'POST'])
 def add_discription():
+    if Savelist["can't_be_zero"] == True:
+        flash("At least contain one step discription", 'error')
+        Savelist["can't_be_zero"] = False
+
     StepNo = request.form.get('step_number')
     StepDes = request.form.get('discriptions')
     
@@ -324,24 +328,20 @@ def add_discription():
         Shown_discription = ""
         if obj != []:
             Shown_discription = obj[0]
-        judge = False
-        if Find != None: 
-            i = 0   
-            for current_step in obj:
-                print("StepNo", StepNo)
-                print("current_step", current_step.step_no)
-                if int(StepNo) == int(current_step.step_no):
-                    judge = True
-                    Shown_discription = obj[i]
-                    break
-                i += 1
-            if judge == False:
+        
+        if Find != None:
+            print("id: ", Savelist["RecipeId"])
+            print("step_no: ", StepNo)
+            Find_discription = Recipestep.query.filter_by(recipe_id = Savelist["RecipeId"], step_no = StepNo).first()
+            if Find_discription == None:
                 if Savelist["deleting_step"] == True:
                     flash("successfully deleting current step")
-                    Savelist["deleting_step"] = False
                 else:
                     flash("Don't create this step yet", 'error')
-        
+                Savelist["deleting_step"] = False
+            else:
+                Shown_discription = Find_discription
+            
 
 
         button4 = request.form.get('button4')
@@ -884,6 +884,7 @@ def delete_discription():
             flash("At least contain one step discription", 'error')
             Savelist["can't_be_zero"] = True
             if Savelist["Is_creating"] == True:
+                print("can't_be_zero", Savelist["can't_be_zero"])
                 return redirect(url_for('recipes.add_discription'))
             return redirect(url_for('recipes.edit_discription'))
         else:
@@ -891,13 +892,21 @@ def delete_discription():
 
             db.session.delete(step_delete)
             db.session.commit()
-            print("deleting successfully")
+            step_d = Recipestep.query.filter_by(recipe_id = recipe_id, step_no = step_no).first()
+            if step_d == None:
+                print("deleting successfully")
+            else:
+                print("deleting not successfully")
             if Savelist["Is_creating"] == True:
                 return redirect(url_for('recipes.add_discription'))
             return redirect(url_for('recipes.edit_discription'))
 
 @recipes.route('/edit discription', methods = ['GET', 'POST'])
 def edit_discription():
+    if Savelist["can't_be_zero"] == True:
+        flash("At least contain one step discription", 'error')
+        Savelist["can't_be_zero"] = False
+
     StepNo = request.form.get('step_number')
     StepDes = request.form.get('discriptions')
     
@@ -908,24 +917,18 @@ def edit_discription():
     Shown_discription = ""
     if obj != []:
         Shown_discription = obj[0]
-    judge = False
-    if Find != None: 
-        i = 0   
-        for current_step in obj:
-            print("StepNo", StepNo)
-            print("current_step", current_step.step_no)
-            if int(StepNo) == int(current_step.step_no):
-                judge = True
-                Shown_discription = obj[i]
-                break
-            i += 1
-        if judge == False:
+    if Find != None:
+        print("id: ", Savelist["RecipeId"])
+        print("step_no: ", StepNo)
+        Find_discription = Recipestep.query.filter_by(recipe_id = Savelist["RecipeId"], step_no = StepNo).first()
+        if Find_discription == None:
             if Savelist["deleting_step"] == True:
                 flash("successfully deleting current step")
-                Savelist["deleting_step"] = False
             else:
                 flash("Don't create this step yet", 'error')
-    
+            Savelist["deleting_step"] = False
+        else:
+            Shown_discription = Find_discription
 
 
     button4 = request.form.get('button4')
@@ -987,9 +990,13 @@ def edit_discription():
                 Shown_discription = new_step
                 flash(f"Added comment and photo at Step.{StepNo}!")
         else:
+            print("zero? ", Savelist["can't_be_zero"])
             if Savelist["can't_be_zero"] == True:
                 flash("At least contain one step discription", 'error')
                 Savelist["can't_be_zero"] = False
+            elif Savelist["deleting_step"] == True:
+                flash("successfully deleting current step")
+                Savelist["deleting_step"] = False
             else:    
                 flash(f"Update comment and photo at Step.{StepNo}!")
     
