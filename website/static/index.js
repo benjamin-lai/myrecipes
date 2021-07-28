@@ -137,3 +137,92 @@ function subscribeToNewsletters() {
     window.location.reload(true);
   });
 }
+
+// Update Like count and the colour of the like icon in the recipe page
+function updateLike(num_of_likes, num_of_dislikes, like_status) {
+  console.log(document.getElementById("arrow-up").style.color)
+  if (document.getElementById("dislike").innerHTML > num_of_dislikes) {
+      if (document.getElementById("like").innerHTML == num_of_likes) {
+        document.getElementById("like").innerHTML = num_of_likes+1;          
+      } else {
+        document.getElementById("like").innerHTML = num_of_likes
+      }
+      document.getElementById("dislike").innerHTML = num_of_dislikes;
+  } else if (document.getElementById("dislike").innerHTML < num_of_dislikes) 
+      if (document.getElementById("like").innerHTML == num_of_likes) {
+        document.getElementById("like").innerHTML = num_of_likes+1;
+      } else {
+        document.getElementById("like").innerHTML = num_of_likes
+      }
+
+  else if (document.getElementById("like").innerHTML > num_of_likes) 
+    document.getElementById("like").innerHTML = num_of_likes;
+  else if (document.getElementById("like").innerHTML < num_of_likes) {
+    document.getElementById("like").innerHTML = num_of_likes;
+  } else {
+
+    if (like_status == 1) 
+      document.getElementById("like").innerHTML = num_of_likes-1;
+    else if (like_status == 0)
+      document.getElementById("like").innerHTML = num_of_likes+1;
+    else {
+      document.getElementById("like").innerHTML = num_of_likes+1;
+      document.getElementById("dislike").innerHTML = num_of_dislikes-1;
+    }
+
+  }
+  // Change colour of text
+  document.getElementById("dislike").style.color = "darkgray";
+  document.getElementById("arrow-down").style.color = "";
+  if (document.getElementById("like").style.color == "darkgray") {  
+    document.getElementById("like").style.color = "darkorange";
+    document.getElementById("arrow-up").style.color = "darkorange";
+  } else {
+    document.getElementById("like").style.color = "darkgray";
+    document.getElementById("arrow-up").style.color = "";
+  }
+
+}
+
+
+// Update Disike count and the colour of the dislike icon in the recipe page
+function updateDislike(num_of_likes, num_of_dislikes, like_status) {
+  if (document.getElementById("like").innerHTML > num_of_likes) {
+      if (document.getElementById("dislike").innerHTML == num_of_dislikes) 
+        document.getElementById("dislike").innerHTML = num_of_dislikes+1;  
+      else 
+        document.getElementById("dislike").innerHTML = num_of_dislikes
+      document.getElementById("like").innerHTML = num_of_likes;
+  } else if (document.getElementById("like").innerHTML < num_of_likes) 
+      if (document.getElementById("dislike").innerHTML == num_of_dislikes) 
+        document.getElementById("dislike").innerHTML = num_of_dislikes+1;  
+      else 
+        document.getElementById("dislike").innerHTML = num_of_dislikes
+          
+  else if (document.getElementById("dislike").innerHTML > num_of_dislikes) 
+    document.getElementById("dislike").innerHTML = num_of_dislikes;
+  else if (document.getElementById("dislike").innerHTML < num_of_dislikes) {
+
+    document.getElementById("dislike").innerHTML = num_of_dislikes;
+  } else {        
+
+    if (like_status == -1) 
+      document.getElementById("dislike").innerHTML = num_of_dislikes-1;
+    else if (like_status == 0)
+      document.getElementById("dislike").innerHTML = num_of_dislikes+1;
+    else {
+      document.getElementById("like").innerHTML = num_of_likes-1;
+      document.getElementById("dislike").innerHTML = num_of_dislikes+1;
+    }
+  }
+  // Change colour of text
+  document.getElementById("like").style.color = "darkgray";
+  document.getElementById("arrow-up").style.color = "";
+  if (document.getElementById("dislike").style.color == "darkgray") {  
+    document.getElementById("dislike").style.color = "darkorange";
+    document.getElementById("arrow-down").style.color = "darkorange";
+  } else {
+    document.getElementById("dislike").style.color = "darkgray";
+    document.getElementById("arrow-down").style.color = "";
+  }
+}
