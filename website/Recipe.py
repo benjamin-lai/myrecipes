@@ -933,6 +933,13 @@ def view_recipe(recipeName, recipeId):
             star_status = "unstarred"
         else:
             star_status = "starred"
+        if not Likes.query.filter_by(own=current_user.id, has=recipe.id).first():
+            like_status = 0
+        else:
+            likes = Likes.query.filter_by(own=current_user.id, has=recipe.id).first()
+            like_status = likes.like_status
+
+        
     else:
         star_status = "unstarred"
 
@@ -1027,7 +1034,7 @@ def view_recipe(recipeName, recipeId):
     
     return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
         recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", 
-            meal_type = recipe.meal_type, methods=methods, star_status=star_status, res=res, UserImage = UserImage, UserName = recipe.creator, 
+            meal_type = recipe.meal_type, methods=methods, star_status=star_status, like_status=like_status, res=res, UserImage = UserImage, UserName = recipe.creator, 
             rating=rating, cookbook_my = cookbook_my)
         
          

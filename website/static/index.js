@@ -29,6 +29,7 @@ function create_book() {
         window.location.reload(true);
       });
   }
+}
 
 
 function createComment2(recipe_id) {
@@ -69,21 +70,44 @@ function modifyComment(comment_id) {
 }
 
 function addLike(recipe_id) {
-  fetch("/add-like", {
-    method: "POST",
-    body: JSON.stringify({ recipe_id: recipe_id }),
-  }).then((_res) => {
-    window.location.reload(true);
-  });
+
+  
+  $.ajax({
+    type : "POST", // http method
+    url : "http://127.0.0.1:5000/add-like", // the endpoint
+    data : {id: JSON.parse( recipe_id )
+    }, // data sent with the post request
+
+    // handle a successful response
+    success : function() {
+        console.log("success"); // another sanity check
+    },
+
+    // handle a non-successful response
+    error : function(xhr,errmsg,err) {
+        console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+    }
+});
+
 }
 
 function addDislike(recipe_id) {
-  fetch("/add-dislike", {
-    method: "POST",
-    body: JSON.stringify({ recipe_id: recipe_id }),
-  }).then((_res) => {
-    window.location.reload(true);
-  });
+  $.ajax({
+    type : "POST", // http method
+    url : "http://127.0.0.1:5000/add-dislike", // the endpoint
+    data : {id: JSON.parse( recipe_id )
+    }, // data sent with the post request
+
+    // handle a successful response
+    success : function() {
+        console.log("success"); // another sanity check
+    },
+
+    // handle a non-successful response
+    error : function(xhr,errmsg,err) {
+        console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+    }
+});
 }
 
 function unsubscribeToNewsletters() {

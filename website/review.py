@@ -173,8 +173,8 @@ def add_like():
         # If user is going through this path it means they have clicked like
         # Which should imply that status = 1.
         status = 1
-        like_dislike_recipe(status)
-
+        recipe_id = request.form['id']
+        like_dislike_recipe(status, recipe_id)
     else:
         flash("You need to be logged in to do that", category='error')
 
@@ -186,7 +186,8 @@ def add_dislike():
         # If user is going through this path it means they have clicked like
         # Which should imply that status = -1.
         status = -1
-        like_dislike_recipe(status)
+        recipe_id = request.form['id']
+        like_dislike_recipe(status, recipe_id)
 
     else:
         flash("You need to be logged in to do that", category='error')
@@ -194,9 +195,7 @@ def add_dislike():
     return jsonify({})
 
 # Process to either like or dislike recipe given the status
-def like_dislike_recipe(status):
-    recipe = json.loads(request.data)
-    recipe_id = recipe['recipe_id']
+def like_dislike_recipe(status, recipe_id):
     recipe = Recipes.query.filter_by(id=recipe_id).first()
 
     # Determine if there is a like table for this user and recipe already
