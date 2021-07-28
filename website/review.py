@@ -1,13 +1,15 @@
 # This is contains helper functions to create, modify and delete messages.
-from flask import Blueprint, request, flash, jsonify,redirect, url_for, render_template
+
+from flask import Blueprint, request, flash, jsonify
 from flask_login import login_required, current_user
+from flask_cors import CORS
 import json
 
 from .models import Comments, Profiles, Likes, Recipes, Cookbooks, Cookbooks_lists
 from . import db
 
 review = Blueprint('review', __name__)
-
+CORS(review)
 
 #cookbook in profile
 @review.route('/cookbook_create', methods=['POST']) 
@@ -101,8 +103,7 @@ def set_des():
         return jsonify({})
 
 
-# Creates a comment given the recipe_id
-# Already checks http request 
+# Creates a comment given the recipe_id and comment value
 @review.route('/create-comment', methods=['POST'])
 @login_required
 def create_comment():
@@ -134,7 +135,7 @@ def retrieve_comments(recipe_id):
         # Instead of adding display name to comments table, we find it here given comments.own
         # Creates a lot of overhead right now, needs to be fixed later
         profile = Profiles.query.filter_by(owns=comments.owns).first()
-        user_information = (profile.display_name, profile.profile_id, comments)
+        user_information = (profile, comments)
         details.append(user_information)
     return details
 

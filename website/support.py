@@ -1,3 +1,5 @@
+# Backend for the support page which caters for upload images/files support.
+
 from flask import Blueprint, render_template, flash, request, current_app as app
 from flask_login import current_user
 from flask_cors import CORS
@@ -6,9 +8,9 @@ import boto3
 from werkzeug.utils import secure_filename
 
 s3 = boto3.client('s3',
-                    aws_access_key_id='AKIAQNR7WVADC7MX2ZEW',
-                    aws_secret_access_key= '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'
-                     )
+    aws_access_key_id='AKIAQNR7WVADC7MX2ZEW',
+    aws_secret_access_key= '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'
+     )
 BUCKET_NAME='comp3900-w18b-sheeesh'
 
 
@@ -35,10 +37,10 @@ def supports():
 
         else:
             # Given the uploaded_files save it into boto3
-            for f in uploaded_files:
-                if f:
-                    filename = secure_filename(f.filename)
-                    f.save(filename)
+            for file in uploaded_files:
+                if file:
+                    filename = secure_filename(file.filename)
+                    file.save(filename)
                     s3.upload_file(
                         Bucket = 'comp3900-w18b-sheeesh',
                         Filename=filename,

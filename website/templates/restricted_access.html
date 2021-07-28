@@ -1,12 +1,14 @@
-<!-- Overrides base.html -->
+<!-- A restricted access field for when the user is attempting to use a logged-in feature -->
 {% extends "base.html" %}
-<!-- Overrides tab name-->
-{% block title %}Please Login{% endblock %} {% block content%}
-<!-- Display login related content, will change later card form -->
+  {% block title %}
+    Please Login
+  {% endblock %} 
+
+
+{% block content%}
 <br />
 <section class="container-fluid">
   <section class="row justify-content-center">
-    <!-- Shadow-->
     <div class="shadow p-3 mb-5 bg-white rounded" style="width: 45rem">
       <div class="card-body" align="center">
         <h3>MyRecipe</h3>

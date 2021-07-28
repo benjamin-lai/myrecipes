@@ -5,8 +5,7 @@
 {% block content %}
 {% include 'base2.html' %}
 <head>
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">    
-  <script src="{{ url_for('static',filename = 'Recipe/Like.js')}}"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <style>
     body{
     background-color:white;
@@ -152,11 +151,11 @@
     <!--action buttons-->
     <div>
       <form action="edit recipe" method="POST">
-        <button class="btn btn-success pull-right" type="submit" >Edit</button>
+        <button class="btn btn-info pull-right" type="submit" >Edit</button>
       </form> 
       
       
-      <button class="btn btn-success pull-right" type="submit" onClick="recipe_delete()">Delete</button>
+      <button class="btn btn-danger pull-right" type="submit" onClick="recipe_delete()">Delete</button>
       
     </div>
     {% endif %}
@@ -272,34 +271,7 @@
         {{Descriptions}}
       </span>
       <h3 align = "center;"><a href="http://127.0.0.1:5000/profile/{{profile.custom_url}}" style="margin-left: 40px;">{{UserName}}</a><h3>
-    </div>
-    
-
-    <!--star rating begin-->
-    <link href=.rating-list li {
-      float: right;
-      color: #ddd;
-      padding: 10px 5px;
-    }
-    
-    .rating-list li:hover,
-    .rating-list li:hover ~ li {
-      color: #ffd700;
-    }
-    
-    .rating-list {
-      display: inline-block;
-      list-style: none;
-    } rel="stylesheet" />
-    
-    <div style = "margin-left: 30px;">
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star"></span>
-      <span class="fa fa-star"></span>
-    </div>
-    <!--star rating end-->
+    </div> 
     
     <!-- Like and disclick buttons with their associated counter -->
     <div class="row">
@@ -384,51 +356,41 @@
 <br><br>
 
 
-<!-- This entire section is dedicated to comments -->
+<!-- Comment section gives logged-in users the ability to comment, modify and delete comments. -->
 <div class="container">
     <hr>
     <h2>Comments</h2>
-    <!-- Displays the ability to comment -->
     <div class="form-group">
-      <!-- Text Area of comment section -->
-      <label for="comment_textarea">Enter a new comment!</label>
-      <textarea class="form-control" id="comment_textarea" rows="3"></textarea>
+      <textarea class="form-control" id="comment_textarea" rows="3" placeholder="Enter a new comment!"></textarea>
 
       <br>
-      <!-- Button to post the comment -->
+
       <div align="center">
         <button type="button" class="btn btn-primary" onClick="createComment2({{ recipe_id }})">Post a new Comment!</button>
       </div>
-
     </div>
     
     <!-- Displays the list of comments for the recipe-->
     <div class="text_wrapper">
 
     <ul class="list-group list-group-flush" id="reviews">
-      <!-- Iterate through comments for the recipe and display associated name and comment. -->
-      {% for name, id, review in comments %}
+      <!-- Iterate through comments for the recipe and display associated profile and comment. -->
+      {% for profile, review in comments %}
       
       <div class="d-flex flex-row align-items-center">
-        <img
-          class="rounded-circle shadow-1-strong me-3"
-          src="https://mdbootstrap.com/img/Photos/Avatars/img%20(31).jpg"
-          alt="avatar"
-          width="40"
-          height="40"
-        />
-        <a href="#">{{ name }}</a>
+        <img class="rounded-circle shadow-1-strong me-3" src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{ profile.profile_pic }}" alt="avatar" width="40" height="40"/>
+        <a href="#">{{ profile.display_name }}</a>
       </div>
 
         <li class="list-group-item">
         {{ review.comment }}
         <!-- Displays the abiltiy to delete comments if either they are the recipe owner or person who made the comment -->
         {% if creates == current_user.id or current_user.id == review.owns %}
-        <!-- Only the person who made the comment can modify it -->
           <button type="button" class="close" onClick="deleteComment({{ review.comment_id }})">
             <span aria-hidden="true">&times;</span>
           </button>
 
+          <!-- Only the person who made the comment can modify it -->
           {% if current_user.id == review.owns %}
             <button type="button" class="btn btn-default float-right" onClick="modifyComment({{ review.comment_id }})">
               Modify
