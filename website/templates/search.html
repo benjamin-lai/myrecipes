@@ -288,7 +288,20 @@
     </div>
   </nav>
 
-  {% include 'base2.html' %}
+  <br>
+  <form class="d-flex" action="/search_result" method="POST">
+              <input
+                class="form-control me-2"
+                type="search"
+                placeholder="Search Recipes"
+                aria-label="Search"
+                id="Search"
+                name="Search"
+                autocomplete="on"
+                value="{{search_value}}"
+              />
+              <button class="btn btn-outline-primary" type="submit">Search</button>  
+            </form>
   <div class="container"></div>
   
   <!-- Bootstrap. All the javascript required for the css components to work -->
