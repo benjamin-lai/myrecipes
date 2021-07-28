@@ -3,6 +3,7 @@
 <!-- Overwrites title-->
 {% block title %}Recipe{% endblock %}
 {% block content %}
+{% include 'base2.html' %}
 <head>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">    
   <script src="{{ url_for('static',filename = 'Recipe/Like.js')}}"></script>
@@ -76,7 +77,6 @@
     .img-fit{
     width: 1100px;
     height: 500px;
-    margin-top: 25px;
     margin-bottom: 25px;
 
     }
@@ -112,15 +112,12 @@
     width: 770px;
     margin-left: 30px;
     padding-bottom: 20px;
-}
+    }
 
     .text_wrapper {
       word-break:break-all;
     }
 
-    body{
-      height:100%;
-    }
 
 
   </style>
@@ -240,7 +237,9 @@
         
           <br />
         </div>
-        <!--starred end-->
+      <!--starred end-->
+      
+      
       <div class = "text">
         <div><p style="color:blue;">Meal Type : {{meal_type}}</p></div>
         <div><h8>id : {{recipe_id}}</h8></div>
@@ -272,7 +271,7 @@
         <h3>Description</h3>
         {{Descriptions}}
       </span>
-      <h3 align = "center;"><a href="http://127.0.0.1:5000/profile/{{UserName}}" style="margin-left: 40px;">{{UserName}}</a><h3>
+      <h3 align = "center;"><a href="http://127.0.0.1:5000/profile/{{profile.custom_url}}" style="margin-left: 40px;">{{UserName}}</a><h3>
     </div>
     
 
