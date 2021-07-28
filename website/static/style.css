@@ -1,3 +1,23 @@
+.navbar.second-navbar {
+  margin-top: 55px;
+  background: rgb(255, 255, 255) !important;
+  transition: all .5s ease-in-out;
+  z-index: 100;
+}
+
+.navbar.second-navbar.top-nav-collapse {
+  margin-top: 45px;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.sticky-offset {
+  top: 110px;
+  z-index: 100;
+}
+
 .asText {
     background:none;
     border:none;
@@ -48,7 +68,7 @@
     position:relative;
     width: 100px; 
     height: 90px; 
-top:10px;
+    top:10px;
   } 
 
 
@@ -264,13 +284,4 @@ body{
     color: #f1f1f1;
   }
 
-
-  .dropdown:hover .dropdown-menu {
-    display: block;
-  }
-
-  .sticky-offset {
-    top: 55px;
-    z-index: 100;
-  }
   

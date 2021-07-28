@@ -1,5 +1,5 @@
 # The file which will initialise everything relevant for our web application
-# SQLAlchemy, Flask, App configurationos, Blueprints and Login Manager
+#   SQLAlchemy, Flask, App configurationos, Blueprints and Login Manager
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
