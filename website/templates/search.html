@@ -288,9 +288,22 @@
     </div>
   </nav>
 
-
+  <br>
+  <form class="d-flex" action="/search_result" method="POST">
+              <input
+                class="form-control me-2"
+                type="search"
+                placeholder="Search Recipes"
+                aria-label="Search"
+                id="Search"
+                name="Search"
+                autocomplete="on"
+                value="{{search_value}}"
+              />
+              <button class="btn btn-outline-primary" type="submit">Search</button>  
+            </form>
   <div class="container"></div>
-
+  
   <!-- Bootstrap. All the javascript required for the css components to work -->
   <script
     src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
@@ -344,6 +357,7 @@
         <!-- want to change thise so it displays profile based off profile_id-->
         <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.display_name}}"> {{recipes.creator}}</a></u></small></p>
         <a href="/recipe.{{recipes.name}}.{{recipes.id}}" class="btn btn-primary">Get the Recipe</a>
+        <!--drop down menu for cookbook-->
       </div>
     </div>
   </div>

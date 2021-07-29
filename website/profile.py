@@ -1,12 +1,18 @@
 # Profile Page, I haven't done anything that cool yet.
 import os
 from typing import BinaryIO
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for,jsonify
 from flask_login import login_required, current_user
+import json
 from flask_cors import CORS
 from . import db
+from .models import Users, Profiles,Cookbooks, Cookbooks_lists
+from .auth import validate_email
+import boto3
+from werkzeug.utils import secure_filename
+from .review import create_cookbook, delete_book
 from .models import Recipes, Users, Profiles, Subscribed, Subscriber, profile_subs, profile_subbed, Cookbooks_lists
-from .validate_email import validate_email
+
 import boto3
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -252,25 +258,6 @@ def view_profile(id):
     else:
         flash("No user exists with this id.", category="error")
         return redirect(url_for('views.home'))
-
-
-#cookbook in profile
-@profile.route('/cookbook', methods=['GET','POST']) # public view of profile based off name and id
-def cook_book():
-    #implementing create
-
-    #delete
-
-    #name changing
-
-    #add recipes
-
-    #delete recipes
-
-
-    cookbook_all = Cookbooks_lists.query.all()
-    return render_template("cookbook.html",user = current_user)
-
 
 
 # todo:

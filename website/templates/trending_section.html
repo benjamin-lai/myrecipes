@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 <!-- Overwrites title-->
 {% block title %}Recipe_card{% endblock %} {% block content %}
+{% include 'base2.html' %}
 <h2>Trending Section</h2>
 <html>
 <form>
@@ -42,10 +43,11 @@
 </div>
 
 <select style="margin-left:280px" name="filter" id="filter" style="margin-left:5px">
+  <option value="" selected disabled hidden>{{ Day_or_week }}</option>
   <option value="Week">Week</option>
   <option value="Day">Day</option>
 </select>
-<button name="choose" type="add" class="btn btn-primary">Choose</button>
+<button name="choose" type="add" class="btn btn-primary" onClick="trending_filter()">Choose</button>
 </form>
 </body>
 <head>

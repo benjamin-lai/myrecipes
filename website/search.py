@@ -1,11 +1,10 @@
-# Profile Page, I haven't done anything that cool yet.
+# Search Page, I haven't done anything that cool yet.
 from typing import BinaryIO
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from flask_cors import CORS
 from . import db
-from .models import Users, Profiles
-from .validate_email import validate_email
+from .models import Users, Profiles, Cookbooks, Cookbooks_lists
 import boto3
 from werkzeug.utils import secure_filename
 from .models import Users, Recipes, Ingredient, Contents, Recipestep, Profiles,Method,Meal_Type
@@ -44,18 +43,36 @@ def search_result():
         search_input = request.form.get('Search')
         if search_input is not None:
             if len(search_input) < 1:
-                flash("search input can not be empty!", category='error')
-                #clear query
-                query = []
-            else:
-                searchInput = search_input  #put into global variable
+                #if not searching, display every recipes in db
+                query = Recipes.query.all()
+                searchInput = ""
+            else:   #valid content
+                searchInput = search_input #put into global variable
                 reset_all()
                 print("reset")
-                print(MealTypeFilter)
+                
+                #split str by space, search them all and put into query
+                res = " " in searchInput
+                if res is True: #contain space
+                    data = searchInput.split()
+                    query = []
+                    for d in data:
+                        #use function for partial search
+                        print(d)
+                        query_temp = find_query_by_partial_search(d)
+                        for q in query_temp:
+                            query.append(q)
+                else:
+                    #find the query based on search_input
+                    query = find_query_by_partial_search(searchInput)
+                    print(f"query = {query}")
+        else:
+            #if not searching, display every recipes in db
+                query = Recipes.query.all()
+                searchInput = ""
 
-                #find the query based on search_input
-                query = find_query_by_name(searchInput)
-                print(f"query = {query}")
+        #drop duplicate
+        query = list(dict.fromkeys(query))
 
         #clear filters
         clear = request.form.get('clear')
@@ -64,12 +81,15 @@ def search_result():
             print("filter cleared")
             #go back to same search page without any filters
             #find the query based on search_input
-            query = find_query_by_name(searchInput)
+            if len(searchInput) < 1:
+                query = Recipes.query.all()
+            else:
+                query = find_query_by_name(searchInput)
+            
             return render_template("search.html",user = current_user,
                 search_input = searchInput,query = query,search_value = searchInput,queryLen = len(query))
         
-        
-
+    
         #ingredient filter
         addIngre = request.form.get('IngreAdd') 
         if addIngre is not None: #if None means not clicked, not None means clicked
@@ -175,23 +195,43 @@ def search_result():
             print(f"query {query}")
             return render_template("search.html",user = current_user,
                 search_input = searchInput,query = query,search_value = searchInput,
-                contents = Contents, include_ingreList = include_contents,queryLen = len(query), exclude_ingreList = exclude_contents)
+                contents = Contents, include_ingreList = include_contents,queryLen = len(query),
+                exclude_ingreList = exclude_contents)
         else:
             message = f"No Recipe be Founded  {searchInput}"
             return render_template("search.html",user = current_user,
                 search_input = searchInput,query = query,search_value = searchInput,
                 contents = Contents, include_ingreList = include_contents, 
                 exclude_ingreList = exclude_contents,message = message,queryLen = len(query))
-    message = f"No Recipe be Founded  {searchInput}"
-    return render_template("search.html",user = current_user,search_input = searchInput
-        ,message = message,queryLen = len(query))
+    else:
+        #if not searching, display every recipes in db
+        query = Recipes.query.all()
+        searchInput = ""
+        message = ""
+        if len(query) < 1:
+            message = f"No Recipe be Founded  {searchInput}"
+        return render_template("search.html",user = current_user,search_input = searchInput
+            ,message = message,queryLen = len(query),query = query)
     
 
 
 #####helper functions#######
 def find_query_by_name(recipeName):
-    query = Recipes.query.filter_by(name = recipeName).all()
-    return query
+    result = []
+    query = Recipes.query.all()
+    for q in query:
+        if q.name.lower() == recipeName.lower():
+            result.append(q)
+    return result
+
+#partial search
+def find_query_by_partial_search(recipeName):
+    result = []
+    query = Recipes.query.all()
+    for q in query:
+        if (recipeName.lower() in q.name.lower()) or (recipeName.lower() == q.name.lower()):
+            result.append(q)
+    return result
 
 #find which elements of ingredients have been seleceted, and add them to list
 def check_and_add_ingredient(Pork,Beef,Vegi,SeaFood,Poultry):

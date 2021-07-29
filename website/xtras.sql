@@ -6,6 +6,11 @@ as
         join profiles p on (r.creates = p.profile_id)
 ;
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 58008861490fdb6e2834f6339b486e5e6ea01b0d
 
 
 create view profile_subs as
@@ -17,6 +22,10 @@ From
 
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 58008861490fdb6e2834f6339b486e5e6ea01b0d
 
 create view profile_subbed as
 Select p.profile_id, p.first_name, p.last_name, p.display_name, p.profile_pic, p.bio, p.custom_url, p.sub_count, p.recipe_count, s.subscribed_id, s.contains

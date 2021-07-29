@@ -2,68 +2,116 @@
 <!-- Overwrites title-->
 
 {% block content %}
+{% include 'base2.html' %}
 <head>
-  <style>
-    .img-fit img{
-    width:100%;
-    height: 100%;
-    object-fit:cover; 
-    }
-    .loginbox{
-    width:1022px;
-    }
-    .loginbox .jumbotron{
-    margin-left: 0px;
-    padding-top: 20px;
-    padding-bottom: 15px;
-    }
-    .row h4{
-    margin-right: 400px;
-    }
-  </style>
+    
+    <style>
+        .img-fit img{
+        width:100%;
+        height: 100%;
+        object-fit:cover; 
+        }
+        .loginbox{
+        width:280px;
+        }
+        .loginbox .jumbotron{
+        margin-left: 0px;
+        padding-top: 20px;
+        padding-bottom: 15px;
+        }
+        .row h4{
+        margin-right: 400px;
+        }
+        body {
+        background-color: white;
+        }
+    </style>
   
 </head>
+<body>
 <!-- Header -->
 <div class="container">
   <div class="jumbotron page-header" style="margin-bottom: 0px">
-    <h1 class="display-4">MyRecipes</h1>
-    <p class="my-4">Sharing Recipes</p>
+    <h1 class="display-4">My CookBook</h1>
   </div>
 </div>
-<body>
+
     <main class="page projects-page" style = "margin-left:28px;">
       <section class="portfolio-block projects-cards">
         <div class="container">
-          <!--encourring  for signup-->
+          <!--create a new cookbook-->
           <br>
           <div class = "loginbox">  
-            <div class="jumbotron" style="margin-bottom: 0px">
-                {% if current_user.is_authenticated %}   
-                <h2>Hello {{userName}}</h2>
-                {% else %}
-                <div class = "row"><h4>Want to join our MyRecipe family right now?</h4>
-                  <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
-                </div>
-                {% endif %}
+            <div class="jumbotron" style="margin-bottom: 0px" onclick="create_book()">
+                <img border="0" src="{{ url_for('static',filename = 'images/add1.png')}}"  alt="add" height = 100px width = 100px  style = "margin-left: 55px;">  
+                <h5 class="card-title" align = "center">Create a new cookbook</h5>
+                <script>
+                    function create_book() {
+                        var txt;
+                        var name = prompt("CookBook Name：", "NewBook");
+                        if (name == null || name == "") {
+                            txt = "cancel";
+                        } else {
+                            txt = "Hello，" + name + "！How r u？";
+                            fetch("/cookbook_create", {
+                                method: "POST",
+                                body: JSON.stringify({
+                                name: name,
+                                }),
+                            }).then((_res) => {
+                                window.location.reload(true);
+                            });
+                        }
+                    }
+                </script>
             </div>
           </div>
-              
-              
-          <div class="row">
-            {% for res in res %}
-            <div class="col-md-6 col-lg-4">
-              <div class="card border-0">
-                  <div class="zoom img-fit">
-                    <a href="/recipe.{{res.name}}.{{res.id}}"><img class="card-img-top scale-on-hover" src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{res.photo}}" alt="Card Image"></a></div>
-                    <div class="card-body">
-                      <h6><a href="/recipe.{{res.name}}.{{res.id}}">{{res.name}}</a></h6>
-                      <h7 class="card-text">{{res.description[0:100]}}</h7>
-                    </div>
-                  </div>
-              </div>
-              {% endfor %}
+        
+        
+        <br>
+        <div class="row">
+        <!--card for create-->
+        {% for book in books %}
+        <div class="col-md-6 col-lg-4">
+            <div class="border-0" style = "background-color: white;">
+                <div class="img-fit">
+                <a href="/profile/cookbook.{{book.name}}.{{book.id}}"><img border="0"  src="{{ url_for('static',filename = 'images/bookmark.png')}}" 
+                style = "margin-left:3px; margin-top:10px;"></a></div>
+                <div align = "center" style = "margin-bottom:10px;">
+                    <h6><a href="/profile/cookbook.{{book.name}}.{{book.id}}">{{book.name}}</a></h6>
+                    <button class="btn btn-warning" type="submit" name="delete" id = "delete" onclick = "deleteBook({{book.id}})">Delete</button>
+                    <script>
+                        function deleteBook(book_id) {
+                        if (confirm("Are you sure you want to delete this cookbook?"))
+                            fetch("/delete_book", {
+                            method: "POST",
+                            body: JSON.stringify({book_id: book_id,}),
+                            }).then((_res) => {
+                            window.location.reload(true);
+                            });
+                            }
+                    </script>
+                    <button class="btn btn-warning" type="submit" name="edit" id = "edit" onclick = "editName({{book.id}})">Edit</button>
+                    <script>
+                    function editName(book_id) {
+                    var new_Name = prompt("Enter new Name to change.");
+                    if (new_Name != null) {
+                        fetch("/edit_bookname", {
+                        method: "POST",
+                        body: JSON.stringify({ book_id: book_id, name: new_Name }),
+                        }).then((_res) => {
+                        window.location.reload(true);
+                        });
+                    }
+                    }
+                    </script>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
                     
             </div>
+
           </div>
         </div>  
       </section>
