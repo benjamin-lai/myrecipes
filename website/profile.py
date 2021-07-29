@@ -7,12 +7,16 @@ import json
 from flask_cors import CORS
 from . import db
 from .models import Users, Profiles,Cookbooks, Cookbooks_lists
+<<<<<<< HEAD
 from .validate_email import validate_email
+=======
+from .auth import validate_email
+>>>>>>> dev
 import boto3
 from werkzeug.utils import secure_filename
 from .review import create_cookbook, delete_book
 from .models import Recipes, Users, Profiles, Subscribed, Subscriber, profile_subs, profile_subbed, Cookbooks_lists
-from .validate_email import validate_email
+
 import boto3
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -260,6 +264,7 @@ def view_profile(id):
         return redirect(url_for('views.home'))
 
 
+<<<<<<< HEAD
 #cookbook center in profile
 @profile.route('/cookbook', methods=['GET','POST']) 
 def cook_book():
@@ -297,6 +302,8 @@ def cook_book2(book_name,book_id):
     return render_template("cookbook_content.html",user = current_user, empty = empty, recipe_list = recipe_list, 
     cookbook = cookbook)
 
+=======
+>>>>>>> dev
 # todo:
 
 # Edit display recipes

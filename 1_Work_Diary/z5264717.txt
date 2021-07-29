@@ -21,6 +21,13 @@ Week 5
 Finished up sprint 1, finish the demo, started on retrospective.
 
 Week 6
-Finished retrospective, discussed all important aspects as a group. Completed review.
+Finished retrospective, discussed all important aspects as a group. Completed review. Finished Sprint 2
 
 Week 7
+Just worked on features
+
+Week 8
+Completed majority of features. Finished demo and retrospective. Finished sprint 3 and started sprint 4.
+
+Week 9
+Completed sprint 4, completed majority of features, now to focus on debugging, cleaning up front-end and backend.

@@ -1,52 +1,63 @@
-<!-- Overrides base.html -->
+<!-- Login Page for users when the attempt to login-->
+
 {% extends "base.html" %}
-<!-- Overrides tab name-->
-{% block title %}Login{% endblock %} {% block content%}
-<!-- Display login related content, will change later card form -->
+
+{% block title %}
+  Login
+{% endblock %} 
+
+{% block content%}
 <br />
 <section class="container-fluid">
   <section class="row justify-content-center">
-    <!-- Shadow-->
     <div class="shadow p-3 mb-5 bg-white rounded" style="width: 45rem">
       <div class="card-body">
         <h3 align="center">MyRecipe</h3>
-        <h5 align="center">
-          Not a member? <a href="/sign-up" class="link-primary">Sign Up</a>
-        </h5>
+        <h5 align="center">Not a member? <a href="/sign-up" class="link-primary">Sign Up</a></h5>
         <br />
 
         <form method="POST">
-          <!-- Email -->
+          <!-- Email field -->
           <div class="form-group">
             <label for="email">Email Address</label>
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              name="email"
-              placeholder="Enter email"
-            />
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email"/>
           </div>
-          <!-- Password-->
+
+          <!-- Password field -->
           <div class="form-group">
             <label for="password">Password</label>
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              name="password"
-              placeholder="Enter password"
-            />
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password"/>
           </div>
+
           <br />
+
           <a href="/recover" class="link-primary">Forgot Password?</a>
           <div align="right">
             <button type="submit" class="btn btn-primary">Login</button>
           </div>
+
           <hr />
+          
         </form>
         <!-- Google sign-in option available to users -->
-        <div class="g-signin2" align="center" data-onsuccess="onSignIn"></div>
+        <div class="row">
+          <div class="col-md-3">
+            <a class="btn btn-outline-dark" href="google_login" role="button" style="text-transform:none">
+              <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+              Login with Google
+            </a>
+          </div>
+        </div>
+        
+        <!-- Minified CSS and JS -->
+        <link   rel="stylesheet" 
+                href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+                integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+                crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" 
+                integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" 
+                crossorigin="anonymous">
+        </script>
       </div>
     </div>
   </section>

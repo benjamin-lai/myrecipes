@@ -1,3 +1,6 @@
+# The file which will initialise everything relevant for our web application
+#   SQLAlchemy, Flask, App configurationos, Blueprints and Login Manager
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -35,6 +38,9 @@ def create_app():
     from .search import search
     from .newsletter import newsletter
     from .support import support
+    from .Trending_section import trending_section
+    from .history import historys
+    from .cookbook import cookbook
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
@@ -45,6 +51,9 @@ def create_app():
     app.register_blueprint(search, url_prefix='/')
     app.register_blueprint(newsletter, url_prefix='/')
     app.register_blueprint(support, url_prefix='/')
+    app.register_blueprint(trending_section, url_prefix='/')
+    app.register_blueprint(historys, url_prefix='/')
+    app.register_blueprint(cookbook, url_prefix='/profile')
     
 
     from .models import Users

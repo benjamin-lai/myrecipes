@@ -1,3 +1,24 @@
+.navbar.second-navbar {
+  margin-top: 55px;
+  background: rgb(255, 255, 255) !important;
+  transition: all .5s ease-in-out;
+  z-index: 100;
+}
+
+.navbar.second-navbar.top-nav-collapse {
+  margin-top: 45px;
+  
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.sticky-offset {
+  top: 110px;
+  z-index: 100;
+}
+
 .asText {
     background:none;
     border:none;
@@ -48,7 +69,7 @@
     position:relative;
     width: 100px; 
     height: 90px; 
-top:10px;
+    top:10px;
   } 
 
 
@@ -147,12 +168,12 @@ position: absolute;
 
 
 
+
 .cont{
 background-color: #ccc;
 }
 
 body{
-
   color: #1a202c;
   text-align: left;
   background-color: #e2e8f0;    
@@ -263,6 +284,7 @@ body{
     color: #f1f1f1;
   }
 
+<<<<<<< HEAD
   .footer-dark {
     padding:50px 0;
     color:#f0f9ff;
@@ -388,3 +410,6 @@ footer p { font-size:13px; color:#CCC; padding-bottom:0px; margin-bottom:8px;}
 .social_footer_ul li { padding-left:20px; padding-top:10px; float:left; }
 .social_footer_ul li a { color:#CCC; border:1px solid #CCC; padding:8px;border-radius:50%;}
 .social_footer_ul li i {  width:20px; height:20px; text-align:center;}
+=======
+  
+>>>>>>> dev

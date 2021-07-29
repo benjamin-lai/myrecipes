@@ -1,12 +1,14 @@
-<!-- Overrides base.html -->
+<!-- Front end for code recovery -->
 {% extends "base.html" %}
-<!-- Overrides tab name-->
-{% block title %}Recover Password{% endblock %} {% block content%}
-<!-- Display login related content, will change later card form -->
+
+{% block title %}
+  Recover Password
+{% endblock %} 
+
+{% block content%}
 <br />
 <section class="container-fluid">
   <section class="row justify-content-center">
-    <!-- Shadow-->
     <div class="shadow p-3 mb-5 bg-white rounded" style="width: 45rem">
       <div class="card-body">
         <h3 align="center">MyRecipe</h3>
@@ -16,20 +18,12 @@
         <br />
 
         <form method="POST">
-          <!-- Email -->
+          <!-- Email address that users will provide for us to send the recovery code to -->
           <div class="form-group">
-            <label for="email"
-              >Please enter your email address to search for your
-              account.</label
-            >
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              name="email"
-              placeholder="Enter email"
-            />
+            <label for="email">Please enter your email address to search for your account.</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email"/>
           </div>
+          
           <div align="center">
             <button type="submit" class="btn btn-primary">Search</button>
           </div>
