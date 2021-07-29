@@ -11,7 +11,8 @@ import ctypes
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
 from .models import StarredRecipes, Recipes, Ingredient, Contents, Recipestep, Profiles, Method, History, Likes, Comments, Cookbooks, Cookbooks_lists
-from .review import create_comment, retrieve_comments, get_rating
+from .review import retrieve_comments, get_rating, check_likes_exists
+from .newsletter import send_new_recipe_emails
 from . import db
 from sqlalchemy import desc
 from sqlalchemy import func
@@ -832,13 +833,14 @@ def view_recipe(recipeName, recipeId):
     
     methods = Method.query.filter_by(recipe_id=Savelist["RecipeId"]).all()
     if current_user.is_authenticated:
+        # Get the information on like/dislike by checking if it exists.
+        like_status = check_likes_exists(current_user.id, recipe.id) 
         if not StarredRecipes.query.filter_by(recipe_id=recipe.id, contains=current_user.id).first():
             star_status = "unstarred"
         else:
             star_status = "starred"
     else:
         star_status = "unstarred"
-
 
     #Create recipe view history
     if current_user.is_authenticated:
@@ -930,9 +932,9 @@ def view_recipe(recipeName, recipeId):
     creator_name = recipe.creator.split(" ")
     profile = Profiles.query.filter_by(owns = recipe.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
     
-    return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
-        recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", 
-            meal_type = recipe.meal_type, methods=methods, star_status=star_status, res=res, UserImage = UserImage, UserName = recipe.creator, 
+    return render_template("recipe.html", user=current_user, MyIngredient = Contents,
+        image1 = RecipeImage, query = obj, comments=comments, likes = like_status, recipe=recipe, type="recent", 
+            methods=methods, star_status=star_status, res=res, UserImage = UserImage, 
             rating=rating, cookbook_my = cookbook_my, profile = profile)
         
          
@@ -1089,7 +1091,12 @@ def create_recipe (RecipeName, Description, Serving, Meal_type):
     
     db.session.add(new_recipe)
     db.session.commit()             # Commits changes
-
+    
+    # Send new recipe notification over to all users who are subscribed to this user.
+    send_new_recipe_emails(new_recipe)
+    
+    recipe_id = db.session.query(func.max(Recipes.id)).first()
+    print(recipe_id[0])
     Savelist["RecipeId"] = new_recipe.id
 
 #def add_step (recipe_id, step_no, )

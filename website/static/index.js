@@ -14,7 +14,7 @@ function signOut() {
 }
 
 function createComment2(recipe_id) {
-  var new_comment = prompt("Create a new comment on this recipe.");
+  var new_comment = document.getElementById("comment_textarea").value;
   if (new_comment != null) {
     fetch("/create-comment", {
       method: "POST",
@@ -99,7 +99,7 @@ function subscribeToNewsletters() {
 function deleteIngredient(ingredient_id) {
   if (confirm("Are you sure you want to delete this ingredient?"))
     fetch("/delete ingredient", {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({ ingredient_id: ingredient_id }),
     }).then((_res) => {
       window.location.reload(true);
@@ -110,10 +110,15 @@ function modifyIngredient(ingredient_id, order) {
   var x = document.getElementsByName("dosage")[order].value;
   var y = document.getElementsByName("Unit Name")[order].value;
   var z = document.getElementsByName("Ingredient Name")[order].value;
-  
+
   fetch("/modify ingredient", {
     method: "POST",
-    body: JSON.stringify({ ingredient_id: ingredient_id, Dosage: x, UnitName: y, MyIngredient: z }),
+    body: JSON.stringify({
+      ingredient_id: ingredient_id,
+      Dosage: x,
+      UnitName: y,
+      MyIngredient: z,
+    }),
   }).then((_res) => {
     window.location.reload(true);
   });
@@ -129,23 +134,19 @@ function AddIngredient() {
   }).then((_res) => {
     window.location.reload(true);
   });
-
 }
 
 function recipe_delete() {
   if (confirm("Are you sure you want to delete this recipe?"))
-  fetch("/Delete recipe", {
-    
-  }).then((_res) => {
-    window.location.reload(true);
-  });
-
+    fetch("/Delete recipe", {}).then((_res) => {
+      window.location.reload(true);
+    });
 }
 
 function history_delete(id) {
-if (confirm("Are you sure you want to delete this browsing history?"))
+  if (confirm("Are you sure you want to delete this browsing history?"))
     fetch("/delete history", {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({ id: id }),
     }).then((_res) => {
       window.location.reload(true);
@@ -155,8 +156,8 @@ if (confirm("Are you sure you want to delete this browsing history?"))
 function deletedicription(id, step_no) {
   if (confirm("Are you sure you want to delete this dicription?"))
   fetch("/delete discription", {
-    method: 'POST',
-    body: JSON.stringify({ id: id, step_no: step_no}),
+    method: "POST",
+    body: JSON.stringify({ id: id, step_no: step_no }),
   }).then((_res) => {
     window.location.reload(true);
   });

@@ -1,14 +1,15 @@
-<!-- Overrides base.html -->
+<!-- Front end for support page, which just contains a simple form for users to submit the provided topics. -->
 {% extends "base.html" %}
 
-<!-- Overrides tab name-->
+{% block title %}
+  Support
+{% endblock %} 
 
-{% block title %}Support{% endblock %} {% block content%}
 
+{% block content%}
 <br />
 <section class="container-fluid">
   <section class="row justify-content-center">
-    <!-- Shadow-->
     <div class="shadow p-3 mb-5 bg-white rounded" style="width: 45rem">
       <div class="card-body">
         <div align="center">
@@ -17,28 +18,17 @@
           <br />
 
           <form method="POST" enctype="multipart/form-data">
-            <!-- Email Address -->
-            <h4>Email Address</h4>
+            <!-- Email Address field -->
+            <h5>Email Address</h5>
             <div class="form-group">
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                name="email"
-                placeholder="Enter email"
-              />
+              <input type="email" class="form-control" id="email" name="email" placeholder="Enter email"/>
             </div>
 
-            <h4>Topic</h4>
+            <!-- Topic select field (dropdown menu)-->
+            <h5>Topic</h5>
             <br />
-            <select
-              class="form-select form-select-lg mb-3"
-              aria-label=".form-select-lg example"
-              name="topic_select"
-            >
-              <option <option selected="true" disabled="disabled">
-                Select a topic
-              </option>
+            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" name="topic_select">
+              <option <option selected="true" disabled="disabled">Select a topic</option>
               <option value="Leaving Feedback">Leaving Feedback</option>
               <option value="Enquires">Enquires</option>
               <option value="Reporting A Bug">Reporting A Bug</option>
@@ -47,25 +37,16 @@
             <br />
             <br />
 
-            <h4>Photos/Files Upload</h4>
-            <input
-              class="form-control"
-              type="file"
-              id="files"
-              name="files"
-              multiple
-            />
+            <!-- Upload field with the option to upload multiple files -->
+            <h5>Photos/Files Upload</h5>
+            <input class="form-control" type="file" id="files" name="files" multiple/>
             <br />
 
-            <div class="form-group">
-              <h4>Comment</h4>
-              <textarea
-                class="form-control"
-                id="email-body"
-                name="email-body"
-                rows="3"
-              ></textarea>
-            </div>
+            <!-- Description section for users to further describe their issue -->
+            <h5>Description</h5>
+            <textarea class="form-control" id="email-body" name="email-body" rows="3"></textarea>
+            <br />
+
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>

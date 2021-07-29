@@ -11,11 +11,14 @@ from .models import Subscriber, Users, Profiles, Newsfeeds, Newsletters
 newsletter = Blueprint('newsletter', __name__)
 CORS(newsletter)
 
+
 @newsletter.route('/manage_newsletters', methods=['GET', 'POST'])
 def manage_newsletter():
     if current_user.is_authenticated:     
+        # This is  what the users will be looking at, every other method down 
+        #   below are functions that assist in the subscribe/unsubscribe process. 
         return render_template("newsletters.html", user=current_user)
-    return render_template("restricted_access.html")
+    return render_template("restricted_access.html")                        
     
 @newsletter.route('/subscribe-to-newsletters', methods=['POST'])
 def subscribe_newsletter():
@@ -40,18 +43,15 @@ def subscribe_newsletter():
         if newsletter:
             newsletter.trending = trending
             newsletter.subscribed_to = subscribed_to
+            flash("Your Newsletter Feed is now updated!", category="success")
         
         else:   # Newsletter does not exist
             newsletter = Newsletters(trending=trending, 
                 subscribed_to=subscribed_to, own=current_user.id)
             db.session.add(newsletter)
+            flash("You have successfully subscribed to this service!", category="success")
 
-        flash("Your Newsletter Feed is now updated!", category="success")
         db.session.commit()
-
-        # Send a welcoming email
-        welcome_email(current_user, newsletter)
-        
     return jsonify({})
 
 
@@ -68,20 +68,19 @@ def unsubscribe_newsletter():
 
     return jsonify({})
 
-# Confirmation email to tell users that they are subscribed to our newsletter service
-def welcome_email(user, newsletter):
-    topic = "Newsletters"
-    body = "Thank you for subscribing to our newsletter service. "
-    send_email(user.email, topic, body)
-
 # Method to send a email to provide emails
 def send_email(emails, topic, body):
     mail = Mail(app)
     msg = Message(topic,
         sender='w18b.sheeesh@gmail.com',
-        recipients=[emails])
-    msg.body = body
-    msg.html = render_template("home.html")
+        body = body)
+
+    # Recipients requires a list
+    # However, it does not take a list inside a list i.e. [ [recipients] ]
+    if type(emails) is type([]):        # Avoids the issue above.
+        msg.recipients = emails
+    else:                               # Caters for when there is only one user.
+        msg.recipients = [emails] 
             
     mail.send(msg)
 
@@ -94,11 +93,11 @@ def send_new_recipe_emails(recipe):
     subscriber_list = Subscriber.query.filter_by(contains=user.profile_id).all()
 
     # Get subscribers profile's emails
-    emailing_list = get_profile_emails(subscriber_list)
-
+    emailing_list = get_profile_emails(subscriber_list) 
+    print(emailing_list)
     if len(emailing_list) != 0:
         topic = f"{user.display_name} has posted a new recipe called {recipe.name}."
-        body = "New recipe"
+        body = f"New recipe can be found at: http://127.0.0.1:5000/{recipe.name}.{recipe.id}"
 
         send_email(emailing_list, topic, body)
 
@@ -115,6 +114,10 @@ def get_profile_emails(sub_list):
             if newsletter.subscribed_to == True:
                 emailing_list.append(user.email)
     return emailing_list
+
+
+
+
 
 # Email the trending recipe for that week to everyone who is subscribed to that feature 
 def send_weekly_trending_recipes(trending):

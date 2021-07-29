@@ -1,13 +1,14 @@
-# Authentication
+# Backend for the Authentication process.
+ 
 from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app as app
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_user, logout_user, current_user
 from flask_cors import CORS
 from flask_mail import Mail, Message
 from random import randint
+from re import search
 
-from .models import Subscribed, Subscriber, Users, Profiles, Codes
-from .validate_email import validate_email
+from .models import Users, Profiles, Codes
 from . import db
 
 
@@ -24,6 +25,7 @@ def login():
     
     return render_template("login.html", user=current_user)
 
+# Function for login route
 def login_fn(email, password):
     user = Users.query.filter_by(email=email).first()
     if user:
@@ -58,38 +60,25 @@ def sign_up():
 
     return render_template("sign_up.html", user=current_user)
 
+# Function for sign_up route
 def sign_up_fn(email, first_name, last_name, password1, password2):
-
-    # Checks if email already exists
-    # Similar to    select email from users where email = %s     
-    if Users.query.filter_by(email=email).first()  :
-        flash('Email already exists.', category='error')
-    elif validate_email(email) is False:
-        flash('Email provided is not valid.', category='error')
-    elif len(first_name) < 2:
-        flash('First name must be greater than 1 character.', category='error')
-    elif len(last_name) < 2:
-        flash('First name must be greater than 1 character.', category='error')
-    elif password1 != password2:
-        flash('Passwords don\'t match.', category='error')
-    elif len(password1) < 7:        # Remember to change limit
-        flash('Password must be at least 7 characters.', category='error')
-    else:
+    if (verify_authenticate_details(email, first_name, last_name, password1, password2)):
         # Register new user
         new_user = Users(email=email, password=generate_password_hash(password1, method='sha256'))
-        db.session.add(new_user)        # Adds to our database
-        db.session.commit()             # Commits changes
+        db.session.add(new_user)        
+        db.session.commit()            
 
-        bio="Not much is known about this user... Encourage them to setup their user bio!"
+        
         # static default image hardcoded
-        image_file = url_for('static', filename='default_user.jpg')      
+        image_file = url_for('static', filename='default_user.jpg')   
+        bio="Not much is known about this user... Encourage them to setup their user bio!"   
 
         # Create default profile for new user
         new_profile = Profiles(first_name=first_name, last_name=last_name, display_name=first_name + ' ' + 
             last_name, profile_pic=image_file, bio=bio, custom_url=None, owns=new_user.id)
 
         db.session.add(new_profile)
-        db.session.commit()             # Commits changes
+        db.session.commit()           
 
         login_user(new_user, remember=True)
         flash('Account created!', category='success')
@@ -121,6 +110,7 @@ def change_password():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
+        # Error checking for provided code.
         if code.isnumeric() is False or len(str(code)) != 6:
             flash('Code is invalid', category='error')
         elif password1 != password2:
@@ -144,10 +134,27 @@ def change_password():
             else:
                 flash('Invalid Code, please try again', category='error')
     return render_template("change_pwd.html")
-                
-        
+
+# Simple function that checks authentication details for sign-up and profile-edit
+def verify_authenticate_details(email, first_name, last_name, password1, password2):
+    if Users.query.filter_by(email=email).first():
+        flash('Email already exists.', category='error')
+    elif validate_email(email) is False:
+        flash('Email provided is not valid.', category='error')
+    elif len(first_name) < 2:
+        flash('First name must be greater than 1 character.', category='error')
+    elif len(last_name) < 2:
+        flash('First name must be greater than 1 character.', category='error')
+    elif password1 != password2:
+        flash('Passwords don\'t match.', category='error')
+    elif len(password1) < 7:        
+        flash('Password must be at least 7 characters.', category='error')
+    else:
+        return True
+    return False
+
+# Generate a recovery code and add it to the table       
 def generate_recovery_code(user):
-     # Generate a recovery code and add it to the table
     reset_code = randint(100000, 999999)
 
     # Check to see if code table exists for existing email already
@@ -162,7 +169,7 @@ def generate_recovery_code(user):
     # Send the code to user via email.
     send_recovery_code(user.email, reset_code)
     
-
+# Sends the recovery code over to the provided email.
 def send_recovery_code(email, reset_code):
     mail = Mail(app)
     msg = Message(str(reset_code) + ' is your MyRecipe account recovery code',
@@ -170,6 +177,16 @@ def send_recovery_code(email, reset_code):
         recipients=[email])
     msg.body = f'We received a request to reset your MyRecipe password.\nEnter the following password reset code {reset_code}.'
     mail.send(msg)
+
+# Function used to determine if provided email is valid or not
+# reference: https://www.geeksforgeeks.org/check-if-email-address-valid-or-not-in-python/
+def validate_email(email):  
+    regex = '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
+    if(search(regex,email)):
+        return True
+
+    else:
+        return False
 
 
 
