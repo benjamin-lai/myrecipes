@@ -154,13 +154,22 @@ if (confirm("Are you sure you want to delete this browsing history?"))
 
 function deletedicription(id, step_no) {
   if (confirm("Are you sure you want to delete this dicription?"))
-  alert(id)
-  alert(step_no)
   fetch("/delete discription", {
     method: 'POST',
     body: JSON.stringify({ id: id, step_no: step_no}),
   }).then((_res) => {
     window.location.reload(true);
   });
+}
+
+function trending_filter() {
+  var filter = document.getElementsByName("filter")[0].value;
+  fetch("/Trending filter", {
+    method: "POST",
+    body: JSON.stringify({ filter: filter}),
+  }).then((_res) => {
+    window.location.reload(true);
+  });
+
 }
 
