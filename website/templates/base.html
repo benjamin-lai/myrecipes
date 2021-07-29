@@ -1,3 +1,4 @@
+<!-- Base html file where all other webpages extends from -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -22,33 +23,24 @@
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       crossorigin="anonymous"
     />
-    <!-- When hovering over dropdown menu display content (I dont know how to connect css file) -->
-    <style type="text/css">
-      .dropdown:hover .dropdown-menu {
-        display: block;
-      }
-
-      .sticky-offset {
-        top: 55px;
-        z-index: 100;
-      }
-    </style>
 
     <link type="text/css" rel="stylesheet" href="/static/style.css" />
-    <title>{% block title %}Home{% endblock %}</title>
   </head>
+
+  <!-- Tab name -->
+  <title> 
+    {% block title %}
+      Home
+    {% endblock %} 
+  </title>
+
   <body>
     <!-- Our navbar, caters for desktop and mobile -->
     <!-- Nav bar that has a dark bg, and changes when the screen is no longer small-->
     <!-- Sticky top makes it stay on the top of the screen-->
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark sticky-top">
       <!-- Creates a button for navbar when the screen is small.-->
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbar"
-      >
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
         <span class="navbar-toggler-icon"></span>
       </button>
 
@@ -59,16 +51,7 @@
           <!-- First nav bar to hold content to the left-->
           <div class="navbar-nav">
             <a class="myrecipes" href="/">
-              <li>
-                <img
-                  border="0"
-                  align="left"
-                  src="{{ url_for('static',filename = 'images/my-recipes.svg')}}"
-                  alt="facebook"
-                  height="40"
-                  width="100"
-                />
-              </li>
+              <li><img border="0" align="left" src="{{ url_for('static', filename = 'images/my-recipes.svg')}}" alt="brand" height="40" width="100"/></li>
             </a>
           </div>
 
@@ -77,87 +60,23 @@
             <!-- Viewing condition for logged in and logged out users-->
             {% if current_user.is_authenticated %}
 
-            <!-- Recipe creation stuff & random recipe -->
-            <a class="nav-item nav-link" id="#" href="/recipe/random">Surprise me!</a>
-            <a class="nav-item nav-link" id="#" href="#">Recipe Stuff</a> 
-            <!--search form-->
-            <form class="d-flex" action="/search_result" method="POST">
-              <input
-                class="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-                id="Search"
-                name="Search"
-                autocomplete="on"
-                value="{{search_value}}"
-              />
-              <button class="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
-
-            <!-- Recipe creation stuff  -->
-            <a
-              class="nav-item nav-link"
-              id="Create recipe"
-              href="/Create recipe"
-              >New Recipe</a
-            >
+            <!-- Ability to create a new recipe  -->
+            <a class="nav-item nav-link" id="Create recipe" href="/Create recipe" >Create New Recipe</a>
 
             <!-- Dropdown -->
             <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                id="navbarDropdownMenuLink"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Placeholder
               </a>
-              <div
-                class="dropdown-menu"
-                aria-labelledby="navbarDropdownMenuLink"
-              >
-                <a class="dropdown-item" id="profile" href="/profile/my"
-                  >Profile</a
-                >
-                <a class="dropdown-item" id="#" href="#">Newsletters</a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" id="profile" href="/profile/my">Profile</a>
                 <a class="dropdown-item" id="newsfeed" href="/newsfeed">Personalised Newsfeed</a>
                 <a class="dropdown-item" id="starred_recipes" href="/recipes/starred">Starred Recipes</a>
-                <a
-                  class="dropdown-item"
-                  id="Create recipe"
-                  href="/Create recipe"
-                  >New Recipe</a
-                >
-
-                <a class="dropdown-item" id="Recipe cards" href="/Recipe cards"
-                  >Recipes</a
-                >
-                <a class="dropdown-item" id="history" href="/history"
-                  >History</a
-                >
-                <a
-                  class="dropdown-item"
-                  id="Trending Section"
-                  href="/Trending Section"
-                  >Trending Section</a
-                >
+                <a class="dropdown-item" id="history" href="/history">History</a>
 
                 <!-- Newsletter and support tabs -->
                 <div class="dropdown-divider"></div>
-                <a
-                  class="dropdown-item"
-                  id="newsletter"
-                  href="/manage_newsletters"
-                  >Newsletters</a
-                >
-                <a class="dropdown-item" id="support" href="/support"
-                  >Support</a
-                >
+                <a class="dropdown-item" id="newsletter" href="/manage_newsletters">Newsletters</a>
 
                 <!-- Logout option -->
                 <div class="dropdown-divider"></div>
@@ -166,7 +85,7 @@
             </li>
 
             {% else %}
-            <!-- ATM only authentication methods avaliable -->
+            <!-- Only have sign-in and login option available. -->
             <a class="nav-item nav-link" id="login" href="/login">Login</a>
             <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
             {% endif %}
@@ -175,51 +94,43 @@
       </div>
     </nav>
 
-    <!-- ######### Flashing Messages  ###############-->
+    <!-- ######### Flashing Messages  ######### -->
     <!-- Get all the messages that was flashed, and display them on the screen-->
-    {% with messages = get_flashed_messages(with_categories=true) %} {% if
-    messages %} {% for category, message in messages %} {% if category ==
-    'error' %}
-    <div
-      class="
-        alert alert-danger
-        alter-dismissable
-        fade
-        show
-        sticky-top sticky-offset
-      "
-      role="alert"
-      align="center"
-    >
-      {{ message }}
-      <button type="button" class="close" data-dismiss="alert">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    {% else %}
-    <div
-      class="
-        alert alert-success
-        alter-dismissable
-        fade
-        show
-        sticky-top sticky-offset
-      "
-      role="alert"
-      align="center"
-    >
-      {{ message }}
-      <button type="button" class="close" data-dismiss="alert">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    {% endif %} {% endfor %} {% endif %} {% endwith %}
+    {% with messages = get_flashed_messages(with_categories=true) %} 
+      {% if messages %} 
+        {% for category, message in messages %} 
+          {% if category =='error' %}
+            <div class=" alert alert-danger alter-dismissable fade show sticky-top sticky-offset" role="alert" align="center">
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          {% else %}
+            <div
+              class=" alert alert-success alter-dismissable fade show sticky-top sticky-offset" role="alert" align="center">
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          {% endif %} 
+        {% endfor %} 
+      {% endif %} 
+    {% endwith %}
 
-    <div class="container">{% block content %} {% endblock %}</div>
+    <!-- Content block for the rest of the webpages -->
+    <div class="container">
+      {% block content %}
+      {% endblock %}
+    </div>
 
     
+<<<<<<< HEAD
     
 
+=======
+>>>>>>> dev
     <!-- Bootstrap. All the javascript required for the css components to work -->
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
@@ -237,7 +148,6 @@
       crossorigin="anonymous"
     ></script>
     
-
     <!-- Google Platform Library for integrating Google sign-in -->
     <script src="https://apis.google.com/js/platform.js" async defer></script>
 

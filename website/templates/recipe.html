@@ -3,9 +3,9 @@
 <!-- Overwrites title-->
 {% block title %}Recipe{% endblock %}
 {% block content %}
+{% include 'base2.html' %}
 <head>
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">    
-  <script src="{{ url_for('static',filename = 'Recipe/Like.js')}}"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <style>
     body{
     background-color:white;
@@ -76,7 +76,6 @@
     .img-fit{
     width: 1100px;
     height: 500px;
-    margin-top: 25px;
     margin-bottom: 25px;
 
     }
@@ -112,15 +111,12 @@
     width: 770px;
     margin-left: 30px;
     padding-bottom: 20px;
-}
+    }
 
     .text_wrapper {
       word-break:break-all;
     }
 
-    body{
-      height:100%;
-    }
 
 
   </style>
@@ -151,15 +147,15 @@
     {% endfor %}
     
     <!-- Only the person who made the recipe can modify and delete it -->
-    {% if current_user.id == creates %}
+    {% if current_user.id == recipe.creates %}
     <!--action buttons-->
     <div>
       <form action="edit recipe" method="POST">
-        <button class="btn btn-success pull-right" type="submit" >Edit</button>
+        <button class="btn btn-info pull-right" type="submit" >Edit</button>
       </form> 
       
       
-      <button class="btn btn-success pull-right" type="submit" onClick="recipe_delete()">Delete</button>
+      <button class="btn btn-danger pull-right" type="submit" onClick="recipe_delete()">Delete</button>
       
     </div>
     {% endif %}
@@ -169,7 +165,7 @@
   <div class="jumbotron">
     
     <div class="container">
-      <h1 style="font-size:88px;">{{RecipeName}}</h1>
+      <h1 style="font-size:88px;">{{recipe.name}}</h1>
       <!--starred start-->
         <div class="container" style = "height:40px;">
             <!-- Recipe Star Button-->
@@ -211,7 +207,7 @@
                       url : "{{url_for('recipes.star_recipe')}}", // the endpoint
                       data : {status: JSON.stringify(status), 
                           user: JSON.stringify({{current_user.id}}), 
-                          recipe: JSON.stringify({{recipe_id}})
+                          recipe: JSON.stringify({{recipe.id}})
                       }, // data sent with the post request
 
                       // handle a successful response
@@ -240,10 +236,12 @@
         
           <br />
         </div>
-        <!--starred end-->
+      <!--starred end-->
+      
+      
       <div class = "text">
-        <div><p style="color:blue;">Meal Type : {{meal_type}}</p></div>
-        <div><h8>id : {{recipe_id}}</h8></div>
+        <div><p style="color:blue;">Meal Type : {{recipe.meal_type}}</p></div>
+        <div><h8>id : {{recipe.id}}</h8></div>
       </div>
       Cooking methods:
       </h6>
@@ -270,45 +268,38 @@
         
       <span class="mid">
         <h3>Description</h3>
-        {{Descriptions}}
+        {{recipe.description}}
       </span>
-      <h3 align = "center;"><a href="http://127.0.0.1:5000/profile/{{profile.custom_url}}" style="margin-left: 40px;">{{UserName}}</a><h3>
-    </div>
-    
-
-    <!--star rating begin-->
-    <link href=.rating-list li {
-      float: right;
-      color: #ddd;
-      padding: 10px 5px;
-    }
-    
-    .rating-list li:hover,
-    .rating-list li:hover ~ li {
-      color: #ffd700;
-    }
-    
-    .rating-list {
-      display: inline-block;
-      list-style: none;
-    } rel="stylesheet" />
-    
-    <div style = "margin-left: 30px;">
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star"></span>
-      <span class="fa fa-star"></span>
-    </div>
-    <!--star rating end-->
+      <h3 align = "center;"><a href="http://127.0.0.1:5000/profile/{{profile.custom_url}}" style="margin-left: 40px;">{{recipe.creator}}</a><h3>
+    </div> 
     
     <!-- Like and disclick buttons with their associated counter -->
     <div class="row">
       <div class="col">
-        <button type="button" class="btn btn-primary" onClick="addLike({{ recipe_id }})">Like!</button>
-        {{ recipe.num_of_likes }}
-        <button type="button" class="btn btn-primary" onClick="addDislike({{ recipe_id }})">Dislike!</button>
-        {{ recipe.num_of_dislikes }}
+        <!-- Section checks for certain criterias when displaying the look of likes/dislikes -->
+        <!-- Checks if likes table exists for this user and if it has been liked or disliked.-->
+        {% if likes and likes.like_status != 0 %}
+          {% if likes.like_status == 1 %}
+            <button type="button" class="btn btn-success" onClick="addLike({{ recipe.id }})">Liked</button>
+            {{ recipe.num_of_likes }}
+            <button type="button" class="btn btn-primary" onClick="addDislike({{ recipe.id }})">Dislike</button>
+            {{ recipe.num_of_dislikes }}
+          {% else %}
+            <button type="button" class="btn btn-primary" onClick="addLike({{ recipe.id }})">Like</button>
+            {{ recipe.num_of_likes }}
+            <button type="button" class="btn btn-danger" onClick="addDislike({{ recipe.id }})">Disliked</button>
+            {{ recipe.num_of_dislikes }}
+          {% endif %}
+          
+        <!-- Displays normal form for non logged-in users, users who havent liked/disliked. -->
+        {% else %}
+          <button type="button" class="btn btn-primary" onClick="addLike({{ recipe_id }})">Like</button>
+          {{ recipe.num_of_likes }}
+          <button type="button" class="btn btn-primary" onClick="addDislike({{ recipe_id }})">Dislike</button>
+          {{ recipe.num_of_dislikes }}
+        {% endif %}
+
+        
       </div>
     </div>
 
@@ -327,7 +318,7 @@
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <div class = "container">
-        <form method="POST"  action="http://127.0.0.1:5000/recipe.{{RecipeName}}.{{recipe_id}}" >
+        <form method="POST"  action="http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe_id}}" >
           {% for cookbook in cookbook_my %}
           <input type="radio" id="{{cookbook.name}}" name="cookbook" value="{{cookbook.id}}">
           <label for="{{cookbook.name}}">{{cookbook.name}}</label><br>
@@ -365,40 +356,46 @@
 <br><br>
 
 
-<!-- This entire section is dedicated to comments -->
+<!-- Comment section gives logged-in users the ability to comment, modify and delete comments. -->
 <div class="container">
     <hr>
     <h2>Comments</h2>
-    <!-- Displays the ability to comment when the user is logged in-->
-    {% if current_user.is_authenticated %}
+    <div class="form-group">
+      <textarea class="form-control" id="comment_textarea" rows="3" placeholder="Enter a new comment!"></textarea>
+
+      <br>
+
       <div align="center">
         <button type="button" class="btn btn-primary" onClick="createComment2({{ recipe_id }})">Post a new Comment!</button>
       </div>
-    {% endif %}
-
+    </div>
+    
     <!-- Displays the list of comments for the recipe-->
     <div class="text_wrapper">
 
     <ul class="list-group list-group-flush" id="reviews">
-      <!-- Iterate through comments for the recipe and display associated name and comment. -->
-      {% for name, id, review in comments %}
-      <a href="#">{{ name }}</a>
-      <li class="list-group-item">
-        
-        {{ review.comment }}
-          
-        <!-- Displays the abiltiy to delete comments if either they are the recipe owner or person who made the comment -->
-        {% if creates == current_user.id or current_user.id == review.owns %}
-        <!-- Only the person who made the comment can modify it -->
-          {% if current_user.id == review.owns %}
-            <button type="button" class="btn btn-secondary float-right" onClick="modifyComment({{ review.comment_id }})">
-              Modify
-            </button>
-          {% endif %}
+      <!-- Iterate through comments for the recipe and display associated profile and comment. -->
+      {% for profile, review in comments %}
+      
+      <div class="d-flex flex-row align-items-center">
+        <img class="rounded-circle shadow-1-strong me-3" src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{ profile.profile_pic }}" alt="avatar" width="40" height="40"/>
+        <a href="#">{{ profile.display_name }}</a>
+      </div>
 
+        <li class="list-group-item">
+        {{ review.comment }}
+        <!-- Displays the abiltiy to delete comments if either they are the recipe owner or person who made the comment -->
+        {% if recipe.creates == current_user.id or current_user.id == review.owns %}
           <button type="button" class="close" onClick="deleteComment({{ review.comment_id }})">
             <span aria-hidden="true">&times;</span>
           </button>
+
+          <!-- Only the person who made the comment can modify it -->
+          {% if current_user.id == review.owns %}
+            <button type="button" class="btn btn-default float-right" onClick="modifyComment({{ review.comment_id }})">
+              Modify
+            </button>
+          {% endif %}
           
         {% endif %}
       </li>
@@ -409,16 +406,16 @@
   <!--share and download-->
   <hr>
   <div class = "wrap">
-    <a class= "facebook" href= "https://www.facebook.com/sharer.php?text=Amazing recipes I found in MyRecipe [{{RecipeName}}]&u=http://127.0.0.1:5000/recipe.{{RecipeName}}.{{recipe_id}}" target= "_blank" id= "J-share-facebook" >
+    <a class= "facebook" href= "https://www.facebook.com/sharer.php?text=Amazing recipes I found in MyRecipe [{{recipe.name}}]&u=http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe_id}}" target= "_blank" id= "J-share-facebook" >
       <img border="0"  src="{{ url_for('static',filename = 'images/facebook1.png')}}" alt="facebook" height="150" width="150">
     </a>
-    <a href="https://twitter.com/share?text=Amazing recipes I found in MyRecipe [{{RecipeName}}]    &url=http://127.0.0.1:5000/recipe.{{RecipeName}}.{{recipe_id}}" target="_blank">
+    <a href="https://twitter.com/share?text=Amazing recipes I found in MyRecipe [{{recipe.name}}]    &url=http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe_id}}" target="_blank">
       <img border="0"  src="{{ url_for('static',filename = 'images/twitter.png')}}" alt="twitter" height="150" width="150">
     </a>
-    <a href="http://service.weibo.com/share/share.php?appkey=&title=Amazing recipes I found in MyRecipe [{{RecipeName}}]&url=http://127.0.0.1:5000/recipe.{{RecipeName}}.{{recipe_id}}" target="_blank">
+    <a href="http://service.weibo.com/share/share.php?appkey=&title=Amazing recipes I found in MyRecipe [{{recipe.name}}]&url=http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe_id}}" target="_blank">
       <img border="0"  src="{{ url_for('static',filename = 'images/weibo2.png')}}" alt="facebook" height="140" width="140">
     </a>
-    <a href="http://127.0.0.1:5000/recipe.{{RecipeName}}.{{recipe_id}}" download = "MeRecipe_{{RecipeName}}">
+    <a href="http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe_id}}" download = "MeRecipe_{{recipe.name}}">
       <img src="{{ url_for('static',filename = 'images/download2.png')}}" width="140" height="150" alt="" />
     </a>
   </div>

@@ -1,13 +1,15 @@
 # This is contains helper functions to create, modify and delete messages.
-from flask import Blueprint, request, flash, jsonify,redirect, url_for, render_template
+
+from flask import Blueprint, request, flash, jsonify
 from flask_login import login_required, current_user
+from flask_cors import CORS
 import json
 
 from .models import Comments, Profiles, Likes, Recipes, Cookbooks, Cookbooks_lists
 from . import db
 
 review = Blueprint('review', __name__)
-
+CORS(review)
 
 #cookbook in profile
 @review.route('/cookbook_create', methods=['POST']) 
@@ -101,8 +103,7 @@ def set_des():
         return jsonify({})
 
 
-# Creates a comment given the recipe_id
-# Already checks http request 
+# Creates a comment given the recipe_id and comment value
 @review.route('/create-comment', methods=['POST'])
 @login_required
 def create_comment():
@@ -111,15 +112,18 @@ def create_comment():
         recipe_id = recipe['recipe_id']
         comment = recipe['comment']
 
-        if len(comment) < 1:
-            flash('Comment is too short!', category='error')
+        if current_user.is_authenticated:
+            if len(comment) < 1:
+                flash('Comment is too short!', category='error')
+            else:
+                profile = Profiles.query.filter_by(owns=current_user.id).first()
+                print(profile.display_name)
+                new_comment = Comments(comment=comment, has=recipe_id, owns=current_user.id)
+                db.session.add(new_comment)
+                db.session.commit()
+                flash('Comment added!', category='success')
         else:
-            profile = Profiles.query.filter_by(owns=current_user.id).first()
-            print(profile.display_name)
-            new_comment = Comments(comment=comment, has=recipe_id, owns=current_user.id)
-            db.session.add(new_comment)
-            db.session.commit()
-            flash('Comment added!', category='success')
+            flash("You need to login first before you can review a recipe", category="error")
         return jsonify({})
 
 # Retrieves comments given recipe_id
@@ -131,7 +135,7 @@ def retrieve_comments(recipe_id):
         # Instead of adding display name to comments table, we find it here given comments.own
         # Creates a lot of overhead right now, needs to be fixed later
         profile = Profiles.query.filter_by(owns=comments.owns).first()
-        user_information = (profile.display_name, profile.profile_id, comments)
+        user_information = (profile, comments)
         details.append(user_information)
     return details
 
@@ -194,6 +198,7 @@ def add_dislike():
     return jsonify({})
 
 # Process to either like or dislike recipe given the status
+@review.route('/add-like-dislike', methods=['POST'])
 def like_dislike_recipe(status):
     recipe = json.loads(request.data)
     recipe_id = recipe['recipe_id']

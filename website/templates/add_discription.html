@@ -73,7 +73,7 @@
             <h3 class="card-text">Step.{{des_step.step_no}}</h3>
             </td><br>
             <div class = "atmiddle">
-            <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{des_step.photo}}" width="300" height="200" class="w3-card-4" width = "600" height = "450">
+            <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{des_step.photo}}" onerror="this.style.display='none'" width="300" height="200" class="w3-card-4" width = "600" height = "450"/>
             </div><br>
             <div class = "right">
             {{des_step.step_comment}}
@@ -92,7 +92,7 @@
             </br>
             <h4 align="left" style = "margin-top:10px; margin-left:0px">Upload Step photos</h4>
             <input style = "margin-left:0px" type=file name=file2>
-            <input name = "button4" type=submit value=Upload>
+            <input name = "upload_images" type=submit value=Upload style = "margin-bottom:20px;">
             <br />
             <button  style = "margin-top:0px; margin-left:0px" name="Submit" type="add" class="btn btn-primary">Submit Recipe</button>
         </form>
