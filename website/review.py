@@ -1,113 +1,13 @@
 # This is contains helper functions to create, modify and delete messages.
-<<<<<<< HEAD
 from flask import Blueprint, request, flash, jsonify,redirect, url_for, render_template
-=======
-
-from flask import Blueprint, request, flash, jsonify
->>>>>>> dev
 from flask_login import login_required, current_user
-from flask_cors import CORS
 import json
 
 from .models import Comments, Profiles, Likes, Recipes, Cookbooks, Cookbooks_lists
 from . import db
 
 review = Blueprint('review', __name__)
-CORS(review)
 
-#cookbook in profile
-@review.route('/cookbook_create', methods=['POST']) 
-def create_cookbook():
-    #implementing create
-    print(request.method)
-    if request.method == 'POST':
-        cookbook = json.loads(request.data)
-        cookbook_name = cookbook['name']
-        print(f"cookbook {cookbook['name']}")
-
-        if len(cookbook_name) < 1:
-            flash('name is too short!', category='error')
-        elif check_duplicate(cookbook_name) is False:
-            flash('name is already exist!', category='error')
-        else:
-            new_book = Cookbooks(name = cookbook_name, contains = current_user.id)
-            db.session.add(new_book)
-            db.session.commit()
-            flash('CookBook added!', category='success')
-        return jsonify({})
-
-#helper func for create_cookbook
-def check_duplicate(cookbook_name):
-    cookbook = Cookbooks.query.filter_by(name = cookbook_name, contains = current_user.id).first()
-    if cookbook is not None:
-        return False #duplicate
-    return True
-
-#delete cookbook
-@review.route('/delete_book', methods=['POST'])
-def delete_book():
-    if request.method == 'POST':
-        delete = json.loads(request.data)
-        print(delete)
-        book_id = delete['book_id']
-        print(book_id)
-        cookbook = Cookbooks.query.filter_by(id = book_id).first()
-
-        db.session.delete(cookbook)
-        db.session.commit()
-        flash('Deleted cookbook successfully!', category='success')
-        return jsonify({})
-
-#edit the name of cookbook
-@review.route('/edit_bookname', methods=['POST'])
-def edit_name():
-    if request.method == 'POST':
-        cookbook = json.loads(request.data)
-        book_id = cookbook['book_id']
-        new_name = cookbook['name']
-        print(f"book   {cookbook}")
-        if len(new_name) < 1:    
-            flash('Name is too short!', category='error')
-        else:
-            cookbook = Cookbooks.query.filter_by(id = book_id).first()
-            cookbook.name = new_name
-            db.session.commit()
-            flash('Modified book name successfully!', category='success')
-
-        return jsonify({})
-
-#remove recipe from cookbook
-@review.route('/remove_recipe', methods=['POST'])
-def remove_recipe():
-    if request.method == 'POST':
-        delete = json.loads(request.data)
-        print(delete)
-        recipe_id = delete['recipe_id']
-        book_id = delete['cookbook_id']
-        cookbook = Cookbooks_lists.query.filter_by(recipe_id = recipe_id, cookbook_id = book_id).first()
-        db.session.delete(cookbook)
-        db.session.commit()
-        flash('remove recipe successfully!', category='success')
-        return jsonify({})
-
-#eidt / create cookbook description
-@review.route('/set_des', methods=['POST'])
-def set_des():
-    if request.method == 'POST':
-        cookbook = json.loads(request.data)
-        book_id = cookbook['cookbook_id']
-        des = cookbook['des']
-        print(f"book   {cookbook}")
-    
-        cookbook = Cookbooks.query.filter_by(id = book_id).first()
-        cookbook.description = des
-        db.session.commit()
-        flash('Modified cookbook description successfully!', category='success')
-
-        return jsonify({})
-
-
-<<<<<<< HEAD
 
 #cookbook in profile
 @review.route('/cookbook_create', methods=['POST']) 
@@ -203,9 +103,6 @@ def set_des():
 
 # Creates a comment given the recipe_id
 # Already checks http request 
-=======
-# Creates a comment given the recipe_id and comment value
->>>>>>> dev
 @review.route('/create-comment', methods=['POST'])
 @login_required
 def create_comment():
@@ -214,18 +111,15 @@ def create_comment():
         recipe_id = recipe['recipe_id']
         comment = recipe['comment']
 
-        if current_user.is_authenticated:
-            if len(comment) < 1:
-                flash('Comment is too short!', category='error')
-            else:
-                profile = Profiles.query.filter_by(owns=current_user.id).first()
-                print(profile.display_name)
-                new_comment = Comments(comment=comment, has=recipe_id, owns=current_user.id)
-                db.session.add(new_comment)
-                db.session.commit()
-                flash('Comment added!', category='success')
+        if len(comment) < 1:
+            flash('Comment is too short!', category='error')
         else:
-            flash("You need to login first before you can review a recipe", category="error")
+            profile = Profiles.query.filter_by(owns=current_user.id).first()
+            print(profile.display_name)
+            new_comment = Comments(comment=comment, has=recipe_id, owns=current_user.id)
+            db.session.add(new_comment)
+            db.session.commit()
+            flash('Comment added!', category='success')
         return jsonify({})
 
 # Retrieves comments given recipe_id
@@ -279,8 +173,8 @@ def add_like():
         # If user is going through this path it means they have clicked like
         # Which should imply that status = 1.
         status = 1
-        recipe_id = request.form['id']
-        like_dislike_recipe(status, recipe_id)
+        like_dislike_recipe(status)
+
     else:
         flash("You need to be logged in to do that", category='error')
 
@@ -292,8 +186,7 @@ def add_dislike():
         # If user is going through this path it means they have clicked like
         # Which should imply that status = -1.
         status = -1
-        recipe_id = request.form['id']
-        like_dislike_recipe(status, recipe_id)
+        like_dislike_recipe(status)
 
     else:
         flash("You need to be logged in to do that", category='error')
@@ -301,14 +194,9 @@ def add_dislike():
     return jsonify({})
 
 # Process to either like or dislike recipe given the status
-<<<<<<< HEAD
-def like_dislike_recipe(status, recipe_id):
-=======
-@review.route('/add-like-dislike', methods=['POST'])
 def like_dislike_recipe(status):
     recipe = json.loads(request.data)
     recipe_id = recipe['recipe_id']
->>>>>>> dev
     recipe = Recipes.query.filter_by(id=recipe_id).first()
 
     # Determine if there is a like table for this user and recipe already

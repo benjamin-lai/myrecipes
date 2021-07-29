@@ -147,18 +147,6 @@
     {% endfor %}
     
     <!-- Only the person who made the recipe can modify and delete it -->
-<<<<<<< HEAD
-    {% if current_user.id == creates %}
-    <!--action buttons-->
-    <div>
-      <form action="edit recipe" method="POST">
-        <button class="btn btn-success pull-right" type="submit" >Edit</button>
-      </form> 
-      
-      <form action="Delete recipe " method="POST">
-        <button class="btn btn-success pull-right" type="submit">Delete</button>
-      </form>
-=======
     {% if current_user.id == recipe.creates %}
     <!--action buttons-->
     <div>
@@ -169,7 +157,6 @@
       
       <button class="btn btn-danger pull-right" type="submit" onClick="recipe_delete()">Delete</button>
       
->>>>>>> dev
     </div>
     {% endif %}
   </div>
@@ -178,15 +165,9 @@
   <div class="jumbotron">
     
     <div class="container">
-<<<<<<< HEAD
-      <h1 style="font-size:88px;">{{RecipeName}}</h1>
-      <!--starred start-->
-        <div class="container">
-=======
       <h1 style="font-size:88px;">{{recipe.name}}</h1>
       <!--starred start-->
         <div class="container" style = "height:40px;">
->>>>>>> dev
             <!-- Recipe Star Button-->
             <div id="favourite" style="float:right">
               <div id="heart"></div> 
@@ -255,13 +236,9 @@
         
           <br />
         </div>
-<<<<<<< HEAD
-        <!--starred end-->
-=======
       <!--starred end-->
       
       
->>>>>>> dev
       <div class = "text">
         <div><p style="color:blue;">Meal Type : {{recipe.meal_type}}</p></div>
         <div><h8>id : {{recipe.id}}</h8></div>
@@ -298,55 +275,27 @@
     
     <!-- Like and disclick buttons with their associated counter -->
     <div class="row">
-<<<<<<< HEAD
       <div class="col-md-1.5">
         {% if like_status == 1 %}
-        <i id="arrow-up" class="fa fa-arrow-circle-up fa-3x" style="color: darkorange" aria-hidden="true" onClick="addLike({{ recipe_id }}); 
+        <i id="arrow-up" class="fa fa-arrow-circle-up fa-3x" style="color: darkorange" aria-hidden="true" onClick="addLike({{ recipe.id }}); 
         updateLike({{ recipe.num_of_likes }}, {{recipe.num_of_dislikes}}, {{like_status}});"></i>
         <span id="like" style="font-size:30px; color:darkorange;">{{ recipe.num_of_likes }}</span>
         {% else %}
-        <i id="arrow-up" class="fa fa-arrow-circle-up fa-3x" aria-hidden="true" onClick="addLike({{ recipe_id }}); 
+        <i id="arrow-up" class="fa fa-arrow-circle-up fa-3x" aria-hidden="true" onClick="addLike({{ recipe.id }}); 
         updateLike({{ recipe.num_of_likes }}, {{recipe.num_of_dislikes}}, {{like_status}});"></i>
         <span id="like" style="font-size:30px; color:darkgray;">{{ recipe.num_of_likes }}</span>
         {% endif %}
       </div>
       <div class="col-md-2">
         {% if like_status == -1 %}
-        <i id="arrow-down" class="fa fa-arrow-circle-down fa-3x" style="color: darkorange" aria-hidden="true" onClick="addDislike({{ recipe_id }}); 
+        <i id="arrow-down" class="fa fa-arrow-circle-down fa-3x" style="color: darkorange" aria-hidden="true" o nClick="addDislike({{ recipe.id }}); 
         updateDislike({{ recipe.num_of_likes }}, {{recipe.num_of_dislikes}}, {{like_status}});"></i>
         <span id="dislike" style="font-size:30px; color:darkorange;">{{ recipe.num_of_dislikes }}</span>
         {% else %}
-        <i id="arrow-down" class="fa fa-arrow-circle-down fa-3x" aria-hidden="true" onClick="addDislike({{ recipe_id }}); 
+        <i id="arrow-down" class="fa fa-arrow-circle-down fa-3x" aria-hidden="true" onClick="addDislike({{ recipe.id }}); 
         updateDislike({{ recipe.num_of_likes }}, {{recipe.num_of_dislikes}}, {{like_status}});"></i>
         <span id="dislike" style="font-size:30px; color:darkgray;">{{ recipe.num_of_dislikes }}</span>
         {% endif %}
-=======
-      <div class="col">
-        <!-- Section checks for certain criterias when displaying the look of likes/dislikes -->
-        <!-- Checks if likes table exists for this user and if it has been liked or disliked.-->
-        {% if likes and likes.like_status != 0 %}
-          {% if likes.like_status == 1 %}
-            <button type="button" class="btn btn-success" onClick="addLike({{ recipe.id }})">Liked</button>
-            {{ recipe.num_of_likes }}
-            <button type="button" class="btn btn-primary" onClick="addDislike({{ recipe.id }})">Dislike</button>
-            {{ recipe.num_of_dislikes }}
-          {% else %}
-            <button type="button" class="btn btn-primary" onClick="addLike({{ recipe.id }})">Like</button>
-            {{ recipe.num_of_likes }}
-            <button type="button" class="btn btn-danger" onClick="addDislike({{ recipe.id }})">Disliked</button>
-            {{ recipe.num_of_dislikes }}
-          {% endif %}
-          
-        <!-- Displays normal form for non logged-in users, users who havent liked/disliked. -->
-        {% else %}
-          <button type="button" class="btn btn-primary" onClick="addLike({{ recipe_id }})">Like</button>
-          {{ recipe.num_of_likes }}
-          <button type="button" class="btn btn-primary" onClick="addDislike({{ recipe_id }})">Dislike</button>
-          {{ recipe.num_of_dislikes }}
-        {% endif %}
-
-        
->>>>>>> dev
       </div>
     </div>
 
@@ -357,7 +306,7 @@
       </div>
     </div>
     <br>
-
+        
     <!--save into cookbooks-->
     <!--drop down menu for cookbook-->
     <div class="dropdown">
@@ -366,7 +315,7 @@
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <div class = "container">
-        <form method="POST"  action="http://127.0.0.1:5000/recipe.{{RecipeName}}.{{recipe_id}}" >
+        <form method="POST"  action="http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe.id}}" >
           {% for cookbook in cookbook_my %}
           <input type="radio" id="{{cookbook.name}}" name="cookbook" value="{{cookbook.id}}">
           <label for="{{cookbook.name}}">{{cookbook.name}}</label><br>
@@ -379,30 +328,6 @@
 
         
 
-<<<<<<< HEAD
-=======
-    <!--save into cookbooks-->
-    <!--drop down menu for cookbook-->
-    <div class="dropdown">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Save to CookBook
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <div class = "container">
-        <form method="POST"  action="http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe_id}}" >
-          {% for cookbook in cookbook_my %}
-          <input type="radio" id="{{cookbook.name}}" name="cookbook" value="{{cookbook.id}}">
-          <label for="{{cookbook.name}}">{{cookbook.name}}</label><br>
-          {% endfor %}
-          <button name="BookAdd" id = "BookAdd" type="submit" class="btn btn-outline-success" >Save into cookbooks</button>
-        </form>
-      </div>
-      </div>
-    </div>
-
-        
-
->>>>>>> dev
     <div> 
       <h3 style="margin-top:40px", style="margin-left:40px">Ingredients</h3>
       <p class="text-secondary">{{MyIngredient}}</p>
@@ -438,7 +363,7 @@
       <br>
 
       <div align="center">
-        <button type="button" class="btn btn-primary" onClick="createComment2({{ recipe_id }})">Post a new Comment!</button>
+        <button type="button" class="btn btn-primary" onClick="createComment2({{ recipe.id }})">Post a new Comment!</button>
       </div>
     </div>
     

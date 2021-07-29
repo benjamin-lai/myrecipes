@@ -25,7 +25,7 @@ def cook_book():
     #user can only view the recipe of their own
     cookbook_all = Cookbooks.query.filter_by(contains = current_user.id).all()
     print(f"all    {cookbook_all}")
-    return render_template("cookbook.html",user = current_user, books = cookbook_all)
+    return render_template("cookbook.html", user = current_user, books = cookbook_all)
 
 #cookbook
 @cookbook.route('/cookbook.<book_name>.<int:book_id>', methods=['GET','POST'])  

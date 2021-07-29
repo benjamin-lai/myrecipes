@@ -10,14 +10,9 @@ import os
 import ctypes 
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
-<<<<<<< HEAD
-from .models import StarredRecipes, Users, Recipes, Ingredient, Contents, Recipestep, Profiles, Method, History, Likes, Comments, Cookbooks, Cookbooks_lists
-from .review import create_comment, retrieve_comments, get_rating
-=======
 from .models import StarredRecipes, Recipes, Ingredient, Contents, Recipestep, Profiles, Method, History, Likes, Comments, Cookbooks, Cookbooks_lists
 from .review import retrieve_comments, get_rating, check_likes_exists
 from .newsletter import send_new_recipe_emails
->>>>>>> dev
 from . import db
 from sqlalchemy import desc
 from sqlalchemy import func
@@ -786,11 +781,7 @@ def view_recipe(recipeName, recipeId):
     cookbook_my = Cookbooks.query.filter_by(contains = current_user.id).all()
     #add into cookbook
     book_add = request.form.get('cookbook')
-<<<<<<< HEAD
-    print(f"bookadd  {book_add}")
-=======
     
->>>>>>> dev
     if book_add is not None:
         new_recipe_inbook = Cookbooks_lists(cookbook_id = book_add, recipe_id = recipeId)
         db.session.add(new_recipe_inbook)
@@ -798,14 +789,11 @@ def view_recipe(recipeName, recipeId):
         flash('Added into CookBook!', category='success')
 
     
-<<<<<<< HEAD
-=======
     IngredientList.clear()
     Ingredients = Ingredient.query.filter_by(recipe_id=recipeId).all()
     for ingre in Ingredients:
         Dict = dict({'Dosage' : ingre.dosage, 'UnitName' : ingre.unit_name, 'Ingredient' : ingre.ingredient})
         IngredientList.append(Dict)
->>>>>>> dev
     Savelist["edit_ingredient"] = False
     recipe = Recipes.query.filter_by(id=recipeId).first()
     
@@ -927,12 +915,6 @@ def view_recipe(recipeName, recipeId):
     else:
         UserImage = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': get_user_image(recipeId)})
     
-<<<<<<< HEAD
-    return render_template("recipe.html", user=current_user, RecipeName=recipe.name, Descriptions=recipe.description,MyIngredient = Contents,
-        recipe_id = recipe.id,image1 = RecipeImage, query = obj, comments=comments, creates = recipe.creates, recipe=recipe, type="recent", 
-            meal_type = recipe.meal_type, methods=methods, star_status=star_status, like_status=like_status, res=res, UserImage = UserImage, UserName = recipe.creator, 
-            rating=rating, cookbook_my = cookbook_my)
-=======
     # Link the creator's name as url
     creator_name = recipe.creator.split(" ")
     profile = Profiles.query.filter_by(owns = recipe.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
@@ -941,7 +923,6 @@ def view_recipe(recipeName, recipeId):
         image1 = RecipeImage, query = obj, comments=comments, likes = like_status, recipe=recipe, type="recent", 
             methods=methods, star_status=star_status, res=res, UserImage = UserImage, 
             rating=rating, cookbook_my = cookbook_my, profile = profile)
->>>>>>> dev
         
          
 

@@ -5,10 +5,6 @@ from flask_login import login_required, current_user
 from flask_cors import CORS
 from . import db
 from .models import Users, Profiles, Cookbooks, Cookbooks_lists
-<<<<<<< HEAD
-from .validate_email import validate_email
-=======
->>>>>>> dev
 import boto3
 from werkzeug.utils import secure_filename
 from .models import Users, Recipes, Ingredient, Contents, Recipestep, Profiles,Method,Meal_Type
@@ -50,13 +46,8 @@ def search_result():
                 #if not searching, display every recipes in db
                 query = Recipes.query.all()
                 searchInput = ""
-<<<<<<< HEAD
-            else:
-                searchInput = search_input  #put into global variable
-=======
             else:   #valid content
                 searchInput = search_input #put into global variable
->>>>>>> dev
                 reset_all()
                 print("reset")
                 
@@ -90,14 +81,10 @@ def search_result():
             print("filter cleared")
             #go back to same search page without any filters
             #find the query based on search_input
-<<<<<<< HEAD
-            query = find_query_by_name(searchInput)
-=======
             if len(searchInput) < 1:
                 query = Recipes.query.all()
             else:
                 query = find_query_by_name(searchInput)
->>>>>>> dev
             
             return render_template("search.html",user = current_user,
                 search_input = searchInput,query = query,search_value = searchInput,queryLen = len(query))

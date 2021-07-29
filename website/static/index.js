@@ -13,25 +13,6 @@ function signOut() {
   });
 }
 
-function create_book() {
-  var txt;
-  var name = prompt("CookBook Name：", "NewBook");
-  if (name == null || name == "") {
-      txt = "cancel";
-  } else {
-      txt = "Hello，" + name + "！How r u？";
-      fetch("/cookbook", {
-        method: "POST",
-        body: JSON.stringify({
-          name: txt,
-        }),
-      }).then((_res) => {
-        window.location.reload(true);
-      });
-  }
-}
-
-
 function createComment2(recipe_id) {
   var new_comment = document.getElementById("comment_textarea").value;
   if (new_comment != null) {
@@ -138,7 +119,6 @@ function subscribeToNewsletters() {
   });
 }
 
-<<<<<<< HEAD
 // Update Like count and the colour of the like icon in the recipe page
 function updateLike(num_of_likes, num_of_dislikes, like_status) {
   console.log(document.getElementById("arrow-up").style.color)
@@ -227,7 +207,6 @@ function updateDislike(num_of_likes, num_of_dislikes, like_status) {
     document.getElementById("arrow-down").style.color = "";
   }
 }
-=======
 function deleteIngredient(ingredient_id) {
   if (confirm("Are you sure you want to delete this ingredient?"))
     fetch("/delete ingredient", {
@@ -306,4 +285,3 @@ function trending_filter() {
 
 }
 
->>>>>>> dev
