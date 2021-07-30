@@ -403,16 +403,16 @@
   <!--share and download-->
   <hr>
   <div class = "wrap">
-    <a class= "facebook" href= "https://www.facebook.com/sharer.php?text=Amazing recipes I found in MyRecipe [{{recipe.name}}]&u=http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe_id}}" target= "_blank" id= "J-share-facebook" >
+    <a class= "facebook" href= "https://www.facebook.com/sharer.php?text=Amazing recipes I found in MyRecipe [{{recipe.name}}]&u=http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe.id}}" target= "_blank" id= "J-share-facebook" >
       <img border="0"  src="{{ url_for('static',filename = 'images/facebook1.png')}}" alt="facebook" height="150" width="150">
     </a>
-    <a href="https://twitter.com/share?text=Amazing recipes I found in MyRecipe [{{recipe.name}}]    &url=http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe_id}}" target="_blank">
+    <a href="https://twitter.com/share?text=Amazing recipes I found in MyRecipe [{{recipe.name}}]    &url=http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe.id}}" target="_blank">
       <img border="0"  src="{{ url_for('static',filename = 'images/twitter.png')}}" alt="twitter" height="150" width="150">
     </a>
-    <a href="http://service.weibo.com/share/share.php?appkey=&title=Amazing recipes I found in MyRecipe [{{recipe.name}}]&url=http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe_id}}" target="_blank">
+    <a href="http://service.weibo.com/share/share.php?appkey=&title=Amazing recipes I found in MyRecipe [{{recipe.name}}]&url=http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe.id}}" target="_blank">
       <img border="0"  src="{{ url_for('static',filename = 'images/weibo2.png')}}" alt="facebook" height="140" width="140">
     </a>
-    <a href="http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe_id}}" download = "MeRecipe_{{recipe.name}}">
+    <a href="http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe.id}}" download = "MeRecipe_{{recipe.name}}">
       <img src="{{ url_for('static',filename = 'images/download2.png')}}" width="140" height="150" alt="" />
     </a>
   </div>
