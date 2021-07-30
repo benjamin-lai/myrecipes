@@ -81,7 +81,7 @@ def sign_up_fn(email, first_name, last_name, password1, password2):
 
         
         # static default image hardcoded
-        image_file = url_for('static', filename='default_user.jpg')   
+        image_file = 'default_user.jpg'   
         bio="Not much is known about this user... Encourage them to setup their user bio!"   
 
         # Create default profile for new user
@@ -282,7 +282,7 @@ def sign_up_google(email, first_name, last_name, password):
 
         bio="Not much is known about this user... Encourage them to setup their user bio!"
         # static default image hardcoded
-        image_file = url_for('static', filename='default_user.jpg')      
+        image_file = 'default_user.jpg'      
 
         # Create default profile for new user
         new_profile = Profiles(first_name=first_name, last_name=last_name, display_name=first_name + ' ' + 

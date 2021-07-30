@@ -6,28 +6,6 @@
 
 
 <head>  
-  <!-- Import Bootstrap. Links to CDN which gives access to all the bootstrap designs -->
-    <link
-    rel="stylesheet"
-    href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-    crossorigin="anonymous"
-    />
-    <link
-    rel="stylesheet"
-    href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    crossorigin="anonymous"
-    />
-
-    <!-- When hovering over dropdown menu display content (I dont know how to connect css file) -->
-    <style type="text/css">
-        .dropdown:hover .dropdown-menu {
-          display: block;
-        }
-        body{
-          height: 100%;
-        }
-    </style>
 </head>
 <body>
   <!-- Our navbar, caters for desktop and mobile -->
@@ -52,11 +30,6 @@
         <form class="navbar-nav" method="POST">
           <a class="navbar-brand" href="#">  Activated Filters:{{contents}}</a>
         </form>
-
-
-
-
-
 
         <!-- Second navbar to move content to the right-->
         <div class="navbar-nav ml-auto">
@@ -304,28 +277,7 @@
             </form>
   <div class="container"></div>
   
-  <!-- Bootstrap. All the javascript required for the css components to work -->
-  <script
-    src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"
-  ></script>
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"
-  ></script>
-  <script
-    src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"
-  ></script>
-
-  <!-- Script that loads static, js or maybe css into our html file -->
-  <script
-    type="text/javascript"
-    src="{{ url_for('static', filename='index.js') }}"
-  ></script>
+ 
 
 </html>
 

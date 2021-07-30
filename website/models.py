@@ -48,14 +48,14 @@ class Recipes(db.Model):
     def __init__(self,name,description,serving,creates, creator, meal_type):
         self.name = name
         self.description = description
-        self.photo = None
+        self.photo = "recipe_default.jpg"
         self.serving = serving
         self.creates = creates
         self.creator = creator
         self.num_of_likes = 0
         self.num_of_dislikes = 0
         self.meal_type = meal_type
-        self.creation_time = datetime.time(datetime.now())
+        self.creation_time = datetime.time(datetime.now()).strftime("%H:%M:%S")
         self.creation_date = datetime.date(datetime.now())
 
 #Ingredient temp dictionary

@@ -270,11 +270,13 @@ def upload_image():
             # if user does not select file, browser also
             # submit an empty part without filename
             if file1 != None:
-                file_data = file1
                 
                 if file1.filename == '':
                     flash('Continue to create recipe')
+                    recipe_data = Recipes.query.filter_by(id=Savelist["RecipeId"]).first()
+                    recipe_data.photo = "recipe_default.jpg"
                     return redirect(request.url)
+                    
                 if file1 and allowed_file(file1.filename):
                     filename = secure_filename(file1.filename)
                     recipe_data = Recipes.query.filter_by(id=Savelist["RecipeId"]).first()
@@ -287,17 +289,14 @@ def upload_image():
                         Key = filename
                     )
                     os.remove(filename)
-                    image_datas1_read = file_data.read()
-                    image1 = base64.b64encode(image_datas1_read).decode('ascii')
                     db.session.commit()
-
-                    image_datas1 = image1
                     Savelist["image_name1"] = filename
                         
                     if recipe_data.photo != None:
                         flash(f"Recipe photo upload Successfully!")
                     Savelist["color_2"] = "red"
                     return redirect(url_for('recipes.Add_ingredient'))
+                
     else:
         
         flash(f"Please create the recipe first!", 'error')
