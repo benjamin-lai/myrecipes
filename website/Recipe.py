@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import  current_user, login_required
 from flask_cors import CORS
 from website import create_app
-
+from fractions import Fraction
 from flask import Flask
 
 import os
@@ -1116,7 +1116,7 @@ def take_ingredientList_into_str(IngredientLists):
         Dosage = item.get('Dosage')
         UnitName = item.get('UnitName')
         MyIngredient = item.get('Ingredient')
-        Contents += (f"{counter}) --> {Dosage} {UnitName} {MyIngredient}.     "
+        Contents += (f"{counter}) {Fraction(Dosage)} {UnitName} {MyIngredient}.     "
                     f"\n")
         counter += 1
     return Contents
@@ -1137,8 +1137,7 @@ def generate_ingreStr_by_recipeId(recipeId):
         Dosage = item.dosage
         UnitName = item.unit_name
         MyIngredient = item.ingredient
-        Contents += (f"{counter}. --> {Dosage} {UnitName} {MyIngredient}.     "
-                    f" ")
+        Contents += (f"{Fraction(Dosage)} {UnitName} {MyIngredient}.\n")
         counter += 1
     return Contents
 

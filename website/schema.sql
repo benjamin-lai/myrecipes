@@ -49,7 +49,7 @@ create table Ingredient (
     id              serial      primary key,
     recipe_id integer references Recipes(id),
     ingredient      text,
-    dosage          int,
+    dosage          float,
     unit_name       text      
 );
 
