@@ -6,11 +6,6 @@ as
         join profiles p on (r.creates = p.profile_id)
 ;
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 58008861490fdb6e2834f6339b486e5e6ea01b0d
 
 
 
@@ -24,10 +19,6 @@ From
 
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 58008861490fdb6e2834f6339b486e5e6ea01b0d
 
 
 create view profile_subbed as
