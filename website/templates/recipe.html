@@ -276,24 +276,24 @@
     <!-- Like and disclick buttons with their associated counter -->
     <div class="row">
       <div class="col-md-1.5">
-        {% if like_status == 1 %}
+        {% if likes == 1 %}
         <i id="arrow-up" class="fa fa-arrow-circle-up fa-3x" style="color: darkorange" aria-hidden="true" onClick="addLike({{ recipe.id }}); 
-        updateLike({{ recipe.num_of_likes }}, {{recipe.num_of_dislikes}}, {{like_status}});"></i>
+        updateLike({{ recipe.num_of_likes }}, {{recipe.num_of_dislikes}}, {{likes}});"></i>
         <span id="like" style="font-size:30px; color:darkorange;">{{ recipe.num_of_likes }}</span>
         {% else %}
         <i id="arrow-up" class="fa fa-arrow-circle-up fa-3x" aria-hidden="true" onClick="addLike({{ recipe.id }}); 
-        updateLike({{ recipe.num_of_likes }}, {{recipe.num_of_dislikes}}, {{like_status}});"></i>
+        updateLike({{ recipe.num_of_likes }}, {{recipe.num_of_dislikes}}, {{likes}});"></i>
         <span id="like" style="font-size:30px; color:darkgray;">{{ recipe.num_of_likes }}</span>
         {% endif %}
       </div>
       <div class="col-md-2">
-        {% if like_status == -1 %}
+        {% if likes == -1 %}
         <i id="arrow-down" class="fa fa-arrow-circle-down fa-3x" style="color: darkorange" aria-hidden="true" o nClick="addDislike({{ recipe.id }}); 
-        updateDislike({{ recipe.num_of_likes }}, {{recipe.num_of_dislikes}}, {{like_status}});"></i>
+        updateDislike({{ recipe.num_of_likes }}, {{recipe.num_of_dislikes}}, {{likes}});"></i>
         <span id="dislike" style="font-size:30px; color:darkorange;">{{ recipe.num_of_dislikes }}</span>
         {% else %}
         <i id="arrow-down" class="fa fa-arrow-circle-down fa-3x" aria-hidden="true" onClick="addDislike({{ recipe.id }}); 
-        updateDislike({{ recipe.num_of_likes }}, {{recipe.num_of_dislikes}}, {{like_status}});"></i>
+        updateDislike({{ recipe.num_of_likes }}, {{recipe.num_of_dislikes}}, {{likes}});"></i>
         <span id="dislike" style="font-size:30px; color:darkgray;">{{ recipe.num_of_dislikes }}</span>
         {% endif %}
       </div>
