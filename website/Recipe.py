@@ -1012,6 +1012,10 @@ def delete_recipe():
 @recipes.route('/recipe/random')
 def random_recipe():
     rand_num = random.randrange(0, db.session.query(Recipes).count())
+    recipe_exists = db.session.query(Recipes).count()
+    if recipe_exists == 0:
+        flash("Sorry there are no recipes in the database yet, please come back later!", category='error')
+        return redirect(url_for('views.home'))
     rand_recipe = db.session.query(Recipes)[rand_num]
     name = rand_recipe.name
     id = rand_recipe.id

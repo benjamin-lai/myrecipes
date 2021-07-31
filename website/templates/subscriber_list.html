@@ -13,7 +13,7 @@
               <tr>
                 <th>{% if type == "subscribers" %}Subscribers{% else %}Subscriptions{% endif %} ({{sub_count}})</th>
                 <th class="text-center">Information</th>
-                <th class="action text-right">Action</th>
+                <th class="action text-right"></th>
               </tr>
             </thead>
             <tbody>
@@ -63,6 +63,7 @@
 
                   </span>
                 </td>
+                <!--
                 <td>
                   <ul class="list-unstyled mb-0 d-flex justify-content-end">
                     <li><a href="#" class="text-primary" data-toggle="tooltip" title="" data-original-title="view"><i class="far fa-eye"></i></a></li>
@@ -70,12 +71,14 @@
                     <li><a href="#" class="text-secondary" data-toggle="tooltip" title="" data-original-title="Delete"><i class="far fa-trash-alt"></i></a></li>
                   </ul>
                 </td>
+                -->
               </tr>
             {% endfor %}
               <!-- Pages on the bottom (optional)-->
             </tbody>
           </table>
           <div class="text-center mt-3 mt-sm-3">
+          <!--
             <ul class="pagination justify-content-center mb-0">
               <li class="page-item disabled"> <span class="page-link">Prev</span> </li>
               <li class="page-item active" aria-current="page"><span class="page-link">1 </span> <span class="sr-only">(current)</span></li>
@@ -84,7 +87,7 @@
               <li class="page-item"><a class="page-link" href="#">...</a></li>
               <li class="page-item"><a class="page-link" href="#">25</a></li>
               <li class="page-item"> <a class="page-link" href="#">Next</a> </li>
-            </ul>
+            </ul> -->
           </div>
         </div>
       </div>
