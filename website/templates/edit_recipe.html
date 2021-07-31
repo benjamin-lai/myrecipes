@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 {% extends "base.html" %} {% block title %}Create Recipe{% endblock %}
 <!-- Overwrites title-->
 {% block content %}
@@ -156,7 +158,7 @@
         <h6 align="left">Choose your servings</h6>
         <div class="form-group">
           <label for="Servings">Servings</label>
-          <INPUT id="Servings" name="Servings" TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE={{recipe.serving}} SIZE="0" >
+          <INPUT id="Servings" name="Servings" TYPE="NUMBER" MIN="0" MAX="1000" STEP="1" VALUE={{recipe.serving}} SIZE="0" >
         </div id="parentDiv" class="form-inline">
         <button name="create" type="add" class="btn btn-primary">Edit</button>
     </form>
@@ -164,3 +166,4 @@
   </section>
 </section>
 {% endblock %}
+>>>>>>> 4b16ed19f2e7beda066533ba8bc66d116a4f7544

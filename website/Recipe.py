@@ -74,10 +74,24 @@ class ingre:
         self.ingredient = ingredient
         self.order = order
 
+class Card:
+    def __init__(self, recipe, url):
+        self.recipe = recipe
+        self.url = url
 
 @recipes.route('/Recipe cards', methods = ['GET','POST'])
 def recipe_cards():
-    query = Recipes.query.order_by(Recipes.id.desc()).all()
+    recipes = Recipes.query.order_by(Recipes.id.desc()).all()
+    query = []
+    for recipe in recipes:
+        creator_name = recipe.creator.split(" ")
+        if len(creator_name) > 1:
+            profile = Profiles.query.filter_by(owns = recipe.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+        else: 
+             profile = Profiles.query.filter_by(owns = recipe.creates, first_name = creator_name[0]).first()
+        card = Card(recipe, profile.custom_url)
+        query.append(card)
+    
     return render_template("Recipe_card.html", query=query, type="recent")
 
 #for testing now

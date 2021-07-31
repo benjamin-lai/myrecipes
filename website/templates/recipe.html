@@ -1,4 +1,3 @@
-
 {% extends "base.html" %} 
 <!-- Overwrites title-->
 {% block title %}Recipe{% endblock %}
@@ -28,7 +27,7 @@
     margin-bottom: 25px;
     }
 
-    .text{
+    .the_text{
       height: 20px;
       width:300px;
       overflow: hidden;
@@ -39,7 +38,7 @@
       display: block;float: left;margin-right: 190px;
     }
 
-    .text div{
+    .the_text div{
       display: block;float: left;margin-right: 30px;
     }
 
@@ -353,7 +352,7 @@
             <div class="tab-pane fade specifications" role="tabpanel" id="specifications">
                 <br>
                 <div class="shadow-sm p-3 mb-5 bg-white rounded right">
-                <div class = "text">
+                <div class = "the_text">
                   <div><p style="color:blue;">Meal Type : {{recipe.meal_type}}</p></div>
                   <div><h8>id : {{recipe.id}}</h8></div>
                 </div>
@@ -361,7 +360,7 @@
                     <h6>
                     Cooking methods:
                     </h6>
-                    <div class = "text">
+                    <div class = "the_text">
                       {% for method in methods %}
                       <div>
                         <p class="card-text"style="color:DarkOrange;">{{method.method}}</p>
