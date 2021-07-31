@@ -974,17 +974,6 @@ def delete_recipe():
         db.session.delete(comment)
 
 
-    # Delete associated likes
-    likes = Likes.query.filter_by(own=current_user.id).all()
-    for like in likes:
-        db.session.delete(like)
-
-
-    # Delete associated comments
-    comments = Comments.query.filter_by(owns=current_user.id).all()
-    for comment in comments:
-        db.session.delete(comment)
-
     #delete ingredient
     ingre = Ingredient.query.filter_by(recipe_id=recipe_id).all()
     if ingre != None:
@@ -998,6 +987,22 @@ def delete_recipe():
         for s in steps:
             if s.recipe_id == recipe_id:
                 db.session.delete(s)
+    
+    
+    #delete cookbook
+    cookbook = Cookbooks_lists.query.filter_by(recipe_id=recipe_id).all()
+    if cookbook != None:
+        for s in cookbook:
+            if s.recipe_id == recipe_id:
+                db.session.delete(s)
+
+    #delete StarredRecipes
+    Starred_Recipes = StarredRecipes.query.filter_by(recipe_id=recipe_id).all()
+    if Starred_Recipes != None:
+        for s in Starred_Recipes:
+            if s.recipe_id == recipe_id:
+                db.session.delete(s)
+            
 
     #delete history
     historys = History.query.filter_by(recipe=recipe_id).all()
