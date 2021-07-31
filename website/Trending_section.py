@@ -6,7 +6,7 @@ from website import create_app
 
 from flask import Flask
 
-from tkinter import messagebox
+from .models import Profiles
  
 #from gi.repository import Gtk
 from werkzeug.utils import secure_filename
@@ -40,6 +40,11 @@ CORS(trending_section)
 Savelist = {}
 Savelist["Day_or_week"] = "Week"
 Savelist["type"] = "all"
+
+class Card:
+    def __init__(self, recipe, url):
+        self.recipe = recipe
+        self.url = url
 
 # Filter trending by day or week
 @trending_section.route('/Trending filter', methods = ['GET','POST'])
@@ -77,10 +82,16 @@ def trending_sections():
         if i.num_of_likes > i.num_of_dislikes:
             if Savelist["Day_or_week"] == 'Day':
                 if (i.creation_date - current_date).days <= 1:
-                    trending.append(i)
+                    creator_name = i.creator.split(" ")
+                    profile = Profiles.query.filter_by(owns = i.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+                    card = Card(i, profile.custom_url)
+                    trending.append(card)
             else:
                 if (i.creation_date - current_date).days <= 7:
-                    trending.append(i)
+                    creator_name = i.creator.split(" ")
+                    profile = Profiles.query.filter_by(owns = i.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+                    card = Card(i, profile.custom_url)
+                    trending.append(card)
 
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "All types", Day_or_week = Savelist["Day_or_week"])
 
@@ -98,10 +109,16 @@ def trending_section_Starter():
         if i.num_of_likes > i.num_of_dislikes:
             if Savelist["Day_or_week"] == 'Day':
                 if (i.creation_date - current_date).days <= 1:
-                    trending.append(i)
+                    creator_name = i.creator.split(" ")
+                    profile = Profiles.query.filter_by(owns = i.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+                    card = Card(i, profile.custom_url)
+                    trending.append(card)
             else:
                 if (i.creation_date - current_date).days <= 7:
-                    trending.append(i)
+                    creator_name = i.creator.split(" ")
+                    profile = Profiles.query.filter_by(owns = i.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+                    card = Card(i, profile.custom_url)
+                    trending.append(card)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Starter", Day_or_week = Savelist["Day_or_week"])
     
 @trending_section.route('/Trending Section.Main', methods = ['GET','POST'])
@@ -118,10 +135,16 @@ def trending_section_Main():
         if i.num_of_likes > i.num_of_dislikes:
             if Savelist["Day_or_week"] == 'Day':
                 if (i.creation_date - current_date).days <= 1:
-                    trending.append(i)
+                    creator_name = i.creator.split(" ")
+                    profile = Profiles.query.filter_by(owns = i.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+                    card = Card(i, profile.custom_url)
+                    trending.append(card)
             else:
                 if (i.creation_date - current_date).days <= 7:
-                    trending.append(i)
+                    creator_name = i.creator.split(" ")
+                    profile = Profiles.query.filter_by(owns = i.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+                    card = Card(i, profile.custom_url)
+                    trending.append(card)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Main", Day_or_week = Savelist["Day_or_week"])
 
 @trending_section.route('/Trending Section.Dessert', methods = ['GET','POST'])
@@ -138,10 +161,16 @@ def trending_section_Dessert():
         if i.num_of_likes > i.num_of_dislikes:
             if Savelist["Day_or_week"] == 'Day':
                 if (i.creation_date - current_date).days <= 1:
-                    trending.append(i)
+                    creator_name = i.creator.split(" ")
+                    profile = Profiles.query.filter_by(owns = i.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+                    card = Card(i, profile.custom_url)
+                    trending.append(card)
             else:
                 if (i.creation_date - current_date).days <= 7:
-                    trending.append(i)
+                    creator_name = i.creator.split(" ")
+                    profile = Profiles.query.filter_by(owns = i.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+                    card = Card(i, profile.custom_url)
+                    trending.append(card)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Dessert", Day_or_week = Savelist["Day_or_week"])
 
 @trending_section.route('/Trending Section.Snack', methods = ['GET','POST'])
@@ -158,10 +187,16 @@ def trending_section_Snack():
         if i.num_of_likes > i.num_of_dislikes:
             if Savelist["Day_or_week"] == 'Day':
                 if (i.creation_date - current_date).days <= 1:
-                    trending.append(i)
+                    creator_name = i.creator.split(" ")
+                    profile = Profiles.query.filter_by(owns = i.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+                    card = Card(i, profile.custom_url)
+                    trending.append(card)
             else:
                 if (i.creation_date - current_date).days <= 7:
-                    trending.append(i)
+                    creator_name = i.creator.split(" ")
+                    profile = Profiles.query.filter_by(owns = i.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+                    card = Card(i, profile.custom_url)
+                    trending.append(card)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Snack", Day_or_week = Savelist["Day_or_week"])
 
 @trending_section.route('/Trending Section.Breakfast', methods = ['GET','POST'])
@@ -178,10 +213,16 @@ def trending_section_Breakfastk():
         if i.num_of_likes > i.num_of_dislikes:
             if Savelist["Day_or_week"] == 'Day':
                 if (i.creation_date - current_date).days <= 1:
-                    trending.append(i)
+                    creator_name = i.creator.split(" ")
+                    profile = Profiles.query.filter_by(owns = i.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+                    card = Card(i, profile.custom_url)
+                    trending.append(card)
             else:
                 if (i.creation_date - current_date).days <= 7:
-                    trending.append(i)
+                    creator_name = i.creator.split(" ")
+                    profile = Profiles.query.filter_by(owns = i.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+                    card = Card(i, profile.custom_url)
+                    trending.append(card)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Breakfastk", Day_or_week = Savelist["Day_or_week"])
 
 @trending_section.route('/Trending Section.Drink', methods = ['GET','POST'])
@@ -198,9 +239,15 @@ def trending_section_Drink():
         if i.num_of_likes > i.num_of_dislikes:
             if Savelist["Day_or_week"] == 'Day':
                 if (i.creation_date - current_date).days <= 1:
-                    trending.append(i)
+                    creator_name = i.creator.split(" ")
+                    profile = Profiles.query.filter_by(owns = i.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+                    card = Card(i, profile.custom_url)
+                    trending.append(card)
             else:
                 if (i.creation_date - current_date).days <= 7:
-                    trending.append(i)
+                    creator_name = i.creator.split(" ")
+                    profile = Profiles.query.filter_by(owns = i.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+                    card = Card(i, profile.custom_url)
+                    trending.append(card)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Drink", Day_or_week = Savelist["Day_or_week"])
 
