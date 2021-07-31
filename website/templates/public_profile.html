@@ -139,16 +139,10 @@
           readonly="">{{profile.bio}}</textarea>
       </div>
   </div>
-  <!-- FORM HERE -->
-</div>
-<br>
-</div>
-<!-- User Bio-->
-
 <div class="container-fluid">
   <div class='row card-group'>
     {% for recipes in query %}
-      <div class="col-lg-3 d-flex align-items-stretch">
+      <div class="col-lg-4 d-flex align-items-stretch">
         <div class="card" style="width: 18.75rem;">
           <div class="zoom">
             <a href="/recipe.{{recipes.name}}.{{recipes.id}}">
@@ -160,7 +154,7 @@
             <h5 class="card-title">{{recipes.name}} </h5>
             <p>Likes: {{recipes.num_of_likes}} Dislikes: {{recipes.num_of_dislikes}}</p>
             <!-- want to change thise so it displays profile based off profile_id-->
-            <a href="/recipe.{{recipes.name}}.{{recipes.id}}" class="btn btn-primary">Get the Recipe</a>
+
             
           </div>
           <div class="card-footer">
@@ -174,5 +168,11 @@
     </div>
 
 </div>
+  <!-- FORM HERE -->
+</div>
+<br>
+</div>
+<!-- User Bio-->
+
 {% endblock %}
 
