@@ -45,8 +45,12 @@ def delete_book():
         print(delete)
         book_id = delete['book_id']
         print(book_id)
-        cookbook = Cookbooks.query.filter_by(id = book_id).first()
+        
+        ckbkl = Cookbooks_lists.query.filter_by(cookbook_id = book_id).all()
+        for cl in ckbkl:
+            db.session.delete(cl)
 
+        cookbook = Cookbooks.query.filter_by(id = book_id).first()
         db.session.delete(cookbook)
         db.session.commit()
         flash('Deleted cookbook successfully!', category='success')
@@ -62,6 +66,8 @@ def edit_name():
         print(f"book   {cookbook}")
         if len(new_name) < 1:    
             flash('Name is too short!', category='error')
+        elif check_duplicate(new_name) is False:
+            flash('name is already exist!', category='error')
         else:
             cookbook = Cookbooks.query.filter_by(id = book_id).first()
             cookbook.name = new_name

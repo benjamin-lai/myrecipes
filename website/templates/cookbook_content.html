@@ -30,12 +30,13 @@
         }
     </style>
 </head>
+<body>
 <h2 align = "center">{{cookbook.name}}</h2>
 <hr>
 <h4>Description</h4>
 {% if cookbook.description != None %}
 <h7>{{cookbook.description}}<h7>
-{% endif %}<br>
+{% endif %}<br><br>
 <button class="btn btn-warning" type="submit" name="setDes" id = "setDes" onclick = "setDes({{cookbook.id}})">Edit/Create</button>
 <script>
     function setDes(cookbook_id) {
@@ -53,7 +54,6 @@
         }
     }
 </script>
-<hr>
 <br>
 {% if empty == True %}
 <h1 align = "center">

@@ -50,7 +50,7 @@
     position: static;
     top: 0px;
     float: right;
-    margin-top: 300px;
+    margin-top: 150px;
     padding-top: 10px;
     background-color: rgb(255, 255, 255);
     }
@@ -165,97 +165,11 @@
   <div class="jumbotron">
     
     <div class="container">
-      <h1 style="font-size:88px;">{{recipe.name}}</h1>
-      <!--starred start-->
-        <div class="container" style = "height:40px;">
-            <!-- Recipe Star Button-->
-            <div id="favourite" style="float:right">
-              <div id="heart"></div> 
-              <a><div id="heartwhite" onclick="star_state();" style="cursor: pointer;"></div></a>
-
-
-              {% if star_status == "starred" %}
-                <script type = text/javascript>
-                  document.getElementById("heartwhite").style.opacity = 0;
-                </script>
-              {% endif %}
-
-              <!-- toggle the star button from starred to unstarred-->
-              {% if current_user.is_authenticated %}
-              <script type = text/javascript>          
-                function star_state() {
-                  var toggle = document.getElementById("heartwhite");
-                  var status = "";
-                  // Set the opacity to 1 by default
-                  if (toggle.style.opacity == "")
-                    toggle.style.opacity = 1;
-                  
-                  // Alternate between being transparent and visible
-                  if (toggle.style.opacity == "1") {
-                    toggle.style.opacity = "0";
-                    status = "starred"
-                  }
-                  else if (toggle.style.opacity = "0") {
-                    toggle.style.opacity = "1";
-                    status = "unstarred"
-                  }
-
-                  
-                  // Post to backend                 
-                  $.ajax({
-                      type : "POST", // http method
-                      url : "{{url_for('recipes.star_recipe')}}", // the endpoint
-                      data : {status: JSON.stringify(status), 
-                          user: JSON.stringify({{current_user.id}}), 
-                          recipe: JSON.stringify({{recipe.id}})
-                      }, // data sent with the post request
-
-                      // handle a successful response
-                      success : function() {
-                          console.log("success"); // another sanity check
-                      },
-
-                      // handle a non-successful response
-                      error : function(xhr,errmsg,err) {
-                          console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-                      }
-                  });
-
-
-                }
-              </script>
-              {% else %}
-              <script type = text/javascript>
-                function star_state(){
-                  window.alert("Please sign in first so you can heart your favourite recipes!")
-                }
-              </script>
-              {% endif %}
-
-            </div>
-        
-          <br />
-        </div>
-      <!--starred end-->
-      
-      
-      <div class = "text">
-        <div><p style="color:blue;">Meal Type : {{recipe.meal_type}}</p></div>
-        <div><h8>id : {{recipe.id}}</h8></div>
-      </div>
-      Cooking methods:
-      </h6>
-      <div class = "text">
-        {% for method in methods %}
-        <div>
-          <p class="card-text"style="color:DarkOrange;">{{method.method}}</p>
-        </div>
-        {% endfor %}
-      </div>
+      <h1 style="font-size:88px;">{{recipe.name}}</h1>  
     </div>
   </div>
   
-  
+  <br>
   <!--user image, description, rating, likes, Ingredients-->
   <div class="container">
     <div class = "row">
@@ -306,7 +220,84 @@
       </div>
     </div>
     <br>
-        
+    
+
+    <!--starred start-->
+      <div class="container" style = "height:40px;">
+          <!-- Recipe Star Button-->
+          <div id="favourite" style="float:left">
+            <div id="heart"></div> 
+            <a><div id="heartwhite" onclick="star_state();" style="cursor: pointer;"></div></a>
+
+
+            {% if star_status == "starred" %}
+              <script type = text/javascript>
+                document.getElementById("heartwhite").style.opacity = 0;
+              </script>
+            {% endif %}
+
+            <!-- toggle the star button from starred to unstarred-->
+            {% if current_user.is_authenticated %}
+            <script type = text/javascript>          
+              function star_state() {
+                var toggle = document.getElementById("heartwhite");
+                var status = "";
+                // Set the opacity to 1 by default
+                if (toggle.style.opacity == "")
+                  toggle.style.opacity = 1;
+                
+                // Alternate between being transparent and visible
+                if (toggle.style.opacity == "1") {
+                  toggle.style.opacity = "0";
+                  status = "starred"
+                }
+                else if (toggle.style.opacity = "0") {
+                  toggle.style.opacity = "1";
+                  status = "unstarred"
+                }
+
+                
+                // Post to backend                 
+                $.ajax({
+                    type : "POST", // http method
+                    url : "{{url_for('recipes.star_recipe')}}", // the endpoint
+                    data : {status: JSON.stringify(status), 
+                        user: JSON.stringify({{current_user.id}}), 
+                        recipe: JSON.stringify({{recipe.id}})
+                    }, // data sent with the post request
+
+                    // handle a successful response
+                    success : function() {
+                        console.log("success"); // another sanity check
+                    },
+
+                    // handle a non-successful response
+                    error : function(xhr,errmsg,err) {
+                        console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                    }
+                });
+
+
+              }
+            </script>
+            {% else %}
+            <script type = text/javascript>
+              function star_state(){
+                window.alert("Please sign in first so you can heart your favourite recipes!")
+              }
+            </script>
+            {% endif %}
+
+          </div>
+      
+        <br />
+      </div>
+    <!--starred end-->
+  <br><br><br><br><br><br><br>
+
+
+
+    {% if current_user.is_authenticated %}
     <!--save into cookbooks-->
     <!--drop down menu for cookbook-->
     <div class="dropdown">
@@ -325,80 +316,139 @@
       </div>
       </div>
     </div>
-
-        
-
-    <div> 
-      <h3 style="margin-top:40px", style="margin-left:40px">Ingredients</h3>
-      <p class="text-secondary">{{MyIngredient}}</p>
-    </div>
+    {% endif %}
+    <br>
 
 
-      {% for des_step in query %}
-        <td>
-          <h3 class="card-text">Step {{des_step.step_no}}</h3>
-        </td><br>
-        <div class = "atmiddle">
-          <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{des_step.photo}}" class="w3-card-4" width = "600" height = "450">
-        </div><br>
-        <div class = "right">
-          {{des_step.step_comment}}
+
+
+
+
+
+
+
+
+
+<div class="product-info">
+    <div>
+        <ul class="nav nav-tabs" role="tablist" id="myTab">
+            <li class="nav-item" role="presentation"><a class="nav-link active" role="tab" data-bs-toggle="tab" id="description-tab" href="#description">Steps</a></li>
+            <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" id="specifications-tabs" href="#specifications">Details</a></li>
+            <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" id="reviews-tab" href="#reviews">Reviews</a></li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active description" role="tabpanel" id="description">
+                {% for des_step in query %}
+                  <td>
+                    <h3 class="card-text">Step.{{des_step.step_no}}</h3>
+                  </td><br>
+                  <div class = "atmiddle">
+                    <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{des_step.photo}}" class="w3-card-4" width = "600" height = "450">
+                  </div><br>
+                  <div class = "right">
+                    {{des_step.step_comment}}
+                  </div>
+                {% endfor %}
+            </div>
+            <div class="tab-pane fade specifications" role="tabpanel" id="specifications">
+                <br>
+                <div class="shadow-sm p-3 mb-5 bg-white rounded right">
+                <div class = "text">
+                  <div><p style="color:blue;">Meal Type : {{recipe.meal_type}}</p></div>
+                  <div><h8>id : {{recipe.id}}</h8></div>
+                </div>
+                  
+                    <h6>
+                    Cooking methods:
+                    </h6>
+                    <div class = "text">
+                      {% for method in methods %}
+                      <div>
+                        <p class="card-text"style="color:DarkOrange;">{{method.method}}</p>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <!--ingredient-->
+                  <div class="shadow-sm p-3 mb-5 bg-white rounded right"> 
+                    <h3 style="margin-top:40px", style="margin-left:40px">Ingredients</h3>
+                    <p class="text-secondary">{{MyIngredient}}</p>
+                  </div>
+              </div>
+            <div class="tab-pane fade" role="tabpanel" id="reviews">
+                
+                <!-- Comment section gives logged-in users the ability to comment, modify and delete comments. -->
+                <div class="container right">
+                    <h2>Comments</h2>
+                    <div class="form-group">
+                      <textarea class="form-control" id="comment_textarea" rows="3" placeholder="Enter a new comment!"></textarea>
+
+                      <br>
+
+                      <div align="center">
+                        <button type="button" class="btn btn-primary" onClick="createComment2({{ recipe.id }})">Post a new Comment!</button>
+                      </div>
+                    </div>
+                    
+                    <!-- Displays the list of comments for the recipe-->
+                    <div class="text_wrapper">
+
+                    <ul class="list-group list-group-flush" id="reviews">
+                      <!-- Iterate through comments for the recipe and display associated profile and comment. -->
+                      {% for review_info, review in comments %}
+                      
+                      <div class="d-flex flex-row align-items-center">
+                        <img class="rounded-circle shadow-1-strong me-3" src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{ review_info.profile_pic }}" alt="avatar" width="40" height="40"/>
+                        <a href="#">{{ review_info.display_name }}</a>
+                      </div>
+
+                        <li class="list-group-item">
+                        {{ review.comment }}
+                        <!-- Displays the abiltiy to delete comments if either they are the recipe owner or person who made the comment -->
+                        {% if recipe.creates == current_user.id or current_user.id == review.owns %}
+                          <button type="button" class="close" onClick="deleteComment({{ review.comment_id }})">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+
+                          <!-- Only the person who made the comment can modify it -->
+                          {% if current_user.id == review.owns %}
+                            <button type="button" class="btn btn-default float-right" onClick="modifyComment({{ review.comment_id }})">
+                              Modify
+                            </button>
+                          {% endif %}
+                          
+                        {% endif %}
+                      </li>
+                      {% endfor %}
+                    </ul>
+                </div>
+            </div>
         </div>
-      {% endfor %}
     </div>
-  
-  </div>     
+</div>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
 <br><br>
 
 
-<!-- Comment section gives logged-in users the ability to comment, modify and delete comments. -->
-<div class="container">
-    <hr>
-    <h2>Comments</h2>
-    <div class="form-group">
-      <textarea class="form-control" id="comment_textarea" rows="3" placeholder="Enter a new comment!"></textarea>
 
-      <br>
-
-      <div align="center">
-        <button type="button" class="btn btn-primary" onClick="createComment2({{ recipe.id }})">Post a new Comment!</button>
-      </div>
-    </div>
-    
-    <!-- Displays the list of comments for the recipe-->
-    <div class="text_wrapper">
-
-    <ul class="list-group list-group-flush" id="reviews">
-      <!-- Iterate through comments for the recipe and display associated profile and comment. -->
-      {% for review_info, review in comments %}
-      
-      <div class="d-flex flex-row align-items-center">
-        <img class="rounded-circle shadow-1-strong me-3" src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{ review_info.profile_pic }}" alt="avatar" width="40" height="40"/>
-        <a href="#">{{ review_info.display_name }}</a>
-      </div>
-
-        <li class="list-group-item">
-        {{ review.comment }}
-        <!-- Displays the abiltiy to delete comments if either they are the recipe owner or person who made the comment -->
-        {% if recipe.creates == current_user.id or current_user.id == review.owns %}
-          <button type="button" class="close" onClick="deleteComment({{ review.comment_id }})">
-            <span aria-hidden="true">&times;</span>
-          </button>
-
-          <!-- Only the person who made the comment can modify it -->
-          {% if current_user.id == review.owns %}
-            <button type="button" class="btn btn-default float-right" onClick="modifyComment({{ review.comment_id }})">
-              Modify
-            </button>
-          {% endif %}
-          
-        {% endif %}
-      </li>
-      {% endfor %}
-    </ul>
-    </div>
 
   <!--share and download-->
   <hr>
@@ -419,5 +469,8 @@
 </div>
 
 </body>
-
+<script src="static/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+    <script src="static/assets/js/vanilla-zoom.js"></script>
+    <script src="static/assets/js/theme.js"></script>
 {% endblock %}

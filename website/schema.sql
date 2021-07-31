@@ -100,9 +100,10 @@ create table CookBooks (
 );
 
 create table CookBooks_Lists (
+    id              serial      not null    unique,
     cookbook_id     serial      references CookBooks(id),
     recipe_id       integer      not null,
-    primary key (cookbook_id),   -- duplicate recipes cant be put into the same cookbook for a given user
+    primary key (id),   -- duplicate recipes cant be put into the same cookbook for a given user
     foreign key (recipe_id) references Recipes(id)      -- added this line, but not sure if necessary, will just check if the id exists in recipes 
 );
 

@@ -1,81 +1,122 @@
-{% extends "base.html" %} {% block title %}MyRecipes{% endblock %}
-<!-- Overwrites title-->
+<!DOCTYPE html>
+<html>
 
-{% block content %}
-{% include 'base2.html' %}
 <head>
-  <style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>MyRecipe Home</title>
+    <link rel="stylesheet" href="static/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700">
+    <link rel="stylesheet" href="static/assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
+    <style>
     .img-fit img{
-    width:100%;
-    height: 100%;
-    object-fit:cover; 
+        height: 250px;
+        object-fit:cover; 
     }
-    .loginbox{
-    width:1047px;
+    .fit_carousel img{
+        height: 650px;
+        object-fit:cover; 
     }
     .loginbox .jumbotron{
     margin-left: 0px;
     padding-top: 20px;
     padding-bottom: 15px;
     }
-    .row h4{
-    margin-right: 400px;
-    }
-    body{
-    background-color:white;
-    }
-  </style>
-  
+    </style>
 </head>
+{% extends "base.html" %} {% block title %}MyRecipes{% endblock %}
+<!-- Overwrites title-->
 <!-- Header -->
 <div class="container">
   <div class="jumbotron page-header" style="margin-bottom: 0px">
-    <h1><b><font face = "Verdana" size="10" color = "DarkRed">my</font><font face = "Verdana" size="10" color = "DarkOrange">Recipes</font></b></h1>
+    <h1><b><font face = "Verdana" size="10" style="color:rgb(149,26,29)">my</font><font face = "Verdana" size="10" style="color:rgb(241,91,43)">Recipes</font></b></h1>
     <p class="my-4">Sharing Recipes</p>
   </div>
 </div>
 
+{% block content %}
+{% include 'base2.html' %}
 <body>
-  <main class="page projects-page" style = "margin-left:28px;">
-    <section class="portfolio-block projects-cards">
-      <div class="container">
-        <!--encourring  for signup-->
-        <br>
-        <div class = "loginbox">  
-          <div class="jumbotron" style="margin-bottom: 0px">
-              {% if current_user.is_authenticated %}   
-              <h2>Hello {{userName}}</h2>
-              {% else %}
-              <div class = "row"><h4>Want to join our MyRecipe family right now?</h4>
-                <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
-              </div>
-              {% endif %}
-          </div>
+    <!--carousel-->
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+
+    </ol>
+    <div class="carousel-inner">
+        <div class="carousel-item active fit_carousel">
+        <img class="d-block w-100" src="{{ url_for('static',filename = 'Images/myrecipe.png')}}" alt="First slide">
+        <div class="carousel-caption d-none d-md-block" style = "color:grey">
+            <h3>Warm welcome from MyRecipe</h3>
         </div>
-            
-            
-        <div class="row">
-          {% for res in res %}
-          <div class="col-md-6 col-lg-4">
-            <div>
-                <div class="zoom img-fit">
-                  <a href="/recipe.{{res.name}}.{{res.id}}"><img class="card-img-top scale-on-hover" src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{res.photo}}" 
-                  alt="Card Image" style = "margin-left: 25px;"></a></div>
-                  <div style = "margin:5px;">
-                    <h6><a href="/recipe.{{res.name}}.{{res.id}}">{{res.name}}</a></h6>
-                    <h7 class="card-text">{{res.description[0:100]}}</h7>
-                  </div>
+        </div>
+         
+        
+        {% for t in trend %}
+        <div class="carousel-item fit_carousel">
+        <a href="/recipe.{{t.name}}.{{t.id}}"><img class="d-block w-100"  src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{t.photo}}"></a>
+        <div class="carousel-caption d-none d-md-block">
+            <h3>{{t.name}}</h3>
+            <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{t.custom_url}}"> {{t.creator}}</a></u></small></p>
+        </div>
+        </div>
+        {% endfor %}
+        
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+    </div>
+
+    <br>
+    <div class="heading">
+        <!--encourring  for signup-->
+        <div class = "loginbox">  
+            <div class="jumbotron" style="margin-bottom: 0px">
+                {% if current_user.is_authenticated %}   
+                <h2>Hello {{userName}}</h2>
+                {% else %}
+                <h4>Want to join our MyRecipe family right now?</h4>
+                <h2><a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a><h2>
+                {% endif %}
+            </div>
+        </div>  
+    </div>
+
+
+    <main class="page projects-page">
+        <section class="portfolio-block projects-cards">
+            <div class="container">
+                <div class="row">
+                    {% for res in res %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card border-0"><div class = "img-fit"><a href="/recipe.{{res.name}}.{{res.id}}"><img class="card-img-top scale-on-hover" src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{res.photo}}" alt="Card Image"></a></div>
+                            <div class="card-body">
+                                <h6><a href="/recipe.{{res.name}}.{{res.id}}">{{res.name}}</a></h6>
+                                <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{res.custom_url}}"> {{res.creator}}</a></u></small></p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
                 </div>
             </div>
-            {% endfor %}
-                  
-          </div>
-        </div>
-      </div>  
-    </section>
-  </main>
+        </section>
+    </main>
+    <script src="static/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
+    <script src="static/assets/js/theme.js"></script>
 </body>
-
-
-
 {% endblock %}
+
+</html>
