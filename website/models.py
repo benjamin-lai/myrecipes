@@ -192,5 +192,6 @@ class Cookbooks(db.Model,UserMixin):
     contains = db.Column(db.Integer,db.ForeignKey('users.id'), primary_key=True)
 
 class Cookbooks_lists(db.Model,UserMixin):
-    cookbook_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, unique = True)
+    cookbook_id = db.Column(db.Integer,db.ForeignKey('cookbooks.id'))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key=True)

@@ -5,7 +5,14 @@
 <!-- Header -->
 
 
-<head>  
+<head> 
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>MyRecipe Search</title>
+    <link rel="stylesheet" href="static/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700">
+    <link rel="stylesheet" href="static/assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
 </head>
 <body>
   <!-- Our navbar, caters for desktop and mobile -->
@@ -285,7 +292,7 @@
 <h6>{{queryLen}} results founded</h6>
 <h1 align="center">{{message}}</h1>
   <!--for loop to add card, copied from recipe card-->
-  {% for recipes in query %}
+{% for recipes in query %}
 <tr>
   <td>
     <div class="card mb-3" style="max-width: 1000px;">
@@ -318,8 +325,9 @@
 </tr>
 
 {% endfor %}
-
 </div>
+
+
 </body>
 
 

@@ -84,7 +84,7 @@ def recipe_cards():
 @recipes.route('/recipes', methods = ['GET','POST'])
 def recipe():
     recipe = Recipes.query.all()
-    return render_template("test.html",user = current_user)
+    return render_template("product-page.html",user = current_user)
 
 @recipes.route('/Add discription', methods=['GET', 'POST'])
 def add_discription():
@@ -777,15 +777,22 @@ def edit_discription():
 @recipes.route('/.<int:recipeId>', methods=['GET', 'POST'])
 def view_recipe(recipeName, recipeId):
     #for cookbook
-    cookbook_my = Cookbooks.query.filter_by(contains = current_user.id).all()
+    cookbook_my = []
+    if current_user.is_authenticated:
+        cookbook_my = Cookbooks.query.filter_by(contains = current_user.id).all()
     #add into cookbook
     book_add = request.form.get('cookbook')
     
     if book_add is not None:
-        new_recipe_inbook = Cookbooks_lists(cookbook_id = book_add, recipe_id = recipeId)
-        db.session.add(new_recipe_inbook)
-        db.session.commit()
-        flash('Added into CookBook!', category='success')
+        #check if this recipe already inbook
+        cookbook_r = Cookbooks_lists.query.filter_by(cookbook_id = book_add, recipe_id = recipeId).all()
+        if len(cookbook_r) == 0:
+            new_recipe_inbook = Cookbooks_lists(cookbook_id = book_add, recipe_id = recipeId)
+            db.session.add(new_recipe_inbook)
+            db.session.commit()
+            flash('Added into CookBook!', category='success')
+        else:
+            flash('Already in the CookBook!', category='error')
 
     
     IngredientList.clear()
@@ -832,6 +839,7 @@ def view_recipe(recipeName, recipeId):
     rating = get_rating(recipe.num_of_likes, recipe.num_of_dislikes)
     
     methods = Method.query.filter_by(recipe_id=Savelist["RecipeId"]).all()
+    like_status = []
     if current_user.is_authenticated:
         # Get the information on like/dislike by checking if it exists.
         like_status = check_likes_exists(current_user.id, recipe.id) 
