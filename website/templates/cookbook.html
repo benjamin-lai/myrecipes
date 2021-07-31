@@ -22,9 +22,7 @@
         .row h4{
         margin-right: 400px;
         }
-        body {
-        background-color: white;
-        }
+        
     </style>
   
 </head>
@@ -73,7 +71,7 @@
         <!--card for create-->
         {% for book in books %}
         <div class="col-md-6 col-lg-4">
-            <div class="border-0" style = "background-color: white;">
+            <div class="border-0">
                 <div class="img-fit">
                 <a href="/profile/cookbook.{{book.name}}.{{book.id}}"><img border="0"  src="{{ url_for('static',filename = 'images/bookmark.png')}}" 
                 style = "margin-left:3px; margin-top:10px;"></a></div>
