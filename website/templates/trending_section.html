@@ -65,26 +65,26 @@
       <div class="row g-0">
         <div class="col-md-4">
           <div class="zoom">
-            <a href="/recipe.{{recipes.name}}.{{recipes.id}}">
-              <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipes.photo}}" class="image">
+            <a href="/recipe.{{recipes.recipe.name}}.{{recipes.recipe.id}}">
+              <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipes.recipe.photo}}" class="image">
             </a>
           </div>
         </div>
         <div class="col-md-8">
           <div class="card-body">
-            <h5 class="card-title">{{recipes.name}} </h5>
+            <h5 class="card-title">{{recipes.recipe.name}} </h5>
     
   </td>
   <td>
-    <p class="card-text">{{recipes.description}}</p>
+    <p class="card-text">{{recipes.recipe.description}}</p>
   </td>
   <td>
-    <p class="card-text">Likes:{{recipes.num_of_likes}}</p>
+    <p class="card-text">Likes:{{recipes.recipe.num_of_likes}}</p>
   </td>
   <td>
         <!-- want to change thise so it displays profile based off profile_id-->
-        <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.display_name}}"> {{recipes.creator}}</a></u></small></p>
-        <a href="/recipe.{{recipes.name}}.{{recipes.id}}" class="btn btn-primary">Get the Recipe</a>
+        <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.url}}"> {{recipes.recipe.creator}}</a></u></small></p>
+        <a href="/recipe.{{recipes.recipe.name}}.{{recipes.recipe.id}}" class="btn btn-primary">Get the Recipe</a>
       </div>
     </div>
   </div>
