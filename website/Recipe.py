@@ -391,6 +391,10 @@ def create_recipe():
 
 @recipes.route('/edit recipe', methods = ['GET', 'POST'])
 def edit_recipe():
+    Savelist["color_1"] = ''
+    Savelist["color_2"] = ''
+    Savelist["color_3"] = ''
+    Savelist["color_4"] = ''
     recipe_id = Savelist["RecipeId"]
     recipe = Recipes.query.filter_by(id=recipe_id).first()
         
