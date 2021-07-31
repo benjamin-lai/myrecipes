@@ -8,46 +8,28 @@
     <h1>Personalised Newsfeed</h1>
 
     {% if type == '#' %}
-    <a
-      class="nav-link dropdown-toggle"
-      href="#"
-      id="navbarDropdownMenuLink"
-      data-toggle="dropdown"
-      aria-haspopup="true"
-      aria-expanded="false"
-    >
-      Sort by:
+    <li class="nav-item dropdown" style="list-style: none;">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Sort by:
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <a class="dropdown-item" id="newsfeed_likes" href="/newsfeed/recent">Most Recent</a>
+        <a class="dropdown-item" id="newsfeed_likes" href="/newsfeed/likes">Most Likes</a>
+      </div>
+    </li>
+  {% elif type == 'recent' %}
+  <li class="nav-item dropdown" style="list-style: none;">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Most Recent:
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-      <a class="dropdown-item" id="newsfeed_likes" href="/newsfeed/recent">Most Recent</a>
       <a class="dropdown-item" id="newsfeed_likes" href="/newsfeed/likes">Most Likes</a>
+      <a class="dropdown-item" id="newsfeed_likes" href="/newsfeed">Remove Sort</a>
     </div>
   </li>
-  {% elif type == 'recent' %}
-  <a
-    class="nav-link dropdown-toggle"
-    href="#"
-    id="navbarDropdownMenuLink"
-    data-toggle="dropdown"
-    aria-haspopup="true"
-    aria-expanded="false"
-  >
-    Most Recent:
-  </a>
-  <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-    <a class="dropdown-item" id="newsfeed_likes" href="/newsfeed/likes">Most Likes</a>
-    <a class="dropdown-item" id="newsfeed_likes" href="/newsfeed">Remove Sort</a>
-  </div>
-  </li>
   {% elif type == 'likes' %}
-  <a
-      class="nav-link dropdown-toggle"
-      href="#"
-      id="navbarDropdownMenuLink"
-      data-toggle="dropdown"
-      aria-haspopup="true"
-      aria-expanded="false"
-    >
+  <li class="nav-item dropdown" style="list-style: none;">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Most Likes
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">

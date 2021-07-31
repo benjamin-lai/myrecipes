@@ -40,11 +40,11 @@
     <body>
 
         <div class="btn-group">
-            <a href="/edit recipe" name="Create recipe" type="add" class="btn btn-primary" style = "color:{{color1}}">Create recipe</a>
-            <a href="/edit recipe image" name="upload image" type="add" class="btn btn-primary" style = "color:{{color2}}">upload image</a>
-            <a href="/edit ingredient" name="Add ingredient" type="add" class="btn btn-primary" style = "color:{{color3}}">Add ingredient</a>
-            <a href="/edit discription" name="Add discription" type="add" class="btn btn-primary" style = "color:{{color4}}">Add discription</a>
-          </div>
+          <a href="/edit recipe" name="Create recipe" type="add" class="btn btn-primary" style = "color:{{color1}}">Create Recipe</a>
+          <a href="/edit recipe image" name="upload image" type="add" class="btn btn-primary" style = "color:{{color2}}">Upload Image</a>
+          <a href="/edit ingredient" name="Add ingredient" type="add" class="btn btn-primary" style = "color:{{color3}}">Edit Ingredient</a>
+          <a href="/edit discription" name="Add discription" type="add" class="btn btn-primary" style = "color:{{color4}}">Edit Description</a>
+        </div>
     
     </body>
     
@@ -61,7 +61,7 @@
 
         <form method="POST" name="part3" id="part4" enctype=multipart/form-data style="margin-left:80px">
             <h4 align="left" style = "margin-top:30px">Step 4</h4>
-            <h6 align="left" style="color:red;">Update photos and discriptions for each step of your recipe</h6>
+            <h6 align="left" style="color:red;">Update photos and descriptions for each step of your recipe</h6>
             <div class="form-group">
               <label for="step_number">Step No</label>
               <INPUT id="step_number" name="step_number" value={{Step_Number}} TYPE="NUMBER" MIN="0" MAX="10" STEP="1" VALUE="0" SIZE="0" >
@@ -84,13 +84,13 @@
             </button>
             <hr>
             <!-- Description -->
-            <h4 align="left" style="color:blue;"> To create Step.{{Step_Number}}: </h4>
-            <h6 align="left" style="color:red;" style = "margin-top:60px">Add Discriptions</h6>
-            <div align="left" style="color:blue;">discriptions<br> <textarea name="discriptions" cols="30" rows="3" value={{current_step.step_comment}}></textarea></div>
+            <h4 align="left" style="color:blue;"> To create Step {{Step_Number}}: </h4>
+            <h6 align="left" style="color:red;" style = "margin-top:60px">Add Descriptions</h6>
+            <div align="left" style="color:blue;">Descriptions<br> <textarea name="discriptions" cols="30" rows="3" value={{current_step.step_comment}}></textarea></div>
             <div align="left" > <input type="reset" name="Submit2" value="Clear" style="float:left; margin-left:0px"> </div>
       
             </br>
-            <h4 align="left" style = "margin-top:10px; margin-left:0px">Upload Step photos</h4>
+            <h4 align="left" style = "margin-top:10px; margin-left:0px">Upload Step Photos</h4>
             <input style = "margin-left:0px" type=file name=file2>
             <input name = "upload_images" type=submit value=Upload>
             <br />
