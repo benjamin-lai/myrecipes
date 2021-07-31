@@ -54,8 +54,6 @@ def history():
         histories = History.query.filter_by(userid = current_user.id).order_by(History.last_view_date.desc(), History.last_view_time.desc()).all()
         query = []
         for i in histories:
-            print(i.last_view_date)
-            print(i.last_view_time)
             recipes = Recipes.query.filter_by(id = i.recipe).all()
             for recipe in recipes:
                 # Link the creator's name as url

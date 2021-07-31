@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+<!-- Overwrites title-->
+{% block title %}Recipe_card{% endblock %} {% block content %}
+{% include 'base2.html' %}
+<h2>Trending Section</h2>
+<html>
+<form>
+<style>
+.btn-group a {
+  background-color: #04AA6D; /* Green background */
+  border: 1px solid green; /* Green border */
+  color: white; /* White text */
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  float: left; /* Float the buttons side by side */
+}
+
+/* Clear floats (clearfix hack) */
+.btn-group:after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.btn-group button:not(:last-child) {
+  border-right: none; 
+}
+
+</style>
+<body>
+
+<div class="btn-group">
+  <a href="/Trending Section.Starter" name="Starter" type="add" class="btn btn-primary">Starter</a>
+  <a href="/Trending Section.Main" name="Main" type="add" class="btn btn-primary">Main</a>
+  <a href="/Trending Section.Dessert" name="Dessert" type="add" class="btn btn-primary">Dessert</a>
+  <a href="/Trending Section.Snack" name="Snack" type="add" class="btn btn-primary">Snack</a>
+  <a href="/Trending Section.Breakfast" name="Breakfast" type="add" class="btn btn-primary">Breakfast</a>
+  <a href="/Trending Section.Drink" name="Drink" type="add" class="btn btn-primary">Drink</a>
+</div>
+
+<select style="margin-left:280px" name="filter" id="filter" style="margin-left:5px">
+  <option value="" selected disabled hidden>{{ Day_or_week }}</option>
+  <option value="Week">Week</option>
+  <option value="Day">Day</option>
+</select>
+<button name="choose" type="add" class="btn btn-primary" onClick="trending_filter()">Choose</button>
+</form>
+</body>
+<head>
+    <title>Page Title</title>
+    <style>
+      p {color: blue;}
+    </style>
+  </head>  
+  <body>
+  
+  <h3>{{meal_type}}</h3>
+    
+  </body>
+</html>
+{% for recipes in query %}
+<tr>
+  <td>
+    <div class="card mb-3" style="max-width: 1000px;">
+      <div class="row g-0">
+        <div class="col-md-4">
+          <div class="zoom">
+            <a href="/recipe.{{recipes.name}}.{{recipes.id}}">
+              <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipes.photo}}" class="image">
+            </a>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">{{recipes.name}} </h5>
+    
+  </td>
+  <td>
+    <p class="card-text">{{recipes.description}}</p>
+  </td>
+  <td>
+    <p class="card-text">Likes:{{recipes.num_of_likes}}</p>
+  </td>
+  <td>
+        <!-- want to change thise so it displays profile based off profile_id-->
+        <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.display_name}}"> {{recipes.creator}}</a></u></small></p>
+        <a href="/recipe.{{recipes.name}}.{{recipes.id}}" class="btn btn-primary">Get the Recipe</a>
+      </div>
+    </div>
+  </div>
+</div>
+  </td>
+</tr>
+
+{% endfor %} {% endblock %}
