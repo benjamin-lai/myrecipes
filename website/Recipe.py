@@ -926,7 +926,7 @@ def view_recipe(recipeName, recipeId):
                 recipes r on (r.id = t2.rec_id)
             group by t2.rec_id, r.name, r.photo
             order by count desc
-            limit 7;'''
+            limit 4;'''
     
     
     id = str(recipe.id)
