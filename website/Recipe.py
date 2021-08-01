@@ -1077,6 +1077,8 @@ def star_recipe():
 # View user's starred recipes
 @recipes.route('recipes/starred', methods=['GET', 'POST'])
 def view_starred():
+    if not current_user.is_authenticated:
+        return render_template("restricted_access.html")    
     query = StarredRecipes.query.filter_by(contains=current_user.id).all()
     recipes = []
     profiles = []

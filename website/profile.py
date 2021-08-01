@@ -1,17 +1,17 @@
-# Profile Page, I haven't done anything that cool yet.
+# Encompasses all things profile related such as user information,
+# subscriber/subscription lists, profile pics, custom urls, subscribing
 import os
 from typing import BinaryIO
 from flask import Blueprint, render_template, request, flash, redirect, url_for,jsonify
-from flask_login import login_required, current_user
+from flask_login import current_user
 import json
 from flask_cors import CORS
 from . import db
-from .models import Users, Profiles,Cookbooks, Cookbooks_lists
+from .models import Users, Profiles
 from .auth import validate_email
 import boto3
 from werkzeug.utils import secure_filename
-from .review import create_cookbook, delete_book
-from .models import Recipes, Users, Profiles, Subscribed, Subscriber, profile_subs, profile_subbed, Cookbooks_lists
+from .models import Recipes, Users, Profiles, Subscribed, Subscriber, profile_subs, profile_subbed
 
 import boto3
 from werkzeug.utils import secure_filename
@@ -29,27 +29,22 @@ BUCKET_NAME='comp3900-w18b-sheeesh'
 
 # Current user's personal profile (Logged in)
 @profile.route('/my', methods=['GET', 'POST'])
-@login_required
 def Profile():
-    # backdrop hardcoded, add to database later for additional feature
+    if not current_user.is_authenticated:
+        return render_template("restricted_access.html")    
     profile = Profiles.query.filter_by(profile_id=current_user.id).first() 
     # this removes any temp_pics incase they cancelled or went back a page after uploading the pic
     profile.temp_pic = None
     db.session.commit()
-    if profile.profile_pic == "/static/default_user.jpg":
-        image_file = url_for('static', filename='default_user.jpg') 
-        backdrop_image = url_for('static', filename='default_backdrop.png')
-    else:
-        image_file = s3.generate_presigned_url('get_object',
-                                                    Params={'Bucket': 'comp3900-w18b-sheeesh','Key': profile.profile_pic})
-        backdrop_image = url_for('static', filename='default_backdrop.png')
-
         
     return view_profile1(profile.custom_url)
 
-
+# route to edit profile (logged in users can only edit their own profile)
 @profile.route('/my/edit', methods=['GET', 'POST'])
 def update_profile():
+    if not current_user.is_authenticated:
+        return render_template("restricted_access.html")    
+
     profile = Profiles.query.filter_by(profile_id=current_user.id).first() 
     
     if request.method == 'POST':
@@ -80,8 +75,7 @@ def update_profile():
             user_bio = request.form.get('user_bio')
             
             
-            # add login validation here may need to do another validation for username
-            # QOL: Change all flashes to tooltips later
+            # All login validation performed here (similar to auth)
             email_check = Users.query.filter_by(email=email).first()    
             url_check = Profiles.query.filter_by(custom_url=custom_url).first()  
             if email_check and email_check!=current_user:
@@ -92,7 +86,7 @@ def update_profile():
                 flash('Username must be greater than 1 character.', category='error')
             elif password1 != password2:
                 flash('Passwords don\'t match.', category='error')
-            elif 0 < len(password1) < 1:        # Remember to change limit
+            elif 0 < len(password1) < 7:       
                 flash('Password must be at least 7 characters.', category='error')
             elif url_check and url_check.profile_id!=current_user.id and len(url_check.custom_url)>0:
                 flash('The specified profile URL is already in use', category='error')
@@ -122,22 +116,21 @@ def update_profile():
                 
                 db.session.commit()
                 Profile()
-                flash("Profile Updated!", category='success') #also flashes when no change happens
+                flash("Profile Updated!", category='success')
                 return redirect(url_for('profile.Profile'))
 
     return render_template("edit_profile.html", user=current_user, profile=profile)
 
-@profile.route('/<custom_url>', methods=["GET", "POST"]) # public view of profile based off a url set by the user
+# public view of profile based off a url set by the user
+@profile.route('/<custom_url>', methods=["GET", "POST"]) 
 def view_profile1(custom_url):
-    # maybe try no digit
     try:
         public_profile = Profiles.query.filter_by(custom_url=custom_url).first()
         public_user = Users.query.filter_by(id=public_profile.profile_id).first()
     except:
         flash("No user exists with this username or id.", category="error")
         return redirect(url_for('views.home'))
-    # backdrop hardcoded -> when backdrop image is added to edit profile we can remove this
-    # as this generates a public profile based off w/e is in the database
+
     backdrop_image = url_for('static', filename='default_backdrop.png')
   
     if public_user:
@@ -173,8 +166,7 @@ def profile_sub():
         sub_status = request.form['status']
         user_id = request.form['user']
         profile_id = request.form['profile']
-        # sub_status = "subscribe" or "subscribed" with the quotations included. Later add an alert for unsubscribing and make sure only s
-        # logged in users can subscribe. Can't subscribe to yourself (maybe add this).
+
     if str(sub_status) == '"Subscribed"':
         new_subbed = Subscribed(subscribed_id = profile_id, contains = user_id) # user's subscribed to list
         new_subber = Subscriber(subscriber_id = user_id, contains = profile_id) # profile's sublist
@@ -230,7 +222,6 @@ def subscribed_list(custom_url):
         sub.recipe_count = Recipes.query.filter_by(creates=sub.profile_id).count()
 
     # add code for profiles with no subs
-    type = "subscriptions"
     return render_template("subscriber_list.html", profile=public_profile, user=public_user, query=subbed, sub_count=sub_count)
 
 @profile.route('/<int:id>', methods=["GET", "POST"]) # public view of profile based off id 
@@ -241,43 +232,12 @@ def view_profile(id):
     except:
         flash("No user exists with this id.", category="error")
         return redirect(url_for('views.home'))
-    # backdrop hardcoded -> when backdrop image is added to edit profile we can remove this
-    # as this generates a public profile based off w/e is in the database
-    backdrop_image = url_for('static', filename='default_backdrop.png')
+
     
     if public_user and public_profile:
-        if public_profile.profile_pic == "/static/default_user.jpg":
-            image_file = url_for('static', filename='default_user.jpg') 
-        else:
-            image_file = s3.generate_presigned_url('get_object',
-                                                        Params={'Bucket': 'comp3900-w18b-sheeesh','Key': public_profile.profile_pic})
-        # display personal recipes
-        query = Recipes.query.filter_by(creates=public_user.id)
-        
         return view_profile1(public_profile.custom_url)
     else:
         flash("No user exists with this id.", category="error")
         return redirect(url_for('views.home'))
-
-
-# todo:
-
-# Edit display recipes
-
-
-# profile check
-# 1) Display Name (Do we want to differentiate between username/displayname and first name?)
-# 2) User Bio
-# 3) profile picture
-# 4) Edit profile
-# 5) subscriber list and count
-# 6) Subscribe button
-# 7) Recipes
-# 8) Banner/background image
-# 9) any additional info
-
-# Quality improvements
-# 1) Fix up code for view public profile, try/except the whole thing
-# 2) add a button to personal profile page that allows them to check how their profile looks in public (similar to facebook)
 
 

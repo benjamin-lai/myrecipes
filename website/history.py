@@ -1,41 +1,18 @@
 # Homepage
-from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
-from flask_login import  current_user, login_required
+from flask import Blueprint, render_template, request, redirect, url_for
+from flask_login import  current_user
 from flask_cors import CORS
 from website import create_app
 
 from flask import Flask
 
-import os
-import tkinter
-from tkinter import messagebox
-import ctypes 
-#from gi.repository import Gtk
-from werkzeug.utils import secure_filename
-from .models import StarredRecipes, Users, Recipes, Ingredient, Contents, Recipestep, Profiles, Method, History, Likes, Comments, Cookbooks, Cookbooks_lists
-from .review import create_comment, retrieve_comments, get_rating
+from .models import Recipes, Profiles, History
 from . import db
-from sqlalchemy import desc
-from sqlalchemy import func
-from sqlalchemy import and_
-import base64
-import boto3
-import random
-from datetime import datetime
 import psycopg2
-from psycopg2.extensions import AsIs
 import json
-
-s3 = boto3.client('s3',
-                    aws_access_key_id='AKIAQNR7WVADC7MX2ZEW',
-                    aws_secret_access_key= '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'
-                     )
-BUCKET_NAME='comp3900-w18b-sheeesh'
-
 
 
 UPLOAD_FOLDER = 'C:\comp3900\project_data'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -54,13 +31,14 @@ def history():
         histories = History.query.filter_by(userid = current_user.id).order_by(History.last_view_date.desc(), History.last_view_time.desc()).all()
         query = []
         for i in histories:
-            recipes = Recipes.query.filter_by(id = i.recipe).all()
-            for recipe in recipes:
-                # Link the creator's name as url
-                creator_name = recipe.creator.split(" ")
-                profile = Profiles.query.filter_by(owns = recipe.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
-                card = Card(recipe, profile.custom_url)
-                query.append(card)
+            if i.last_view_date and i.last_view_time:
+                recipes = Recipes.query.filter_by(id = i.recipe).all()
+                for recipe in recipes:
+                    # Link the creator's name as url
+                    creator_name = recipe.creator.split(" ")
+                    profile = Profiles.query.filter_by(owns = recipe.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+                    card = Card(recipe, profile.custom_url)
+                    query.append(card)
     else:
         return render_template("restricted_access.html")
     
