@@ -5,10 +5,6 @@
 <head>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <style>
-    body{
-    background-color:white;
-    }
-    
     .container button{
       margin-right: 0px;
     }
@@ -131,7 +127,7 @@
   </div>
   
   <!--sidebar-->
-  <div class="sidebar">
+  <div class="sidebar" style = "background-color: #e2e8f0;">
     <div style = "text-align: center;"><h4>More  delicious for you</h4></div>
     <!--recommandation-->
     <!-- Similar recipes to the one that is currently being looked at -->
@@ -161,16 +157,15 @@
   
   <!--title-->
   <div class="jumbotron">
-    
     <div class="container">
-      <h1 style="font-size:88px;">{{recipe.name}}</h1>  
+      <h1 style="font-size:88px;">{{recipe.name}}</h1> 
     </div>
   </div>
   
   <br>
   <!--user image, description, rating, likes, Ingredients-->
   <div class="container">
-    <div class = "row">
+    <div class = "row right">
         <img
         class="rounded-circle account-img"
         src="{{UserImage}}"
@@ -182,11 +177,11 @@
         <h3>Description</h3>
         {{recipe.description}}
       </span>
-      <h3 align = "center;"><a href="http://127.0.0.1:5000/profile/{{profile.custom_url}}" style="margin-left: 40px;">{{recipe.creator}}</a><h3>
+      <h3 align = "center;"><a href="http://127.0.0.1:5000/profile/{{profile.custom_url}}" >{{recipe.creator}}</a><h3>
     </div> 
     
     <!-- Like and disclick buttons with their associated counter -->
-    <div class="row">
+    <div class="row right">
       <div class="col-md-1.5">
         {% if likes == 1 %}
         <i id="arrow-up" class="fa fa-arrow-circle-up fa-3x" style="color: darkorange" aria-hidden="true" onClick="addLike({{ recipe.id }}); 
@@ -209,21 +204,10 @@
         <span id="dislike" style="font-size:30px; color:darkgray;">{{ recipe.num_of_dislikes }}</span>
         {% endif %}
       </div>
-    </div>
-
-    <!-- Rating method for recipes that works off number of likes and dislikes on recipes. -->
-    <div class="row">
-      <div class="col">
-        <label>Rating: {{ rating }}</label>
-      </div>
-    </div>
-    <br>
-    
-
-    <!--starred start-->
-      <div class="container" style = "height:40px;">
+      <!--starred start-->
+      <div class="container" style = "height:40px;" >
           <!-- Recipe Star Button-->
-          <div id="favourite">
+          <div id="favourite" style="float:right">
             <div id="heart"></div> 
             <a><div id="heartwhite" onclick="star_state();" style="cursor: pointer;"></div></a>
 
@@ -291,8 +275,16 @@
         <br />
       </div>
     <!--starred end-->
-  <br><br><br><br><br><br><br>
+    </div>
 
+    <!-- Rating method for recipes that works off number of likes and dislikes on recipes. -->
+    <div class="row">
+      <div class="col">
+        <label>Rating: {{ rating }}</label>
+      </div>
+    </div>
+    <br>
+    
 
 
     {% if current_user.is_authenticated %}
@@ -302,7 +294,7 @@
       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Save to CookBook
       </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style = "background-color: #e2e8f0;">
         <div class = "container">
         <form method="POST"  action="http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe.id}}" >
           {% for cookbook in cookbook_my %}
@@ -317,7 +309,7 @@
     {% endif %}
     <br>
 
-
+    
 
 
 
@@ -329,10 +321,10 @@
 
 <div class="product-info">
     <div>
-        <ul class="nav nav-tabs" role="tablist" id="myTab">
-            <li class="nav-item" role="presentation"><a class="nav-link active" role="tab" data-bs-toggle="tab" id="description-tab" href="#description">Steps</a></li>
-            <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" id="specifications-tabs" href="#specifications">Details</a></li>
-            <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" id="reviews-tab" href="#reviews">Reviews</a></li>
+        <ul class="nav nav-tabs" role="tablist" id="myTab" >
+            <li class="nav-item" role="presentation"><a class="nav-link active" role="tab" data-bs-toggle="tab" id="description-tab" href="#description" style = "background-color: #e2e8f0;">Steps</a></li>
+            <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" id="specifications-tabs" href="#specifications" style = "background-color: #e2e8f0;">Details</a></li>
+            <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" id="reviews-tab" href="#reviews" style = "background-color: #e2e8f0;">Reviews</a></li>
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active description" role="tabpanel" id="description">
@@ -350,7 +342,7 @@
             </div>
             <div class="tab-pane fade specifications" role="tabpanel" id="specifications">
                 <br>
-                <div class="shadow-sm p-3 mb-5 bg-white rounded right">
+                <div class="shadow p-3 mb-5 rounded right" style = "background-color: #e2e8f0;">
                 <div class = "the_text">
                   <div><p style="color:blue;">Meal Type : {{recipe.meal_type}}</p></div>
                   <div><h8>id : {{recipe.id}}</h8></div>
@@ -368,7 +360,8 @@
                     </div>
                   </div>
                   <!--ingredient-->
-                  <div class="shadow-sm p-3 mb-5 bg-white rounded right"> 
+                  <br><br>
+                  <div class="shadow p-3 mb-5 rounded right" style = "background-color: #e2e8f0;"> 
                     <h3 style="margin-top:40px", style="margin-left:40px">Ingredients</h3>
                     <p class="text-secondary">{{MyIngredient}}</p>
                   </div>
@@ -394,14 +387,15 @@
                     <ul class="list-group list-group-flush" id="reviews">
                       <!-- Iterate through comments for the recipe and display associated profile and comment. -->
                       {% for review_info, review in comments %}
-                      
-                      <div class="d-flex flex-row align-items-center">
+                      <br>
+                      <div class="d-flex flex-row align-items-center" >
                         <img class="rounded-circle shadow-1-strong me-3" src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{ review_info.profile_pic }}" alt="avatar" width="40" height="40"/>
                         <a href="#">{{ review_info.display_name }}</a>
                       </div>
 
-                        <li class="list-group-item">
+                        <li class="list-group-item" style = "background-color: #e2e8f0;">
                         {{ review.comment }}
+                        <br>
                         <!-- Displays the abiltiy to delete comments if either they are the recipe owner or person who made the comment -->
                         {% if recipe.creates == current_user.id or current_user.id == review.owns %}
                           <button type="button" class="close" onClick="deleteComment({{ review.comment_id }})">
@@ -449,7 +443,7 @@
 
 
   <!--share and download-->
-  <hr>
+  <hr style = "border: 1px solid black; border-radius: 1px;">
   <div class = "wrap">
     <a class= "facebook" href= "https://www.facebook.com/sharer.php?text=Amazing recipes I found in MyRecipe [{{recipe.name}}]&u=http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe.id}}" target= "_blank" id= "J-share-facebook" >
       <img border="0"  src="{{ url_for('static',filename = 'images/facebook1.png')}}" alt="facebook" height="150" width="150">

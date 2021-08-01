@@ -6,18 +6,22 @@
 
 
 <head> 
-  <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>MyRecipe Search</title>
-    <link rel="stylesheet" href="static/assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700">
-    <link rel="stylesheet" href="static/assets/fonts/ionicons.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
+<style>
+body{
+  background-color: #e2e8f0;    
+}
+.img-fit img{
+    height: 300px;
+    width:400px;
+    object-fit:cover; 
+}
+</style>
 </head>
+
 <body>
   <!-- Our navbar, caters for desktop and mobile -->
   <!-- Nav bar that has a dark bg, and changes when the screen is no longer small-->
-  <nav class="navbar navbar-light navbar-expand-sm" style="background-color: #e3f2fd;">
+  <nav class="navbar navbar-light navbar-expand-sm" style="background-color: #e2e8f0;">
     
     <!-- Creates a button for navbar when the screen is small.-->
     <button
@@ -154,7 +158,7 @@
             </li>
 
           <!-- Dropdown4 for sort -->
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown" >
             <a
               class="nav-link dropdown-toggle"
               href="#"
@@ -169,7 +173,7 @@
               class="dropdown-menu"
               aria-labelledby="navbarDropdownMenuLink"
             >
-				<div class = "container">
+				<div class = "container" >
 					<form method="POST"  action="/search_result">
 						<input type="radio" id="DateNew" name="Sort" value="DateNew">
 						<label for="DateNew">Recently</label><br>
@@ -194,7 +198,7 @@
 
 
   <!-- Our navbar2, for ingredients only -->
-  <nav class="navbar navbar-light navbar-expand-sm" style="background-color: #e3f2fd;">
+  <nav class="navbar navbar-light navbar-expand-sm" style="background-color: #e2e8f0;">
     
     <!-- Creates a button for navbar when the screen is small.-->
     <button
@@ -239,6 +243,7 @@
                 <div
                 class="dropdown-menu"
                 aria-labelledby="Ingredient"
+                style="background-color: #e2e8f0;"
                 >
 					<div class = "container">
 						<form method="POST"  action="/search_result" >
@@ -249,7 +254,7 @@
               id="include"
               name="include"
               autocomplete="on">
-              <button class="btn btn-success" type="submit" name = "include_add" id = "include _add">Add</button>
+              <button class="btn btn-success" style = "width :100%" type="submit" name = "include_add" id = "include _add">Add</button>
               <hr>
               <input class="form-control me-2" 
               type="search" 
@@ -258,7 +263,7 @@
               id="exclude"
               name="exclude"
               autocomplete="on">
-              <button class="btn btn-success" type="submit" name = "exclude_add" id = "exclude _add">Add</button>
+              <button class="btn btn-success" style = "width :100%" type="submit" name = "exclude_add" id = "exclude _add">Add</button>
 						</form>
 					</div>
 				</div>
@@ -298,23 +303,24 @@
     <div class="card mb-3" style="max-width: 1000px;">
       <div class="row g-0">
         <div class="col-md-4">
-          <div class="zoom">
+          <div class="img-fit zoom">
             <a href="/recipe.{{recipes.name}}.{{recipes.id}}">
               <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipes.photo}}" class="image">
             </a>
           </div>
         </div>
         <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">{{recipes.name}} </h5>
+          <div class = "for-card" style = "margin-top:20px; margin-right:20px; margin-bottom:5px">
+            <b><h3 class="card-title">{{recipes.name}} </h3></b>
     
   </td>
   <div>
-    <h7 class="card-text">{{recipes.description}}</h7>
+    <h7 class="card-text">{{recipes.description[:300]}}</h7>
   </div>
   <td>
         <!-- want to change thise so it displays profile based off profile_id-->
         <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.display_name}}"> {{recipes.creator}}</a></u></small></p>
+        <br>
         <a href="/recipe.{{recipes.name}}.{{recipes.id}}" class="btn btn-primary">Get the Recipe</a>
         <!--drop down menu for cookbook-->
       </div>

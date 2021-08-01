@@ -800,8 +800,8 @@ def view_recipe(recipeName, recipeId):
         cookbook_my = Cookbooks.query.filter_by(contains = current_user.id).all()
     #add into cookbook
     book_add = request.form.get('cookbook')
-    
     if book_add is not None:
+        
         #check if this recipe already inbook
         cookbook_r = Cookbooks_lists.query.filter_by(cookbook_id = book_add, recipe_id = recipeId).all()
         if len(cookbook_r) == 0:
@@ -811,6 +811,7 @@ def view_recipe(recipeName, recipeId):
             flash('Added into CookBook!', category='success')
         else:
             flash('Already in the CookBook!', category='error')
+
 
     
     IngredientList.clear()
