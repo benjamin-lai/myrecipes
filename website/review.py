@@ -9,103 +9,6 @@ from . import db
 review = Blueprint('review', __name__)
 
 
-#cookbook in profile
-@review.route('/cookbook_create', methods=['POST']) 
-def create_cookbook():
-    #implementing create
-    print(request.method)
-    if request.method == 'POST':
-        cookbook = json.loads(request.data)
-        cookbook_name = cookbook['name']
-        print(f"cookbook {cookbook['name']}")
-
-        if len(cookbook_name) < 1:
-            flash('name is too short!', category='error')
-        elif check_duplicate(cookbook_name) is False:
-            flash('name is already exist!', category='error')
-        else:
-            new_book = Cookbooks(name = cookbook_name, contains = current_user.id)
-            db.session.add(new_book)
-            db.session.commit()
-            flash('CookBook added!', category='success')
-        return jsonify({})
-
-#helper func for create_cookbook
-def check_duplicate(cookbook_name):
-    cookbook = Cookbooks.query.filter_by(name = cookbook_name, contains = current_user.id).first()
-    if cookbook is not None:
-        return False #duplicate
-    return True
-
-#delete cookbook
-@review.route('/delete_book', methods=['POST'])
-def delete_book():
-    if request.method == 'POST':
-        delete = json.loads(request.data)
-        print(delete)
-        book_id = delete['book_id']
-        print(book_id)
-        
-        ckbkl = Cookbooks_lists.query.filter_by(cookbook_id = book_id).all()
-        for cl in ckbkl:
-            db.session.delete(cl)
-
-        cookbook = Cookbooks.query.filter_by(id = book_id).first()
-        db.session.delete(cookbook)
-        db.session.commit()
-        flash('Deleted cookbook successfully!', category='success')
-        return jsonify({})
-
-#edit the name of cookbook
-@review.route('/edit_bookname', methods=['POST'])
-def edit_name():
-    if request.method == 'POST':
-        cookbook = json.loads(request.data)
-        book_id = cookbook['book_id']
-        new_name = cookbook['name']
-        print(f"book   {cookbook}")
-        if len(new_name) < 1:    
-            flash('Name is too short!', category='error')
-        elif check_duplicate(new_name) is False:
-            flash('name is already exist!', category='error')
-        else:
-            cookbook = Cookbooks.query.filter_by(id = book_id).first()
-            cookbook.name = new_name
-            db.session.commit()
-            flash('Modified book name successfully!', category='success')
-
-        return jsonify({})
-
-#remove recipe from cookbook
-@review.route('/remove_recipe', methods=['POST'])
-def remove_recipe():
-    if request.method == 'POST':
-        delete = json.loads(request.data)
-        print(delete)
-        recipe_id = delete['recipe_id']
-        book_id = delete['cookbook_id']
-        cookbook = Cookbooks_lists.query.filter_by(recipe_id = recipe_id, cookbook_id = book_id).first()
-        db.session.delete(cookbook)
-        db.session.commit()
-        flash('remove recipe successfully!', category='success')
-        return jsonify({})
-
-#eidt / create cookbook description
-@review.route('/set_des', methods=['POST'])
-def set_des():
-    if request.method == 'POST':
-        cookbook = json.loads(request.data)
-        book_id = cookbook['cookbook_id']
-        des = cookbook['des']
-        print(f"book   {cookbook}")
-    
-        cookbook = Cookbooks.query.filter_by(id = book_id).first()
-        cookbook.description = des
-        db.session.commit()
-        flash('Modified cookbook description successfully!', category='success')
-
-        return jsonify({})
-
 
 # Creates a comment given the recipe_id
 # Already checks http request 
@@ -271,3 +174,101 @@ def get_rating(likes, dislikes):
     elif likes == 0 and dislikes != 0:
         return str(0) + '%'
     return "No Rating"
+
+
+#cookbook in profile
+@review.route('/cookbook_create', methods=['POST']) 
+def create_cookbook():
+    #implementing create
+    print(request.method)
+    if request.method == 'POST':
+        cookbook = json.loads(request.data)
+        cookbook_name = cookbook['name']
+        print(f"cookbook {cookbook['name']}")
+
+        if len(cookbook_name) < 1:
+            flash('name is too short!', category='error')
+        elif check_duplicate(cookbook_name) is False:
+            flash('name is already exist!', category='error')
+        else:
+            new_book = Cookbooks(name = cookbook_name, contains = current_user.id)
+            db.session.add(new_book)
+            db.session.commit()
+            flash('CookBook added!', category='success')
+        return jsonify({})
+
+#helper func for create_cookbook
+def check_duplicate(cookbook_name):
+    cookbook = Cookbooks.query.filter_by(name = cookbook_name, contains = current_user.id).first()
+    if cookbook is not None:
+        return False #duplicate
+    return True
+
+#delete cookbook
+@review.route('/delete_book', methods=['POST'])
+def delete_book():
+    if request.method == 'POST':
+        delete = json.loads(request.data)
+        print(delete)
+        book_id = delete['book_id']
+        print(book_id)
+        
+        ckbkl = Cookbooks_lists.query.filter_by(cookbook_id = book_id).all()
+        for cl in ckbkl:
+            db.session.delete(cl)
+
+        cookbook = Cookbooks.query.filter_by(id = book_id).first()
+        db.session.delete(cookbook)
+        db.session.commit()
+        flash('Deleted cookbook successfully!', category='success')
+        return jsonify({})
+
+#edit the name of cookbook
+@review.route('/edit_bookname', methods=['POST'])
+def edit_name():
+    if request.method == 'POST':
+        cookbook = json.loads(request.data)
+        book_id = cookbook['book_id']
+        new_name = cookbook['name']
+        print(f"book   {cookbook}")
+        if len(new_name) < 1:    
+            flash('Name is too short!', category='error')
+        elif check_duplicate(new_name) is False:
+            flash('name is already exist!', category='error')
+        else:
+            cookbook = Cookbooks.query.filter_by(id = book_id).first()
+            cookbook.name = new_name
+            db.session.commit()
+            flash('Modified book name successfully!', category='success')
+
+        return jsonify({})
+
+#remove recipe from cookbook
+@review.route('/remove_recipe', methods=['POST'])
+def remove_recipe():
+    if request.method == 'POST':
+        delete = json.loads(request.data)
+        print(delete)
+        recipe_id = delete['recipe_id']
+        book_id = delete['cookbook_id']
+        cookbook = Cookbooks_lists.query.filter_by(recipe_id = recipe_id, cookbook_id = book_id).first()
+        db.session.delete(cookbook)
+        db.session.commit()
+        flash('remove recipe successfully!', category='success')
+        return jsonify({})
+
+#eidt / create cookbook description
+@review.route('/set_des', methods=['POST'])
+def set_des():
+    if request.method == 'POST':
+        cookbook = json.loads(request.data)
+        book_id = cookbook['cookbook_id']
+        des = cookbook['des']
+        print(f"book   {cookbook}")
+    
+        cookbook = Cookbooks.query.filter_by(id = book_id).first()
+        cookbook.description = des
+        db.session.commit()
+        flash('Modified cookbook description successfully!', category='success')
+
+        return jsonify({})

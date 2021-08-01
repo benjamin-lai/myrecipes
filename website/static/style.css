@@ -1,8 +1,8 @@
 .navbar.second-navbar {
   margin-top: 55px;
-  background: rgb(255, 255, 255) !important;
   transition: all .5s ease-in-out;
   z-index: 100;
+  background-color: #e2e8f0;
 }
 
 .navbar.second-navbar.top-nav-collapse {

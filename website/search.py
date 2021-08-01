@@ -1,9 +1,9 @@
-# Search Page, I haven't done anything that cool yet.
+# Search Page, for every search result shown
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from flask_cors import CORS
 from . import db
-from .models import Users, Recipes, Ingredient, Contents, Recipestep, Profiles,Method,Meal_Type, Cookbooks, Cookbooks_lists
+from .models import Recipes, Ingredient, Contents, Profiles,Method,Meal_Type, Cookbooks, Cookbooks_lists
 
 
 search = Blueprint('search', __name__)

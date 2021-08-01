@@ -1,9 +1,9 @@
-# Profile Page, I haven't done anything that cool yet.
+#Cook book page and cookbook content page showing
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from flask_cors import CORS
 from . import db
-from .models import Users, Recipes, Ingredient, Contents, Recipestep, Method,Meal_Type, Profiles, Cookbooks, Cookbooks_lists
+from .models import  Recipes, Profiles, Cookbooks, Cookbooks_lists
 
 
 cookbook = Blueprint('cookbook', __name__)
@@ -49,6 +49,7 @@ def cook_book2(book_name,book_id):
     else:
         flash("Only logged in user can view cookbook", category="error")
         return redirect(url_for('views.home'))
+
 
 #helper func
 #put custom url into recipe list
