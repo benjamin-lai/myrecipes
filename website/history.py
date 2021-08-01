@@ -1,41 +1,18 @@
 # Homepage
-from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
-from flask_login import  current_user, login_required
+from flask import Blueprint, render_template, request, redirect, url_for
+from flask_login import  current_user
 from flask_cors import CORS
 from website import create_app
 
 from flask import Flask
 
-import os
-import tkinter
-from tkinter import messagebox
-import ctypes 
-#from gi.repository import Gtk
-from werkzeug.utils import secure_filename
-from .models import StarredRecipes, Users, Recipes, Ingredient, Contents, Recipestep, Profiles, Method, History, Likes, Comments, Cookbooks, Cookbooks_lists
-from .review import create_comment, retrieve_comments, get_rating
+from .models import Recipes, Profiles, History
 from . import db
-from sqlalchemy import desc
-from sqlalchemy import func
-from sqlalchemy import and_
-import base64
-import boto3
-import random
-from datetime import datetime
 import psycopg2
-from psycopg2.extensions import AsIs
 import json
-
-s3 = boto3.client('s3',
-                    aws_access_key_id='AKIAQNR7WVADC7MX2ZEW',
-                    aws_secret_access_key= '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'
-                     )
-BUCKET_NAME='comp3900-w18b-sheeesh'
-
 
 
 UPLOAD_FOLDER = 'C:\comp3900\project_data'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
