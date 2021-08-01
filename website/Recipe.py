@@ -379,11 +379,11 @@ def create_recipe():
         if (RecipeName == ''):
             flash("Please enter recipe name", 'error')
         if (Description == ''):
-            flash("Please add disription", 'error')
+            flash("Please add a description for this recipe", 'error')
         if (Serving == '0'):
-            flash("Serving can't be 0", 'error')
+            flash("The serving must be above 0", 'error')
         if(Meal_type == ''):
-            flash("Please choose a meal_type", 'error')
+            flash("Please choose a meal type", 'error')
         
         
     return render_template("create_recipe.html", user=current_user, color1 = Savelist["color_1"],
