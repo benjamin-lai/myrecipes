@@ -28,13 +28,16 @@ CORS(auth)
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-        if login_fn(email, password):
-            return redirect(url_for('views.home'))
-    
-    return render_template("login.html", user=current_user)
+    if not current_user.is_authenticated:
+        if request.method == 'POST':
+            email = request.form.get('email')
+            password = request.form.get('password')
+            if login_fn(email, password):
+                return redirect(url_for('views.home'))
+        
+        return render_template("auth_login.html", user=current_user)
+    flash("You are already logged into the platform", category="error")
+    return redirect(url_for('views.home'))
 
 # Function for login route
 def login_fn(email, password):
@@ -60,16 +63,19 @@ def logout():
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        first_name = request.form.get('first_name')
-        last_name = request.form.get('last_name')
-        password1 = request.form.get('password1')
-        password2 = request.form.get('password2')
-        if sign_up_fn(email, first_name, last_name, password1, password2):
-            return redirect(url_for('views.home'))  
+    if not current_user.is_authenticated:
+        if request.method == 'POST':
+            email = request.form.get('email')
+            first_name = request.form.get('first_name')
+            last_name = request.form.get('last_name')
+            password1 = request.form.get('password1')
+            password2 = request.form.get('password2')
+            if sign_up_fn(email, first_name, last_name, password1, password2):
+                return redirect(url_for('views.home'))  
 
-    return render_template("sign_up.html", user=current_user)
+        return render_template("auth_register.html", user=current_user)
+    flash("You are already logged into the platform", category="error")
+    return redirect(url_for('views.home'))
 
 # Function for sign_up route
 def sign_up_fn(email, first_name, last_name, password1, password2):
@@ -98,53 +104,59 @@ def sign_up_fn(email, first_name, last_name, password1, password2):
 
 @auth.route('/recover', methods=['GET', 'POST'])
 def recover_password():
-    if request.method == 'POST':
-        email = request.form.get('email')
+    if not current_user.is_authenticated:
+        if request.method == 'POST':
+            email = request.form.get('email')
 
-        # Checks if provided email exists
-        user = Users.query.filter_by(email=email).first()
-        if user is None:
-            flash('Email does not exist! Please enter a correct email', category='error')
-    
-        else:
-            generate_recovery_code(user)
-            flash('Email contain your reset code has been sent to your email!', category='success')
-            return redirect(url_for('auth.change_password'))
+            # Checks if provided email exists
+            user = Users.query.filter_by(email=email).first()
+            if user is None:
+                flash('Email does not exist! Please enter a correct email', category='error')
+        
+            else:
+                generate_recovery_code(user)
+                flash('Email contain your reset code has been sent to your email!', category='success')
+                return redirect(url_for('auth.change_password'))
 
-    return render_template("recover.html")
+        return render_template("auth_recover_password.html")
+    flash("You are already logged into the platform", category="error")
+    return redirect(url_for('views.home'))
         
 
 @auth.route('/change_password', methods=['GET', 'POST'])
 def change_password():
-    if request.method == 'POST':
-        code = request.form.get('reset_code')
-        password1 = request.form.get('password1')
-        password2 = request.form.get('password2')
+    if not current_user.is_authenticated:
+        if request.method == 'POST':
+            code = request.form.get('reset_code')
+            password1 = request.form.get('password1')
+            password2 = request.form.get('password2')
 
-        # Error checking for provided code.
-        if code.isnumeric() is False or len(str(code)) != 6:
-            flash('Code is invalid', category='error')
-        elif password1 != password2:
-            flash('Passwords don\'t match.', category='error')
-        elif len(password1) < 7:        # Remember to change limit
-            flash('Password must be at least 7 characters.', category='error')
-        else:
-            # Find a generate code table exists for the provided code 
-            user_code = Codes.query.filter_by(reset_code=code).first()
-            if user_code is not None:
-                user = Users.query.filter_by(id=user_code.own).first()
-                # Dont need to check if user exists since it should since code is valid.
-                
-                flash('Successfully changed password!', category='success')
-                db.session.delete(user_code)
-                user.password = generate_password_hash(password1)
-                db.session.commit()
-                login_user(user, remember=True)
-                return redirect(url_for('views.home'))
-                
+            # Error checking for provided code.
+            if code.isnumeric() is False or len(str(code)) != 6:
+                flash('Code is invalid', category='error')
+            elif password1 != password2:
+                flash('Passwords don\'t match.', category='error')
+            elif len(password1) < 7:        # Remember to change limit
+                flash('Password must be at least 7 characters.', category='error')
             else:
-                flash('Invalid Code, please try again', category='error')
-    return render_template("change_pwd.html")
+                # Find a generate code table exists for the provided code 
+                user_code = Codes.query.filter_by(reset_code=code).first()
+                if user_code is not None:
+                    user = Users.query.filter_by(id=user_code.own).first()
+                    # Dont need to check if user exists since it should since code is valid.
+                    
+                    flash('Successfully changed password!', category='success')
+                    db.session.delete(user_code)
+                    user.password = generate_password_hash(password1)
+                    db.session.commit()
+                    login_user(user, remember=True)
+                    return redirect(url_for('views.home'))
+                    
+                else:
+                    flash('Invalid Code, please try again', category='error')
+        return render_template("auth_change_password.html")
+    flash("You are already logged into the platform", category="error")
+    return redirect(url_for('views.home'))
 
 # Simple function that checks authentication details for sign-up and profile-edit
 def verify_authenticate_details(email, first_name, last_name, password1, password2):
@@ -248,7 +260,7 @@ def callback():
     # before they can make an account
     if first_name is None or last_name is None or email is None:
         flash('Gmail account must contain first name, last name and email to create an account.', category='error')
-        return render_template("login.html")
+        return render_template("auth_login.html")
     
     # create a random temporary password for the user.
     characters = string.ascii_letters + string.digits + string.punctuation

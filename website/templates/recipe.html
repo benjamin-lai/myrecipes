@@ -2,7 +2,6 @@
 <!-- Overwrites title-->
 {% block title %}Recipe{% endblock %}
 {% block content %}
-{% include 'base2.html' %}
 <head>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <style>
@@ -224,7 +223,7 @@
     <!--starred start-->
       <div class="container" style = "height:40px;">
           <!-- Recipe Star Button-->
-          <div id="favourite" style="float:left">
+          <div id="favourite">
             <div id="heart"></div> 
             <a><div id="heartwhite" onclick="star_state();" style="cursor: pointer;"></div></a>
 

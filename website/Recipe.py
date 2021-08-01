@@ -379,11 +379,11 @@ def create_recipe():
         if (RecipeName == ''):
             flash("Please enter recipe name", 'error')
         if (Description == ''):
-            flash("Please add disription", 'error')
+            flash("Please add a description for this recipe", 'error')
         if (Serving == '0'):
-            flash("Serving can't be 0", 'error')
+            flash("The serving must be above 0", 'error')
         if(Meal_type == ''):
-            flash("Please choose a meal_type", 'error')
+            flash("Please choose a meal type", 'error')
         
         
     return render_template("create_recipe.html", user=current_user, color1 = Savelist["color_1"],
@@ -391,6 +391,10 @@ def create_recipe():
 
 @recipes.route('/edit recipe', methods = ['GET', 'POST'])
 def edit_recipe():
+    Savelist["color_1"] = ''
+    Savelist["color_2"] = ''
+    Savelist["color_3"] = ''
+    Savelist["color_4"] = ''
     recipe_id = Savelist["RecipeId"]
     recipe = Recipes.query.filter_by(id=recipe_id).first()
         
@@ -974,17 +978,6 @@ def delete_recipe():
         db.session.delete(comment)
 
 
-    # Delete associated likes
-    likes = Likes.query.filter_by(own=current_user.id).all()
-    for like in likes:
-        db.session.delete(like)
-
-
-    # Delete associated comments
-    comments = Comments.query.filter_by(owns=current_user.id).all()
-    for comment in comments:
-        db.session.delete(comment)
-
     #delete ingredient
     ingre = Ingredient.query.filter_by(recipe_id=recipe_id).all()
     if ingre != None:
@@ -998,6 +991,22 @@ def delete_recipe():
         for s in steps:
             if s.recipe_id == recipe_id:
                 db.session.delete(s)
+    
+    
+    #delete cookbook
+    cookbook = Cookbooks_lists.query.filter_by(recipe_id=recipe_id).all()
+    if cookbook != None:
+        for s in cookbook:
+            if s.recipe_id == recipe_id:
+                db.session.delete(s)
+
+    #delete StarredRecipes
+    Starred_Recipes = StarredRecipes.query.filter_by(recipe_id=recipe_id).all()
+    if Starred_Recipes != None:
+        for s in Starred_Recipes:
+            if s.recipe_id == recipe_id:
+                db.session.delete(s)
+            
 
     #delete history
     historys = History.query.filter_by(recipe=recipe_id).all()
