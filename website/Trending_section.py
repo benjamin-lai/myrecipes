@@ -47,6 +47,7 @@ def trending_filter():
         elif Savelist["type"] == "Drink":
             return redirect(url_for('recipes.Trending_Section.Drink'))
 
+# Trending Section for the recipes with all types
 @trending_section.route('/Trending Section', methods = ['GET','POST'])
 def trending_sections():
     Savelist["type"] = "all"
@@ -74,6 +75,7 @@ def trending_sections():
 
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "All types", Day_or_week = Savelist["Day_or_week"])
 
+# Trending recipe for starter
 @trending_section.route('/Trending Section.Starter', methods = ['GET','POST'])
 def trending_section_Starter():
     Savelist["type"] = "Starter"
@@ -99,7 +101,8 @@ def trending_section_Starter():
                     card = Card(i, profile.custom_url)
                     trending.append(card)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Starter", Day_or_week = Savelist["Day_or_week"])
-    
+
+# Trending recipe for main   
 @trending_section.route('/Trending Section.Main', methods = ['GET','POST'])
 def trending_section_Main():
     Savelist["type"] = "Main"
@@ -126,6 +129,7 @@ def trending_section_Main():
                     trending.append(card)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Main", Day_or_week = Savelist["Day_or_week"])
 
+# Trending recipe for dessert 
 @trending_section.route('/Trending Section.Dessert', methods = ['GET','POST'])
 def trending_section_Dessert():
     Savelist["type"] = "Dessert"
@@ -152,6 +156,7 @@ def trending_section_Dessert():
                     trending.append(card)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Dessert", Day_or_week = Savelist["Day_or_week"])
 
+# Trending recipe for snack
 @trending_section.route('/Trending Section.Snack', methods = ['GET','POST'])
 def trending_section_Snack():
     Savelist["type"] = "Snack"
@@ -178,8 +183,9 @@ def trending_section_Snack():
                     trending.append(card)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Snack", Day_or_week = Savelist["Day_or_week"])
 
+# Trending recipe for breakfast
 @trending_section.route('/Trending Section.Breakfast', methods = ['GET','POST'])
-def trending_section_Breakfastk():
+def trending_section_Breakfast():
     Savelist["type"] = "Breakfast"
     choose = request.form.get('choose')
     if choose:
@@ -204,6 +210,7 @@ def trending_section_Breakfastk():
                     trending.append(card)
     return render_template("trending_section.html", query=trending, type="recent", meal_type = "Breakfastk", Day_or_week = Savelist["Day_or_week"])
 
+# Trending recipe for drinks
 @trending_section.route('/Trending Section.Drink', methods = ['GET','POST'])
 def trending_section_Drink():
     Savelist["type"] = "Drink"

@@ -79,6 +79,7 @@ class Card:
         self.recipe = recipe
         self.url = url
 
+# Recipe cards list all the recipes that created in the website
 @recipes.route('/Recipe cards', methods = ['GET','POST'])
 def recipe_cards():
     recipes = Recipes.query.order_by(Recipes.id.desc()).all()
@@ -100,6 +101,7 @@ def recipe():
     recipe = Recipes.query.all()
     return render_template("blog-post-list.html",user = current_user)
 
+# Add discription for each step
 @recipes.route('/Add discription', methods=['GET', 'POST'])
 def add_discription():
     if Savelist["can't_be_zero"] == True:
@@ -252,7 +254,7 @@ def add_discription():
             color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"], des_step = Shown_discription)
 
 
-    
+# Add ingredients for current recipe
 @recipes.route('/Add ingredient', methods=['GET', 'POST'])
 def Add_ingredient():
     if check_create(Savelist["RecipeName"],current_user.id) is False:
@@ -272,7 +274,7 @@ def Add_ingredient():
     return render_template("add_ingradient.html", user=current_user, IngreContents = Contents, color1 = Savelist["color_1"],
             color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"], ingredients =  Ingredients)
     
-   
+# Upload image for recipe
 @recipes.route('/upload image', methods=['GET', 'POST'])
 def upload_image():
     
@@ -322,6 +324,7 @@ def upload_image():
     return render_template("upload_image.html", user=current_user, recipename = recipename, color1 = Savelist["color_1"],
             color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"])
 
+# Create recipe by recipe name and overall description
 @recipes.route('/Create recipe', methods=['GET', 'POST'])
 def create_recipe():
     
@@ -389,6 +392,7 @@ def create_recipe():
     return render_template("create_recipe.html", user=current_user, color1 = Savelist["color_1"],
             color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"])
 
+# Edit recipe basic information
 @recipes.route('/edit recipe', methods = ['GET', 'POST'])
 def edit_recipe():
     Savelist["color_1"] = ''
@@ -476,6 +480,7 @@ def edit_recipe():
     return render_template("edit_recipe.html", user=current_user, recipe = recipe, color1 = Savelist["color_1"],
         color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"])
 
+# Update the recipe photo
 @recipes.route('/edit recipe image', methods = ['GET', 'POST'])
 def edit_photo():
     #is true, already created recipe
@@ -520,6 +525,7 @@ def edit_photo():
     return render_template("edit_recipe_image.html", user=current_user, recipename = recipename, color1 = Savelist["color_1"],
             color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"])
 
+# Delete the ingredient by the data from index.js
 @recipes.route('/delete ingredient', methods = ['POST', 'GET'])
 def delete_ingredient():
     if request.method == 'POST':
@@ -541,6 +547,7 @@ def delete_ingredient():
             return redirect(url_for('recipes.edit_ingredient'))
         return redirect(url_for('recipes.Add_ingredient'))
 
+# Modify the ingredients for current recipe
 @recipes.route('/modify ingredient', methods = ['POST', 'GET'])
 def modify_ingredient():
     if request.method == 'POST':
@@ -607,7 +614,7 @@ def push_ingredient():
                 return redirect(url_for('recipes.edit_ingredient'))
             return redirect(url_for('recipes.Add_ingredient'))
     
-#Add ingrdient
+# Edit ingrdient
 @recipes.route('/edit ingredient', methods = ['POST', 'GET'])
 def edit_ingredient():
     # Update IngredientList
@@ -624,6 +631,7 @@ def edit_ingredient():
     return render_template("edit_ingredient.html", user=current_user, IngreContents = Contents, color1 = Savelist["color_1"],
             color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"], ingredients =  Ingredients)
 
+# Delete the discription for each step
 @recipes.route('/delete discription', methods = ['GET', 'POST'])
 def delete_discription():
     if request.method == 'POST':
@@ -647,6 +655,7 @@ def delete_discription():
                 return redirect(url_for('recipes.add_discription'))
             return redirect(url_for('recipes.edit_discription'))
 
+# Edit discriptions for each step
 @recipes.route('/edit discription', methods = ['GET', 'POST'])
 def edit_discription():
     if Savelist["can't_be_zero"] == True:
@@ -790,7 +799,7 @@ def edit_discription():
             color2 = Savelist["color_2"], color3 = Savelist["color_3"], color4 = Savelist["color_4"], des_step = Shown_discription)
 
 
-
+# View recipes
 @recipes.route('/<recipeName>.<int:recipeId>', methods=['GET', 'POST'])
 @recipes.route('/.<int:recipeId>', methods=['GET', 'POST'])
 def view_recipe(recipeName, recipeId):
@@ -953,7 +962,7 @@ def view_recipe(recipeName, recipeId):
          
 
 
-
+# Delete the recipe
 @recipes.route('/Delete recipe', methods=['GET', 'POST'])
 def delete_recipe():
     #delete the recipe using recipeId
@@ -1217,3 +1226,4 @@ def get_ingre_in_order():
         lst.append(ingre_order)
         order += 1
     return lst
+
