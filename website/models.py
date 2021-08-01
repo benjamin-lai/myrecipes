@@ -129,10 +129,6 @@ class Newsfeeds(db.Model, UserMixin):
     creation_time = db.Column(db.String(150))
     creation_date = db.Column(db.String(150))
     
-class newsletter_email(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(150), unique=True)
-
 
 class Likes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -181,7 +177,6 @@ class Codes(db.Model):
 
 class Newsletters(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    trending = db.Column(db.Boolean)
     subscribed_to = db.Column(db.Boolean)       # This is for subscribed to 
     own = db.Column(db.Integer, db.ForeignKey('users.id'))
 
