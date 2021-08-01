@@ -24,11 +24,6 @@
 .btn-group button:not(:last-child) {
   border-right: none; 
 }
-.img-fit img{
-    height: 300px;
-    width:400px;
-    object-fit:cover; 
-}
 
 </style>
 <body>
@@ -86,7 +81,7 @@
             </td>
             <td>
             <!-- want to change thise so it displays profile based off profile_id-->
-            <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.recipe.display_name}}"> {{recipes.recipe.creator}}</a></u></small></p>
+            <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.url}}"> {{recipes.recipe.creator}}</a></u></small></p>
             <a href="/recipe.{{recipes.recipe.name}}.{{recipes.recipe.id}}" class="btn btn-primary">Get the Recipe</a>
           </div>
     </div>
@@ -94,5 +89,5 @@
 </div>
   </td>
 </tr>
-{% endfor %} 
-{% endblock %}
+
+{% endfor %} {% endblock %}
