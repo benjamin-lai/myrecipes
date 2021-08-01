@@ -19,11 +19,13 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 historys = Blueprint('history', __name__)
 CORS(historys)
 
+# Card class used to store the recipe information and image url
 class Card:
     def __init__(self, recipe, url):
         self.recipe = recipe
         self.url = url
 
+# Browsing history, list most recent browsed recipes.
 @historys.route('/history', methods = ['GET','POST'])
 def history():
     
@@ -113,6 +115,7 @@ def history():
     
     return render_template("history.html", query=query, type="recent", res=res)
 
+# Delete the browsing record in the history page
 @historys.route('/delete history', methods=['GET', 'POST'])
 def delete_history():
     if request.method == 'POST':
