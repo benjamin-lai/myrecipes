@@ -98,7 +98,7 @@ def recipe_cards():
 @recipes.route('/recipes', methods = ['GET','POST'])
 def recipe():
     recipe = Recipes.query.all()
-    return render_template("product-page.html",user = current_user)
+    return render_template("blog-post-list.html",user = current_user)
 
 @recipes.route('/Add discription', methods=['GET', 'POST'])
 def add_discription():

@@ -14,7 +14,11 @@ CORS(cookbook)
 def cook_book():
     #user can only view the recipe of their own
     cookbook_all = Cookbooks.query.filter_by(contains = current_user.id).all()
-    return render_template("cookbook.html", user = current_user, books = cookbook_all)
+    if current_user.is_authenticated:
+        return render_template("cookbook.html", user = current_user, books = cookbook_all)
+    else:
+        flash("Only logged in user can view cookbook", category="error")
+        return redirect(url_for('/'))
 
 #cookbook
 @cookbook.route('/cookbook.<book_name>.<int:book_id>', methods=['GET','POST'])  
@@ -38,7 +42,9 @@ def cook_book2(book_name,book_id):
         empty = True
     else:
         empty = False
-
-    #remove recipes
-    return render_template("cookbook_content.html",user = current_user, empty = empty, recipe_list = recipe_list, 
-    cookbook = cookbook)
+    if current_user.is_authenticated:
+        return render_template("cookbook_content.html",user = current_user, empty = empty, recipe_list = recipe_list, 
+             cookbook = cookbook)
+    else:
+        flash("Only logged in user can view cookbook", category="error")
+        return redirect(url_for('views.home'))

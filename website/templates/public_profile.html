@@ -22,7 +22,7 @@
                 height: 400px;
               "
             >
-              <div class="mask" style="background-color: rgba(48, 48, 48, 0.6);">
+              <div>
                 <div class="d-flex justify-content-center align-items-center h-100">
                   <div class="text-white">
                     <!--Profile picture here-->
@@ -123,12 +123,13 @@
       <p class="lead">Contributed Recipes: {{query.count()}}</p>
 
     <!--entrance to cookbook-->
+    {% if profile.profile_id == current_user.id %}
     <form action="/profile/cookbook" method="GET">
       <button class="btn btn-success pull-right" type="submit">
         CookBook
       </button>
     </form>
-
+    {% endif %}
       <!-- User Bio-->
       <div class="form-group purple-border">
         <label for="exampleFormControlTextarea4">Personal Bio</label>

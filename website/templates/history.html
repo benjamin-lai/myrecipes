@@ -2,6 +2,15 @@
 <!-- Overwrites title-->
 {% block title %}Recipe_card{% endblock %} {% block content %}
 {% include 'base2.html' %}
+<head>
+<style>
+.img-fit img{
+    height: 300px;
+    width:400px;
+    object-fit:cover; 
+}
+</style>
+</head>
 <h2>History</h2>
 {% for recipes in query %}
 <tr>
@@ -9,19 +18,19 @@
       <div class="card mb-3" style="max-width: 1000px;">
         <div class="row g-0">
           <div class="col-md-4">
-            <div class="zoom">
+            <div class="img-fit zoom">
               <a href="/recipe.{{recipes.recipe.name}}.{{recipes.recipe.id}}">
                 <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipes.recipe.photo}}" class="image">
               </a>
             </div>
           </div>
           <div class="col-md-8">
-            <div class="card-body">
+            <div class = "for-card" style = "margin-top:40px; margin-right:20px;">
               <h5 class="card-title">{{recipes.recipe.name}} </h5>
       
     </td>
     <td>
-      <h6 class="card-text">{{recipes.recipe.description}}</h6>
+      <h6 class="card-text">{{recipes.recipe.description[:250]}}</h6>
     </td>
     <td>
           <!-- want to change thise so it displays profile based off profile_id-->

@@ -8,7 +8,12 @@
 <head>
     <title>Page Title</title>
     <style>
-      p {color: blue;}   
+      p {color: blue;} 
+      .img-fit img{
+          height: 300px;
+          width:400px;
+          object-fit:cover; 
+      }  
     </style>
   </head>  
   <body>
@@ -17,35 +22,38 @@
     
   </body>
   </html>
+
 {% for recipes in query %}
 <tr>
   <td>
-    <div class="card mb-3" style="max-width: 1000px;">
+    <div class="card mb-3">
       <div class="row g-0">
         <div class="col-md-4">
-          <div class="zoom">
+          <div class="img-fit zoom">
             <a href="/recipe.{{recipes.recipe.name}}.{{recipes.recipe.id}}">
               <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipes.recipe.photo}}" class="image">
             </a>
           </div>
         </div>
         <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">{{recipes.recipe.name}} </h5>
-    
-  </td>
-  <div>
-    <h7 class="card-text">{{recipes.recipe.description}}</h7>
-  </div>
-  <td>
-        <!-- want to change thise so it displays profile based off profile_id-->
-        <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.url}}"> {{recipes.recipe.creator}}</a></u></small></p>
-        <a href="/recipe.{{recipes.recipe.name}}.{{recipes.recipe.id}}" class="btn btn-primary">Get the Recipe</a>
-      </div>
+          <div class = "for-card" style = "margin-top:40px; margin-right:20px;">
+            <b><h3 class="card-title">{{recipes.recipe.name}} </h3></b>
+            </td>
+            <td>
+              <h7 class="card-text">{{recipes.recipe.description[:350]}}</h7>
+            </td>
+            <td>
+            <!-- want to change thise so it displays profile based off profile_id-->
+            <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.recipe.display_name}}"> {{recipes.recipe.creator}}</a></u></small></p>
+            <a href="/recipe.{{recipes.recipe.name}}.{{recipes.recipe.id}}" class="btn btn-primary">Get the Recipe</a>
+          </div>
     </div>
   </div>
 </div>
   </td>
 </tr>
+{% endfor %}
 
-{% endfor %} {% endblock %}
+
+
+{% endblock %}

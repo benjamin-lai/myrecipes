@@ -28,6 +28,11 @@
         body{
           height: 100%;
         }
+        .img-fit img{
+            height: 300px;
+            width:400px;
+            object-fit:cover; 
+        }
     </style>
 </head>
 <body>
@@ -37,7 +42,9 @@
 {% if cookbook.description != None %}
 <h7>{{cookbook.description}}<h7>
 {% endif %}<br><br>
+{% if cookbook.contains == current_user.id %}
 <button class="btn btn-warning" type="submit" name="setDes" id = "setDes" onclick = "setDes({{cookbook.id}})">Edit/Create</button>
+{% endif %}
 <script>
     function setDes(cookbook_id) {
         var des = prompt("CookBook Description：");
@@ -69,25 +76,27 @@ Empty cookbook, Go find more delicious!
         <div class="card mb-3" style="max-width: 1000px;">
         <div class="row g-0">
             <div class="col-md-4">
-            <div class="zoom">
+            <div class="img-fit zoom">
                 <a href="/recipe.{{recipes.name}}.{{recipes.id}}">
                 <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/{{recipes.photo}}" class="image">
                 </a>
             </div>
             </div>
             <div class="col-md-8">
-            <div class="card-body">
+            <div class = "for-card" style = "margin-top:40px; margin-right:20px;">
                 <h5 class="card-title">{{recipes.name}} </h5>
         
-    </td>
-  <div>
-    <h7 class="card-text">{{recipes.description}}</h7>
-  </div>
-  <td>
+                </td>
+              <div>
+                <h7 class="card-text">{{recipes.description[0:250]}}</h7>
+              </div>
+              <td>
         <!-- want to change thise so it displays profile based off profile_id-->
         <p class="card-text"><small class="text-muted">Created by: <u><a href="/profile/{{recipes.display_name}}"> {{recipes.creator}}</a></u></small></p>
         <a href="/recipe.{{recipes.name}}.{{recipes.id}}" class="btn btn-primary">Get the Recipe</a>
+        {% if cookbook.contains == current_user.id %}
         <button class="btn btn-warning" type="submit" name="remove" id = "remove" onclick = "removeRecipe({{recipes.id}}, {{cookbook.id}})">Delete</button>
+        {% endif %}
         <script>
             function removeRecipe(recipe_id,cookbook_id) {
             if (confirm("Are you sure you want to remove this recipe ?"))
