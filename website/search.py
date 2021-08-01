@@ -73,6 +73,9 @@ def search_result():
             else:
                 query = find_query_by_name(searchInput)
             
+
+            #append profile id into query
+            query = append_profile_id(query)
             return render_template("search.html",user = current_user,
                 search_input = searchInput,query = query,search_value = searchInput,queryLen = len(query))
         
@@ -102,18 +105,35 @@ def search_result():
         if button_include is not None:
             #add ingredient include filter
             if len(ingre_include) > 0:
-                #add to ingredient filter list
-                IngredientFilter.append(ingre_include)
+                #split str by space, search them all and put into query
+                res = " " in ingre_include
+                if res is True: #contain space
+                    data = ingre_include.split()
+                    for d in data:
+                        #add to ingredient filter list
+                        IngredientFilter.append(d)
+                else:
+                    IngredientFilter.append(ingre_include)
             else:
                 flash("Ingredient Input can't be empty", category='error')
         if button_exclude is not None:
             #add ingre exclude
             if len(ingre_exclude) > 0:
-                IngredientExclude.append(ingre_exclude)
+                #split str by space, search them all and put into query
+                res = " " in ingre_exclude
+                if res is True: #contain space
+                    data = ingre_exclude.split()
+                    for d in data:
+                        #add to ingredient filter list
+                        IngredientExclude.append(d)
+                else:
+                    IngredientExclude.append(ingre_exclude)
             else:
                 flash("Ingredient Exclude can't be empty", category='error')
 
-
+        #remvoe duplicate for include and exclude
+        IngredientFilter = list(dict.fromkeys(IngredientFilter))
+        IngredientExclude = list(dict.fromkeys(IngredientExclude))
 
         #Method filter
         addMethod = request.form.get('MethodAdd')
@@ -171,6 +191,8 @@ def search_result():
         if len(Contents) < 1:
             Contents = ""
         if len(query) > 0:
+            #append profile id into query
+            query = append_profile_id(query)
             return render_template("search.html",user = current_user,
                 search_input = searchInput,query = query,search_value = searchInput,
                 contents = Contents, include_ingreList = include_contents,queryLen = len(query),
@@ -188,6 +210,8 @@ def search_result():
         message = ""
         if len(query) < 1:
             message = f"No Recipe be Founded  {searchInput}"
+        #append profile id into query
+        query = append_profile_id(query)
         return render_template("search.html",user = current_user,search_input = searchInput
             ,message = message,queryLen = len(query),query = query)
     
@@ -365,3 +389,14 @@ def generate_exclude_contents():
     for i in IngredientExclude:
         Contents += (f"<< {i} ")
     return Contents
+
+#append recipe's creator's profile id after query
+def append_profile_id(query):
+    recipes = []
+    profiles = []
+    for r in query:
+        recipe = Recipes.query.filter_by(id=r.id).first()
+        profile = Profiles.query.filter_by(profile_id=recipe.creates).first()
+        setattr(recipe, "custom_url", profile.custom_url)
+        recipes.append(recipe)
+    return recipes

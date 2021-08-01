@@ -43,8 +43,21 @@ def cook_book2(book_name,book_id):
     else:
         empty = False
     if current_user.is_authenticated:
+        recipe_list = append_profile_id(recipe_list)
         return render_template("cookbook_content.html",user = current_user, empty = empty, recipe_list = recipe_list, 
              cookbook = cookbook)
     else:
         flash("Only logged in user can view cookbook", category="error")
         return redirect(url_for('views.home'))
+
+#helper func
+#put custom url into recipe list
+def append_profile_id(query):
+    recipes = []
+    profiles = []
+    for r in query:
+        recipe = Recipes.query.filter_by(id=r.id).first()
+        profile = Profiles.query.filter_by(profile_id=recipe.creates).first()
+        setattr(recipe, "custom_url", profile.custom_url)
+        recipes.append(recipe)
+    return recipes
