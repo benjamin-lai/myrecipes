@@ -147,7 +147,6 @@ create table Codes (
 
 create table Newsletters (
     id              serial      primary key,
-    trending        boolean     not null,
     subscribed_to   boolean     not null,
     own             integer     not null,
     foreign key (own) references Users(id)             

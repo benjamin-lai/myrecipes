@@ -23,31 +23,16 @@ def manage_newsletter():
 @newsletter.route('/subscribe-to-newsletters', methods=['POST'])
 def subscribe_newsletter():
     if request.method == 'POST':
-        # Getting list of integers, that correspond to content they want in their newsletters
-        checkbox = json.loads(request.data)
-        checkbox_value = checkbox['checkboxes']
-
         # Check if newsletter already exists for user.
         newsletter = Newsletters.query.filter_by(own=current_user.id).first()
-        trending = 0            # set as false initially.
-        subscribed_to = 0
-
-        # Switches to on if conditions are met.
-        for selected in checkbox_value:
-            if selected == '1':             
-                trending = 1
-            if selected == '2':
-                subscribed_to = 1
             
         # Update current newsletter
         if newsletter:
-            newsletter.trending = trending
-            newsletter.subscribed_to = subscribed_to
+            newsletter.subscribed_to = 1
             flash("Your Newsletter Feed is now updated!", category="success")
         
         else:   # Newsletter does not exist
-            newsletter = Newsletters(trending=trending, 
-                subscribed_to=subscribed_to, own=current_user.id)
+            newsletter = Newsletters(subscribed_to=1, own=current_user.id)
             db.session.add(newsletter)
             flash("You have successfully subscribed to this service!", category="success")
 
@@ -61,7 +46,7 @@ def unsubscribe_newsletter():
     user_newsletter = Newsletters.query.filter_by(own=current_user.id).first()
     if user_newsletter is not None:
         flash("You have successfully unsubscribed to newsletters", category="success")
-        db.session.delete(user_newsletter)
+        user_newsletter.subscribed_to = 0
         db.session.commit()
     else:
         flash("You are already unsubscribed to this service", category="error")
@@ -113,32 +98,4 @@ def get_profile_emails(sub_list):
         if newsletter:
             if newsletter.subscribed_to == True:
                 emailing_list.append(user.email)
-    return emailing_list
-
-
-
-
-
-# Email the trending recipe for that week to everyone who is subscribed to that feature 
-def send_weekly_trending_recipes(trending):
-    # Given the trending recipe
-    # Send emails to everyone subbed to trending feature
-    newsletters = Newsletters.all()
-
-    # Get user email
-    emailing_list = get_trending_emails(newsletters)
-
-    if len(emailing_list) != 0:
-        topic = "New weekly trending recipes!"
-        body = "New recipe"
-
-        send_email(emailing_list, topic, body)
-
-
-def get_trending_emails(newsletter_list):
-    emailing_list = []
-    for newsletter in newsletter_list:
-        if newsletter.trending == True:
-            user = Users.query.filter_by(id=newsletter.own).first()
-            emailing_list.append(user.email)
     return emailing_list
