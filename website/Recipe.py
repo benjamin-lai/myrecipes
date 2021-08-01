@@ -1043,7 +1043,7 @@ def random_recipe():
     rand_recipe = db.session.query(Recipes)[rand_num]
     name = rand_recipe.name
     id = rand_recipe.id
-    return view_recipe(name, id) 
+    return redirect(url_for('recipes.view_recipe',recipeName = name,recipeId = id ))
 
 # star and unstar a recipe
 @recipes.route('/recipe/star', methods=['GET', 'POST'])
@@ -1054,15 +1054,13 @@ def star_recipe():
         user_id = request.form['user']
         recipe_id = request.form['recipe']
 
-        # sub_status = "subscribe" or "subscribed" with the quotations included. Later add an alert for unsubscribing and make sure only s
-        # logged in users can subscribe. Can't subscribe to yourself (maybe add this).
 
     if str(star_status) == '"starred"':
         new_star = StarredRecipes(recipe_id=recipe_id, contains=user_id) # user's subscribed to list
         db.session.add(new_star)
         
         message = "user " + str(user_id) + " has starred recipe " + str(recipe_id)
-    # code for unsubscribing
+    # code for unstarring a recipe
     elif str(star_status) == '"unstarred"':
         del_star = StarredRecipes.query.filter_by(recipe_id=recipe_id, contains=user_id).first()
   
