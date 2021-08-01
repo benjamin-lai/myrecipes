@@ -54,13 +54,14 @@ def history():
         histories = History.query.filter_by(userid = current_user.id).order_by(History.last_view_date.desc(), History.last_view_time.desc()).all()
         query = []
         for i in histories:
-            recipes = Recipes.query.filter_by(id = i.recipe).all()
-            for recipe in recipes:
-                # Link the creator's name as url
-                creator_name = recipe.creator.split(" ")
-                profile = Profiles.query.filter_by(owns = recipe.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
-                card = Card(recipe, profile.custom_url)
-                query.append(card)
+            if i.last_view_date and i.last_view_time:
+                recipes = Recipes.query.filter_by(id = i.recipe).all()
+                for recipe in recipes:
+                    # Link the creator's name as url
+                    creator_name = recipe.creator.split(" ")
+                    profile = Profiles.query.filter_by(owns = recipe.creates, last_name = creator_name[1], first_name = creator_name[0]).first()
+                    card = Card(recipe, profile.custom_url)
+                    query.append(card)
     else:
         return render_template("restricted_access.html")
     
