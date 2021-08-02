@@ -23,7 +23,7 @@ Week 8
 Had 2nd progressive report. Had a meeting beforehand to work out kinks and who's going to present what. Started research on a chatbot and tested out demo on dialogflow website. had a group meeting with winson and albert and looked into bugs for the website. worked on retrospective
 
 Week 9
-Started on Google SSO and integrated dialogflow bot into kommunicate. Finished the SSO, user's create an account from their google acc and started on bots intents, Started on report for my sections. Did the APIs section and did licensing
+Started on Google SSO and integrated dialogflow bot into kommunicate. Finished the SSO, user's create an account from their google acc and started on bots intents, Started on report for my sections. Did the APIs section and did licensing, create a dump file for the database
 
 Week 10
 Start to finish up on report, fixed a few bugs in chatbot intents. Attempt to figure out how to load database on VLAB, but doesn’t work since we don’t have access to Grieg and postgresql anymore. So installed lubuntu and virtualbox and made sure our install process was right.
