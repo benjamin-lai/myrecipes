@@ -5,11 +5,12 @@
 from flask import Blueprint, render_template, request, flash
 from flask_login import current_user
 from flask_cors import CORS
-from .models import Recipes, Ingredient, Method
+from .models import Recipes, Ingredient, Method, Profiles
 
 
 search = Blueprint('search', __name__)
 CORS(search)
+
 
 searchInput = ""
 
@@ -74,6 +75,9 @@ def search_result():
             else:
                 query = find_query_by_name(searchInput)
             
+
+            #append profile id into query
+            query = append_profile_id(query)
             return render_template("search.html",user = current_user,
                 search_input = searchInput,query = query,search_value = searchInput,queryLen = len(query))
         
@@ -88,7 +92,9 @@ def search_result():
             SeaFood = request.form.get('seafood')
             Poultry = request.form.get('poultry')
 
-            check_and_add_ingredient(Pork,Beef,Vegi,SeaFood,Poultry)
+            IngreFlag = check_and_add_ingredient(Pork,Beef,Vegi,SeaFood,Poultry)
+
+
 
         #ingredient search filter
         button_include = request.form.get('include_add')
@@ -98,18 +104,35 @@ def search_result():
         if button_include is not None:
             #add ingredient include filter
             if len(ingre_include) > 0:
-                #add to ingredient filter list
-                IngredientFilter.append(ingre_include)
+                #split str by space, search them all and put into query
+                res = " " in ingre_include
+                if res is True: #contain space
+                    data = ingre_include.split()
+                    for d in data:
+                        #add to ingredient filter list
+                        IngredientFilter.append(d)
+                else:
+                    IngredientFilter.append(ingre_include)
             else:
                 flash("Ingredient Input can't be empty", category='error')
         if button_exclude is not None:
             #add ingre exclude
             if len(ingre_exclude) > 0:
-                IngredientExclude.append(ingre_exclude)
+                #split str by space, search them all and put into query
+                res = " " in ingre_exclude
+                if res is True: #contain space
+                    data = ingre_exclude.split()
+                    for d in data:
+                        #add to ingredient filter list
+                        IngredientExclude.append(d)
+                else:
+                    IngredientExclude.append(ingre_exclude)
             else:
                 flash("Ingredient Exclude can't be empty", category='error')
 
-
+        #remvoe duplicate for include and exclude
+        IngredientFilter = list(dict.fromkeys(IngredientFilter))
+        IngredientExclude = list(dict.fromkeys(IngredientExclude))
 
         #Method filter
         addMethod = request.form.get('MethodAdd')
@@ -122,9 +145,7 @@ def search_result():
             Braising  = request.form.get('braising')
             StirFrying  = request.form.get('stir_frying')
 
-            check_and_add_method(Baking,Frying,Grilling,Steaming,Braising, StirFrying)
-
-
+            MethodFlag = check_and_add_method(Baking,Frying,Grilling,Steaming,Braising, StirFrying)
 
         #MealType filter
         addType = request.form.get('TypeAdd')
@@ -132,6 +153,8 @@ def search_result():
             MealTypeFilter = request.form.get('Type')
             if MealTypeFilter is None:
                 flash("Meal Type can't be empty", category='error')
+
+
         
         #SortBy
         SortAdd = request.form.get('SortAdd')
@@ -157,7 +180,8 @@ def search_result():
         if len(Contents) < 1:
             Contents = ""
         if len(query) > 0:
-            print(f"query {query}")
+            #append profile id into query
+            query = append_profile_id(query)
             return render_template("search.html",user = current_user,
                 search_input = searchInput,query = query,search_value = searchInput,
                 contents = Contents, include_ingreList = include_contents,queryLen = len(query),
@@ -169,12 +193,14 @@ def search_result():
                 contents = Contents, include_ingreList = include_contents, 
                 exclude_ingreList = exclude_contents,message = message,queryLen = len(query))
     else:
-        #if not searching, display every recipes in database
+        #if not searching, display every recipes in db
         query = Recipes.query.all()
         searchInput = ""
         message = ""
         if len(query) < 1:
             message = f"No Recipe be Founded  {searchInput}"
+        #append profile id into query
+        query = append_profile_id(query)
         return render_template("search.html",user = current_user,search_input = searchInput
             ,message = message,queryLen = len(query),query = query)
     
@@ -260,7 +286,6 @@ def use_IngredientFilter_for_query(query):
         ingre = Ingredient.query.filter_by(recipe_id = q.id).all()
         for ing in ingre:
             for i in IngredientFilter:
-                print(ing.ingredient)
                 if ing.ingredient.lower() == i.lower():
                     find += 1
                     break
@@ -290,7 +315,6 @@ def use_MethodFilter_for_query(query):
         method = Method.query.filter_by(recipe_id = q.id).all()
         for me in method:
             for m in MethodFilter:
-                print(me.method)
                 if me.method.lower() == m.lower():
                     find += 1
                     break
@@ -305,7 +329,6 @@ def use_TypeFilter_for_query(query):
     else:
         query_after = []
         for q in query:
-            print(f"type : {q.meal_type}")
             if q.meal_type.lower() == MealTypeFilter.lower():
                 query_after.append(q)
         return query_after
@@ -317,21 +340,17 @@ def get_like_minus_dislike_num(q):
     return int(q.num_of_likes - q.num_of_dislikes)
 
 def sort_query(query):
-    print("sort_query")
-    print(SortBy)
     if SortBy == "DateNew":
         #recently realesed
         query.sort(key = get_recipe_id)
-        print(f"New {query}")
     if SortBy == "DateOld":
         #least recently released
         query.sort(key = get_recipe_id, reverse=True)
-        print(f"Old {query}")
     #if SortBy == "Star":
         #rate of star, currently disable
     if SortBy == "Likes":
         #like - dislike
-        query.sort(key = get_like_minus_dislike_num, reverse=True)
+        query.sort(key = get_like_minus_dislike_num)
     return query
 
 #do the rest for each filter when search input have been changed
@@ -359,3 +378,14 @@ def generate_exclude_contents():
     for i in IngredientExclude:
         Contents += (f"<< {i} ")
     return Contents
+
+#append recipe's creator's profile id after query
+def append_profile_id(query):
+    recipes = []
+    profiles = []
+    for r in query:
+        recipe = Recipes.query.filter_by(id=r.id).first()
+        profile = Profiles.query.filter_by(profile_id=recipe.creates).first()
+        setattr(recipe, "custom_url", profile.custom_url)
+        recipes.append(recipe)
+    return recipes
