@@ -14,11 +14,11 @@ DB_PASSWORD = 'aa'
 def create_app():
     app = Flask(__name__)
     CORS(app)
-    app.config['SECRET_KEY'] = 'amongus'
 
     # Mail parameters
     app.config.update(
-        MAIL_SERVER= 'smtp.gmail.com',
+        SECRET_KEY = 'amongus',
+        MAIL_SERVER = 'smtp.gmail.com',
         MAIL_PORT= 465,
         MAIL_USE_SSL= True,
         MAIL_USERNAME = 'w18b.sheeesh@gmail.com',

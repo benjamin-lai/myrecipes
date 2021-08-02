@@ -1,10 +1,9 @@
-# Homepage
-from typing import BinaryIO
-from flask import Blueprint, render_template, request, flash, redirect, url_for
-from flask_login import login_required, current_user
+# Newsfeed page which gives users access to three filters with how they
+# display their newsfeed. These filters are listed below.
+from flask import Blueprint, render_template
+from flask_login import current_user
 from flask_cors import CORS
-from . import db
-from .models import Users, Profiles, Newsfeeds
+from .models import Newsfeeds
 
 
 newsfeed = Blueprint('newsfeed', __name__)

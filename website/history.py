@@ -1,20 +1,14 @@
-# Homepage
+# History page, displays a list of recipes that the logged in user has looked at.
+# Also gives users the option to delete their history page.
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import  current_user
 from flask_cors import CORS
-from website import create_app
-
-from flask import Flask
 
 from .models import Recipes, Profiles, History
 from . import db
 import psycopg2
 import json
 
-
-UPLOAD_FOLDER = 'C:\comp3900\project_data'
-app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 historys = Blueprint('history', __name__)
 CORS(historys)
@@ -120,11 +114,7 @@ def history():
 def delete_history():
     if request.method == 'POST':
         browsing_history = json.loads(request.data)
-        print(request.data)
-        print(browsing_history)
-
         recipeId = browsing_history['id']
-        print("recipeId: ", recipeId)
         delete_histories = History.query.filter_by(userid = current_user.id, recipe = recipeId).first()
         db.session.delete(delete_histories)
         db.session.commit()

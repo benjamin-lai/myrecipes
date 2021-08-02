@@ -1,4 +1,7 @@
-# Authentication
+# Authentication section
+# Allows users to register, login, logout, and recover their password
+# Allow caters for google sso (google sign in option) 
+
 from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app as app, session, abort, request
 from werkzeug.datastructures import Authorization
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -241,8 +244,6 @@ def callback():
         audience=GOOGLE_CLIENT_ID
     )
 
-
-
     first_name = id_info.get("given_name")
     last_name = id_info.get("family_name")
     email = id_info.get("email")
@@ -273,15 +274,10 @@ def callback():
         body = "Your temporary password is: " + rand_pass + "\n" + "You can use your gmail address and the temporary password to login through our login system or login through the Google Sign-In using your gmail account.\n" "Also, you can reset the password by using the \"Forgot Password?\" link on the sign on page."
         send_email(email, topic, body)
         return redirect(url_for('views.home')) 
-    
-    
-
     return redirect(url_for('views.home'))
 
 
 def sign_up_google(email, first_name, last_name, password):
-
-     
     if len(first_name) < 2:
         flash('First name must be greater than 1 character.', category='error')
     elif len(last_name) < 2:

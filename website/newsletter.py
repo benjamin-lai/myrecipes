@@ -1,11 +1,15 @@
+# Newsletter (email notification) system that we have
+# Logged in users can choose to subscribe/unsubscribe to this feature
+# If they are subscribed then they can get email notifications whenever subscriber that they
+# are subscribed to posts a new recipe.
+
 from flask import Blueprint, render_template, flash, request, jsonify, current_app as app
 from flask_login import current_user
 from flask_cors import CORS
 from flask_mail import Mail, Message
-import json
 
 from . import db
-from .models import Subscriber, Users, Profiles, Newsfeeds, Newsletters
+from .models import Subscriber, Users, Profiles, Newsletters
 
 
 newsletter = Blueprint('newsletter', __name__)
@@ -45,12 +49,9 @@ def unsubscribe_newsletter():
     # Check if the newsletter table exists.
     user_newsletter = Newsletters.query.filter_by(own=current_user.id).first()
     if user_newsletter is not None:
-        flash("You have successfully unsubscribed to newsletters", category="success")
         user_newsletter.subscribed_to = 0
         db.session.commit()
-    else:
-        flash("You are already unsubscribed to this service", category="error")
-
+    flash("You have successfully unsubscribed to newsletters", category="success")
     return jsonify({})
 
 # Method to send a email to provide emails
@@ -79,7 +80,6 @@ def send_new_recipe_emails(recipe):
 
     # Get subscribers profile's emails
     emailing_list = get_profile_emails(subscriber_list) 
-    print(emailing_list)
     if len(emailing_list) != 0:
         topic = f"{user.display_name} has posted a new recipe called {recipe.name}."
         body = f"New recipe can be found at: http://127.0.0.1:5000/{recipe.name}.{recipe.id}"

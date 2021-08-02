@@ -1,17 +1,18 @@
 # This is contains helper functions to create, modify and delete messages.
-from flask import Blueprint, request, flash, jsonify,redirect, url_for, render_template
+#  Also contains functions to like/dislike, feature is only available to loggedin users
+from flask import Blueprint, request, flash, jsonify
 from flask_login import login_required, current_user
+from flask_cors import CORS
 import json
 
 from .models import Comments, Profiles, Likes, Recipes, Cookbooks, Cookbooks_lists
 from . import db
 
 review = Blueprint('review', __name__)
+CORS(review)
 
 
-
-# Creates a comment given the recipe_id
-# Already checks http request 
+# Creates a comment given the recipe_id and comment
 @review.route('/create-comment', methods=['POST'])
 @login_required
 def create_comment():
@@ -24,7 +25,6 @@ def create_comment():
             flash('Comment is too short!', category='error')
         else:
             profile = Profiles.query.filter_by(owns=current_user.id).first()
-            print(profile.display_name)
             new_comment = Comments(comment=comment, has=recipe_id, owns=current_user.id)
             db.session.add(new_comment)
             db.session.commit()
@@ -180,11 +180,9 @@ def get_rating(likes, dislikes):
 @review.route('/cookbook_create', methods=['POST']) 
 def create_cookbook():
     #implementing create
-    print(request.method)
     if request.method == 'POST':
         cookbook = json.loads(request.data)
         cookbook_name = cookbook['name']
-        print(f"cookbook {cookbook['name']}")
 
         if len(cookbook_name) < 1:
             flash('name is too short!', category='error')
@@ -209,9 +207,7 @@ def check_duplicate(cookbook_name):
 def delete_book():
     if request.method == 'POST':
         delete = json.loads(request.data)
-        print(delete)
         book_id = delete['book_id']
-        print(book_id)
         
         ckbkl = Cookbooks_lists.query.filter_by(cookbook_id = book_id).all()
         for cl in ckbkl:
@@ -230,7 +226,6 @@ def edit_name():
         cookbook = json.loads(request.data)
         book_id = cookbook['book_id']
         new_name = cookbook['name']
-        print(f"book   {cookbook}")
         if len(new_name) < 1:    
             flash('Name is too short!', category='error')
         elif check_duplicate(new_name) is False:
@@ -248,7 +243,6 @@ def edit_name():
 def remove_recipe():
     if request.method == 'POST':
         delete = json.loads(request.data)
-        print(delete)
         recipe_id = delete['recipe_id']
         book_id = delete['cookbook_id']
         cookbook = Cookbooks_lists.query.filter_by(recipe_id = recipe_id, cookbook_id = book_id).first()
@@ -264,7 +258,6 @@ def set_des():
         cookbook = json.loads(request.data)
         book_id = cookbook['cookbook_id']
         des = cookbook['des']
-        print(f"book   {cookbook}")
     
         cookbook = Cookbooks.query.filter_by(id = book_id).first()
         cookbook.description = des

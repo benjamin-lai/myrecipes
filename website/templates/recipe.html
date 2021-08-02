@@ -1,3 +1,4 @@
+<!-- Recipe page which displays all recipe information -->
 {% extends "base.html" %} 
 <!-- Overwrites title-->
 {% block title %}Recipe{% endblock %}
@@ -288,35 +289,26 @@
 
 
     {% if current_user.is_authenticated %}
-    <!--save into cookbooks-->
-    <!--drop down menu for cookbook-->
-    <div class="dropdown">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Save to CookBook
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style = "background-color: #e2e8f0;">
-        <div class = "container">
-        <form method="POST"  action="http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe.id}}" >
-          {% for cookbook in cookbook_my %}
-          <input type="radio" id="{{cookbook.name}}" name="cookbook" value="{{cookbook.id}}">
-          <label for="{{cookbook.name}}">{{cookbook.name}}</label><br>
-          {% endfor %}
-          <button name="BookAdd" id = "BookAdd" type="submit" class="btn btn-outline-success" >Save into cookbooks</button>
-        </form>
+      <!--save into cookbooks-->
+      <!--drop down menu for cookbook-->
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Save to CookBook
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style = "background-color: #e2e8f0;">
+          <div class = "container">
+          <form method="POST"  action="http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe.id}}" >
+            {% for cookbook in cookbook_my %}
+            <input type="radio" id="{{cookbook.name}}" name="cookbook" value="{{cookbook.id}}">
+            <label for="{{cookbook.name}}">{{cookbook.name}}</label><br>
+            {% endfor %}
+            <button name="BookAdd" id = "BookAdd" type="submit" class="btn btn-outline-success" >Save into cookbooks</button>
+          </form>
+        </div>
+        </div>
       </div>
-      </div>
-    </div>
     {% endif %}
     <br>
-
-    
-
-
-
-
-
-
-
 
 
 <div class="product-info">

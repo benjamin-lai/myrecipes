@@ -1,8 +1,7 @@
 #Cook book page and cookbook content page showing
-from flask import Blueprint, render_template, request, flash, redirect, url_for
-from flask_login import login_required, current_user
+from flask import Blueprint, render_template, flash, redirect, url_for
+from flask_login import current_user
 from flask_cors import CORS
-from . import db
 from .models import  Recipes, Profiles, Cookbooks, Cookbooks_lists
 
 
@@ -55,7 +54,6 @@ def cook_book2(book_name,book_id):
 #put custom url into recipe list
 def append_profile_id(query):
     recipes = []
-    profiles = []
     for r in query:
         recipe = Recipes.query.filter_by(id=r.id).first()
         profile = Profiles.query.filter_by(profile_id=recipe.creates).first()

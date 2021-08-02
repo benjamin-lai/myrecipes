@@ -1,3 +1,4 @@
+<!-- Page for displaying cookbook content -->
 {% extends "base.html" %} {% block title %}MyRecipes{% endblock %}
 <!-- Overwrites title-->
 
@@ -6,33 +7,6 @@
 
 
 <head>  
-  <!-- Import Bootstrap. Links to CDN which gives access to all the bootstrap designs -->
-    <link
-    rel="stylesheet"
-    href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-    crossorigin="anonymous"
-    />
-    <link
-    rel="stylesheet"
-    href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    crossorigin="anonymous"
-    />
-
-    <!-- When hovering over dropdown menu display content (I dont know how to connect css file) -->
-    <style type="text/css">
-        .dropdown:hover .dropdown-menu {
-          display: block;
-        }
-        body{
-          background-color: #e2e8f0;
-        }
-        .img-fit img{
-            height: 300px;
-            width:400px;
-            object-fit:cover; 
-        }
-    </style>
 </head>
 <br>
 <body>
@@ -64,7 +38,7 @@
 <br>
 {% if empty == True %}
 <h1 align = "center">
-Empty cookbook, Go find more delicious!
+Empty cookbook, Go find more delicious recipes!
 </h1>
 {% endif %}
 <br>
