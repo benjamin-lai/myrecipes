@@ -27,8 +27,8 @@ class Card:
 def trending_filter():
     if request.method == "POST":
         filter = json.loads(request.data)
-        
-        Savelist["Day_or_week"] = filter['filter']
+        if filter['filter']:
+            Savelist["Day_or_week"] = filter['filter']
         if Savelist["type"] == "all":
             return redirect(url_for('trending_section.trending_sections'))
         elif Savelist["type"] == "Starter":
