@@ -42,7 +42,7 @@
           <br>
           <div class = "loginbox">  
             <div class="jumbotron" style="margin-bottom: 0px" onclick="create_book()">
-                <img border="0" src="{{ url_for('static',filename = 'images/add1.png')}}"  alt="add" height = 100px width = 100px  style = "margin-left: 55px;">  
+                <img border="0" src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/add1.png"  alt="add" height = 100px width = 100px  style = "margin-left: 55px;">  
                 <h5 class="card-title" align = "center">Create a new cookbook</h5>
                 <script>
                     function create_book() {
@@ -74,7 +74,7 @@
         <div class="col-md-6 col-lg-4">
             <div class="border-0">
                 <div class="img-fit">
-                <a href="/profile/cookbook.{{book.name}}.{{book.id}}"><img border="0"  src="{{ url_for('static',filename = 'images/bookmark.png')}}" 
+                <a href="/profile/cookbook.{{book.name}}.{{book.id}}"><img border="0"  src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/bookmark.png" 
                 style = "margin-left:3px; margin-top:10px;"></a></div>
                 <div align = "center" style = "margin-bottom:10px;">
                     <h6><a href="/profile/cookbook.{{book.name}}.{{book.id}}">{{book.name}}</a></h6>

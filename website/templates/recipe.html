@@ -438,16 +438,16 @@
   <hr style = "border: 1px solid black; border-radius: 1px;">
   <div class = "wrap">
     <a class= "facebook" href= "https://www.facebook.com/sharer.php?text=Amazing recipes I found in MyRecipe [{{recipe.name}}]&u=http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe.id}}" target= "_blank" id= "J-share-facebook" >
-      <img border="0"  src="{{ url_for('static',filename = 'images/facebook1.png')}}" alt="facebook" height="150" width="150">
+      <img border="0"  src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/facebook1.png" alt="facebook" height="150" width="150">
     </a>
     <a href="https://twitter.com/share?text=Amazing recipes I found in MyRecipe [{{recipe.name}}]    &url=http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe.id}}" target="_blank">
-      <img border="0"  src="{{ url_for('static',filename = 'images/twitter.png')}}" alt="twitter" height="150" width="150">
+      <img border="0"  src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/twitter.png" alt="twitter" height="150" width="150">
     </a>
     <a href="http://service.weibo.com/share/share.php?appkey=&title=Amazing recipes I found in MyRecipe [{{recipe.name}}]&url=http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe.id}}" target="_blank">
-      <img border="0"  src="{{ url_for('static',filename = 'images/weibo2.png')}}" alt="facebook" height="140" width="140">
+      <img border="0"  src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/weibo2.png" alt="weibo" height="140" width="140">
     </a>
     <a href="http://127.0.0.1:5000/recipe.{{recipe.name}}.{{recipe.id}}" download = "MeRecipe_{{recipe.name}}">
-      <img src="{{ url_for('static',filename = 'images/download2.png')}}" width="140" height="150" alt="" />
+      <img src="https://comp3900-w18b-sheeesh.s3.ap-southeast-2.amazonaws.com/download2.png" alt="download" width="140" height="150" alt="" />
     </a>
   </div>
 </div>
