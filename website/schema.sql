@@ -67,13 +67,6 @@ create table Method (
     primary key(recipe_id, method)
 );
 
-create table Meal_Type (
-    recipe_id integer references Recipes(id),
-    meal_type     text,
-    primary key(recipe_id, meal_type)
-);
-
-
 -- list of people that are subscribed to the profile (contains)
 create table Subscriber (
     subscriber_id   integer     not null,
