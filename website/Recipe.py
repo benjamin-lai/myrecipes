@@ -879,6 +879,10 @@ def view_recipe(recipeName, recipeId):
         else:
             history = History(userid = current_user.id, recipe = recipe.id)
             db.session.add(history)
+            date = datetime.date(datetime.now())
+            time = datetime.time(datetime.now())
+            history.last_view_time = time
+            history.last_view_date = date
             db.session.commit()
     
     
