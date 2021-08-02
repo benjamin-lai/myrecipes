@@ -789,19 +789,20 @@ def view_recipe(recipeName, recipeId):
     if current_user.is_authenticated:
         cookbook_my = Cookbooks.query.filter_by(contains = current_user.id).all()
     #add into cookbook
-    book_add = request.form.get('cookbook')
-    if book_add is not None:
-        
-        #check if this recipe already inbook
-        cookbook_r = Cookbooks_lists.query.filter_by(cookbook_id = book_add, recipe_id = recipeId).all()
-        if len(cookbook_r) == 0:
-            new_recipe_inbook = Cookbooks_lists(cookbook_id = book_add, recipe_id = recipeId)
-            db.session.add(new_recipe_inbook)
-            db.session.commit()
-            flash('Added into CookBook!', category='success')
-        else:
-            flash('Already in the CookBook!', category='error')
-
+    if request.method == 'POST':
+        book_add = request.form.get('cookbook')
+        if book_add is not None:
+            
+            #check if this recipe already inbook
+            cookbook_r = Cookbooks_lists.query.filter_by(cookbook_id = book_add, recipe_id = recipeId).all()
+            if len(cookbook_r) == 0:
+                new_recipe_inbook = Cookbooks_lists(cookbook_id = book_add, recipe_id = recipeId)
+                db.session.add(new_recipe_inbook)
+                db.session.commit()
+                flash('Added into CookBook!', category='success')
+            else:
+                flash('Already in the CookBook!', category='error')
+            return redirect(url_for('recipes.view_recipe', recipeName = recipeName,recipeId = recipeId ))
 
     
     IngredientList.clear()
@@ -946,6 +947,7 @@ def view_recipe(recipeName, recipeId):
 # Delete the recipe
 @recipes.route('/Delete recipe', methods=['GET', 'POST'])
 def delete_recipe():
+    
     #delete the recipe using recipeId
     recipe_id = Savelist["RecipeId"]
 
@@ -1017,7 +1019,7 @@ def delete_recipe():
     recipe = Recipes.query.filter_by(id=recipe_id).first()
     if recipe != None:
         db.session.delete(recipe)
-        db.session.commit()
+    db.session.commit()
     flash("Delete successfully")
     Savelist["already_delete"] = True
     return redirect(url_for('views.home'))
