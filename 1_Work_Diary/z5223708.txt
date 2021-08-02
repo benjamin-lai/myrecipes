@@ -1,0 +1,33 @@
+Week1:
+The group formed, and we decided to do the Myrecipe for our project, basically everything is discussing right now.
+
+Week2:
+Decide what we are doing for the recipes, design the program architecture with other group memebers, basically decide which
+platform we are going to use for the interface drawing.
+
+Week3:
+Draw program interface for our proposal, what I have done include home page, recipe page, create/edit recipe, searching page,
+support and newsletter page.
+
+Week4:
+For a sprint 1 tasks, I created both backend and frontend of recipe page and create recipe page together with ZHIBO.
+
+Week5:
+Recieps page imrpovment both in frontend and backend, and also plenties of bugs fixed.
+
+Week6:
+Redesign the profile page into a more clean and beautiful interface, and begin to make the search section for our program,
+both backend and frontend.
+
+Week7:
+Complete search section, and make the basic home page to show all the recipes.
+
+Week8:
+Redesign home page to make it clean and beautiful, as well as begin to create cookbook page.
+
+Week9:
+Implemented the fuzzy search in search section both for basic search and ingredient search, improved the algorithm, used javascript
+to improved cookbook page, used tabs to fix recipe page issues.
+
+Week10:
+Basically bugs fixing and report writing.
