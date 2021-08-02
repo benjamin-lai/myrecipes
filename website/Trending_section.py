@@ -35,17 +35,17 @@ def trending_filter():
         if Savelist["type"] == "all":
             return redirect(url_for('trending_section.trending_sections'))
         elif Savelist["type"] == "Starter":
-            return redirect(url_for('trending_section.Trending_Section.Starter'))
+            return redirect(url_for('trending_section.trending_section_Starter'))
         elif Savelist["type"] == "Dessert":
-            return redirect(url_for('trending_section.Trending_Section.Dessert'))
+            return redirect(url_for('trending_section.trending_section_Dessert'))
         elif Savelist["type"] == "Main":
-            return redirect(url_for('trending_section.Trending_Section.Main'))
+            return redirect(url_for('trending_section.trending_section_Main'))
         elif Savelist["type"] == "Snack":
-            return redirect(url_for('trending_section.Trending_Section.Snack'))
+            return redirect(url_for('trending_section.trending_section_Snack'))
         elif Savelist["type"] == "Breakfast":
-            return redirect(url_for('trending_section.Trending_Section.Breakfast'))
+            return redirect(url_for('trending_section.trending_section_Breakfast'))
         elif Savelist["type"] == "Drink":
-            return redirect(url_for('trending_section.Trending_Section.Drink'))
+            return redirect(url_for('trending_section.trending_section_Drink'))
 
 # Trending Section for the recipes with all types
 @trending_section.route('/Trending Section', methods = ['GET','POST'])
