@@ -96,7 +96,6 @@ function subscribeToNewsletters() {
 
 // Update Like count and the colour of the like icon in the recipe page
 function updateLike(num_of_likes, num_of_dislikes, like_status) {
-  console.log(document.getElementById("arrow-up").style.color)
   if (document.getElementById("dislike").innerHTML > num_of_dislikes) {
       if (document.getElementById("like").innerHTML == num_of_likes) {
         document.getElementById("like").innerHTML = num_of_likes+1;          
@@ -137,6 +136,12 @@ function updateLike(num_of_likes, num_of_dislikes, like_status) {
     document.getElementById("like").style.color = "darkgray";
     document.getElementById("arrow-up").style.color = "";
   }
+  var likes = parseInt(document.getElementById("like").innerHTML)
+
+  var dislikes = parseInt(document.getElementById("dislike").innerHTML)
+
+  var rate = ((likes/(likes + dislikes))*100).toFixed(2) + "%"
+  document.getElementById("rating").innerHTML = "Rating: " + rate
 
 }
 
@@ -170,6 +175,7 @@ function updateDislike(num_of_likes, num_of_dislikes, like_status) {
       document.getElementById("like").innerHTML = num_of_likes-1;
       document.getElementById("dislike").innerHTML = num_of_dislikes+1;
     }
+
   }
   // Change colour of text
   document.getElementById("like").style.color = "darkgray";
@@ -181,6 +187,12 @@ function updateDislike(num_of_likes, num_of_dislikes, like_status) {
     document.getElementById("dislike").style.color = "darkgray";
     document.getElementById("arrow-down").style.color = "";
   }
+  var likes = parseInt(document.getElementById("like").innerHTML)
+
+  var dislikes = parseInt(document.getElementById("dislike").innerHTML)
+
+  var rate = ((likes/(likes + dislikes))*100).toFixed(2) + "%"
+  document.getElementById("rating").innerHTML = "Rating: " + rate
 }
 function deleteIngredient(ingredient_id) {
   if (confirm("Are you sure you want to delete this ingredient?"))

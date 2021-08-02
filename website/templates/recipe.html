@@ -196,7 +196,7 @@
       </div>
       <div class="col-md-2">
         {% if likes == -1 %}
-        <i id="arrow-down" class="fa fa-arrow-circle-down fa-3x" style="color: darkorange" aria-hidden="true" o nClick="addDislike({{ recipe.id }}); 
+        <i id="arrow-down" class="fa fa-arrow-circle-down fa-3x" style="color: darkorange" aria-hidden="true" onClick="addDislike({{ recipe.id }}); 
         updateDislike({{ recipe.num_of_likes }}, {{recipe.num_of_dislikes}}, {{likes}});"></i>
         <span id="dislike" style="font-size:30px; color:darkorange;">{{ recipe.num_of_dislikes }}</span>
         {% else %}
@@ -281,7 +281,7 @@
     <!-- Rating method for recipes that works off number of likes and dislikes on recipes. -->
     <div class="row">
       <div class="col">
-        <label>Rating: {{ rating }}</label>
+        <label id="rating">Rating: {{ rating }}</label>
       </div>
     </div>
     <br>
