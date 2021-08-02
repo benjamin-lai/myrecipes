@@ -17,13 +17,15 @@ Week 6
 Complet recipe cards making. Adding meal type and Method on recipe create page.
 
 Week 7
-Complete history, history deletion, trending Section, improving recipe cards and fixing bugs for recipe create, recipe edit and recipe delete.
+Complete history, history deletion, trending Section, improving recipe cards and fixing bugs for recipe create, recipe edit and recipe delete. Fix the recipe page layout.
 
 Week 8
-Add a filter function for choosing the trending recipe in week or day on Trending Section. Rewrite the recipe creation and recipe edit to splite the whole page into 4 subpages. That is easier for user to create and edit the recipes.
+Add a filter function for choosing the trending recipe in week or day on Trending Section. Rewrite the recipe creation and recipe edit to splite the whole page into 4 subpages. That is easier for user to create and edit the recipes. Add a restriction for recipe creation. 
 
 Week 9
 Change the ingredient on create and edit page to show line by line (easier for users to modify and delete ingredients). Change the step description adding and editing page, add a find function to search specified step. Link the creator name to craetor's profile. Fix bugs and clean useless imports.
 
-Write the recipe page, recipe creation, recipe edit, recipe delete, recommendation, trending section, history parts in report.  
+Write the recipe page, recipe creation, recipe edit, recommendation, trending section, history parts in report.  
 
+Week 10
+Fix the bugs for deleteing cookbook_lists, and choosing day and week for trending section. Add recipe delete part on report. 
