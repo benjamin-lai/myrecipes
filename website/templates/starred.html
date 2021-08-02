@@ -1,3 +1,4 @@
+<!-- Page for displaying all starred recipe -->
 {% extends "base.html" %} {% block title %}Starred Recipes{% endblock %}
 <html>
 
@@ -47,12 +48,6 @@
                         
                         var toggle = (event.srcElement);
                         
-                        console.log("CLICKITY CLACK")
-
-                        console.log(toggle.id)
-                        console.log(toggle.title)
-                        
-                        
                         if (toggle.style.opacity == "1") {
                           toggle.style.opacity = "0";
                           status = "starred"
@@ -97,10 +92,6 @@
     </div>
 
     {% endfor %}
-
-
-
-
   {% endblock %}
 </body>
 

@@ -1,4 +1,5 @@
-# Backend for the homepage.
+# Backend for the homepage. Sends recipes into homepage and for the slider.
+
 from flask import Blueprint, render_template
 from flask_login import  current_user
 from flask_cors import CORS
@@ -14,7 +15,6 @@ def home():
     query = Recipes.query.all()
     #put custom url into recipe list
     recipes = []
-    profiles = []
     for r in query:
         recipe = Recipes.query.filter_by(id=r.id).first()
         profile = Profiles.query.filter_by(profile_id=recipe.creates).first()
@@ -36,7 +36,6 @@ def home():
 
         #put custom url into recipe list
         trending = []
-        profiles1 = []
         for r in trend:
             recipe = Recipes.query.filter_by(id=r.id).first()
             profile = Profiles.query.filter_by(profile_id=recipe.creates).first()

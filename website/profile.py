@@ -1,22 +1,18 @@
 # Encompasses all things profile related such as user information,
 # subscriber/subscription lists, profile pics, custom urls, subscribing
 import os
-from typing import BinaryIO
-from flask import Blueprint, render_template, request, flash, redirect, url_for,jsonify
+from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import current_user
-import json
 from flask_cors import CORS
 from . import db
 from .models import Users, Profiles
 from .auth import validate_email
-import boto3
 from werkzeug.utils import secure_filename
 from .models import Recipes, Users, Profiles, Subscribed, Subscriber, profile_subs, profile_subbed
 
 import boto3
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
-import json
 
 profile = Blueprint('profile', __name__)
 CORS(profile)

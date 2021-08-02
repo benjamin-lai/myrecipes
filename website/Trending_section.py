@@ -1,4 +1,6 @@
-# Homepage
+# Trending section, for the tab trending section for the second navbar
+#  Filters through all of our recipes and sorts them based on the highest number of likes
+#   as well as the time period that users have selected.
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_cors import CORS
 from flask import Flask
@@ -7,11 +9,6 @@ from .models import Recipes
 from datetime import datetime
 import json
 
-
-
-UPLOAD_FOLDER = 'C:\comp3900\project_data'
-app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 trending_section = Blueprint('trending_section', __name__)
 CORS(trending_section)
@@ -57,7 +54,6 @@ def trending_sections():
     recipes = Recipes.query.order_by((Recipes.num_of_likes - Recipes.num_of_dislikes).desc()).all()
     trending = []
     current_date = datetime.date(datetime.now())
-    print(Savelist["Day_or_week"])
     for i in recipes:
         if i.num_of_likes > i.num_of_dislikes:
             if Savelist["Day_or_week"] == 'Day':

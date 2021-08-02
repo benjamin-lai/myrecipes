@@ -1,37 +1,31 @@
-# Homepage
-from flask import Blueprint, render_template, request, flash, redirect, url_for
-from flask_login import  current_user, login_required
+# Recipe Page, gives users access to create/edit/delete recipes
+#  Also has methods inside used to display recipes information onto the frontend.
+
+from flask import Flask, Blueprint, render_template, request, flash, redirect, url_for
+from flask_login import  current_user
 from flask_cors import CORS
-from website import create_app
 from fractions import Fraction
-from flask import Flask
 
 import os
 import ctypes 
-#from gi.repository import Gtk
 from werkzeug.utils import secure_filename
-from .models import StarredRecipes, Recipes, Ingredient, Contents, Recipestep, Profiles, Method, History, Likes, Comments, Cookbooks, Cookbooks_lists
-from .review import retrieve_comments, get_rating, check_likes_exists
-from .newsletter import send_new_recipe_emails
-from . import db
-from sqlalchemy import desc
 from sqlalchemy import func
-from sqlalchemy import and_
-import base64
 import boto3
 import random
 from datetime import datetime
 import psycopg2
-from psycopg2.extensions import AsIs
 import json
+
+from .models import StarredRecipes, Recipes, Ingredient, Recipestep, Profiles, Method, History, Likes, Comments, Cookbooks, Cookbooks_lists
+from .review import retrieve_comments, get_rating, check_likes_exists
+from .newsletter import send_new_recipe_emails
+from . import db
 
 s3 = boto3.client('s3',
                     aws_access_key_id='AKIAQNR7WVADC7MX2ZEW',
                     aws_secret_access_key= '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'
                      )
 BUCKET_NAME='comp3900-w18b-sheeesh'
-
-
 
 UPLOAD_FOLDER = 'C:\comp3900\project_data'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
@@ -153,9 +147,6 @@ def add_discription():
                         Key = filename
                     )
                     os.remove(filename)
-                    image_datas2_read = file_data.read()
-                    image2 = base64.b64encode(image_datas2_read).decode('ascii')
-                    image_datas2 = image2
                     Savelist["image_name2"] = filename
 
                     Savelist["Step_number"] = StepNo
@@ -507,11 +498,7 @@ def edit_photo():
                     Filename=filename,
                     Key = filename
                 )
-                image_datas1_read = file_data.read()
-                image1 = base64.b64encode(image_datas1_read).decode('ascii')
                 db.session.commit()
-
-                image_datas1 = image1
                 Savelist["image_name1"] = filename
                     
                 if recipe_data.photo != None:
@@ -688,7 +675,6 @@ def edit_discription():
     if upload_images != None:
         file2 = request.files['file2']
         if file2 != None:
-            file_data = file2
 
             if file2.filename == '':
                 flash('Continue to create recipe')
@@ -703,11 +689,7 @@ def edit_discription():
                     Filename=filename,
                     Key = filename
                 )
-                image_datas2_read = file_data.read()
-                image2 = base64.b64encode(image_datas2_read).decode('ascii')
-                image_datas2 = image2
                 Savelist["image_name2"] = filename
-
                 Savelist["Step_number"] = StepNo
                 Savelist["Step_Des"] = StepDes
         no_list = []
@@ -772,7 +754,6 @@ def edit_discription():
 
         recipe_data = Recipes.query.filter_by(id = recipe_id).first()
         
-        image1 = s3.generate_presigned_url('get_object', Params={'Bucket': 'comp3900-w18b-sheeesh','Key': recipe_data.photo})
         
         
         IngredientList.clear()#reset
@@ -1088,7 +1069,6 @@ def view_starred():
         return render_template("restricted_access.html")    
     query = StarredRecipes.query.filter_by(contains=current_user.id).all()
     recipes = []
-    profiles = []
     for item in query:
 
         recipe = Recipes.query.filter_by(id=item.recipe_id).first()
@@ -1127,7 +1107,6 @@ def create_recipe (RecipeName, Description, Serving, Meal_type):
     send_new_recipe_emails(new_recipe)
     
     recipe_id = db.session.query(func.max(Recipes.id)).first()
-    print(recipe_id[0])
     Savelist["RecipeId"] = new_recipe.id
 
 #def add_step (recipe_id, step_no, )
