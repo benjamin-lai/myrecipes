@@ -1,0 +1,29 @@
+Week 1
+started on user stories, edited user stories, proofread user stories, added criteria and subtasks to user stories that were not completed
+
+Week 2
+Worked on the software architecture to ensure that the group knew what programs we were using for the frontend, backend and database. Drew up the diagram for our software architecture as well as explained what we are using in the proposal. Proofread user stories.
+
+Week 3
+Roles given to everyone in tut, next day had a group meeting to make sure everyone knew what they were doing
+
+Week 4
+Mocked up an ER diagram for the database so i could start it. Finished it then wrote and edited the models for the python program. 
+
+Week 5
+Had our first progressive report and after did the retrospective. Worked with S3 to make sure that profile pictures could be uploaded to our S3 bucket and retrieved when loaded. Had a meeting to discuss what to do for the next sprint and talked about bugs. 
+
+Week 6
+Started on newsfeed and created barebones of page, made filters, recent posts, filter by likes, filter by both
+
+Week 7
+Made S3 bucket public so we can dynamically create tables in newsfeed. Worked on reccommended recipes and personalised newsfeeds
+
+Week 8
+Had 2nd progressive report. Had a meeting beforehand to work out kinks and who's going to present what. Started research on a chatbot and tested out demo on dialogflow website. had a group meeting with winson and albert and looked into bugs for the website. worked on retrospective
+
+Week 9
+Started on Google SSO and integrated dialogflow bot into kommunicate. Finished the SSO, user's create an account from their google acc and started on bots intents, Started on report for my sections. Did the APIs section and did licensing
+
+Week 10
+Start to finish up on report, fixed a few bugs in chatbot intents. Attempt to figure out how to load database on VLAB, but doesn’t work since we don’t have access to Grieg and postgresql anymore. So installed lubuntu and virtualbox and made sure our install process was right.
