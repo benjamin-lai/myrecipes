@@ -1,0 +1,31 @@
+Week 1
+Created and joined Github and Jira groups and familiarised myself with my teammates. Discussed with team over which project we liked the best and settled on myRecipes. Started discussion on what language to code the project in
+
+Week 2
+Discussed with team and decided that we would use python for our project backend. Planned with the team to distribute the workload for the proposal.
+I did background research on 3 similar solutions (kitchen stories, recipetineats, and allrecipes) and wrote up the problem statement and problem domain draft. I also started brainstorming ideas with the team for novel features.
+
+Week 3
+Finished formatting my section of the proposal and I worked on developing the story boards with a focus on user functionality. Using the Balsamiq wire framework, I created the storyboard for profile, cookbooks, starred recipes, sub lists, and other user related features. The team then decided collectively on sprint deadlines after we proofread the proposal and submitted. 
+
+Week 4
+We discussed what needed to be completed in the first sprint to have a minimal viable product based off the project specifications and then allocated our roles. I worked on the profile page and edit profile page in this time (we all worked on what we drafted up in the storyboard at this time). I also had to familiarise myself with the database system as I was the only member of the team who hadn’t taken comp3311. 
+I implemented a barebones version of a subscribe button but was still figuring out how to update the backend without refreshing the page.
+
+Week 5
+After our demo in the lab, we immediately started working on the retrospective and wrote up all the main points that would be covered in the report. We also set our tasks for sprint 2 including any parts from sprint 1 that we couldn’t complete.
+
+Week 6
+After Albert finished writing up the formal document for the retrospective, I proofread it and then we submitted. During this time, we worked on implementing our core user stories in sprint 2 and constantly communicated as a team to debug and to maintain a consistent style in the frontend.
+
+Week 7
+We ended sprint 2 and started sprint 3. I worked on completing profile to display recipes, implemented the subscribe button with Ajax jQuery, completed starred recipes and starred recipe icons, completed subscriber lists and subscribed-to list, random recipe, and debugging.
+
+Week 8
+After finishing sprint 3, we had our second demo in the lab. After this we discussed what needed to be done in the final sprint which was mainly finishing up some final novelty features, cleaning up the entire frontend and backend, and testing everything thoroughly to ensure that everything is functional. After this we had our retrospective meeting and wrote up our draft of the retrospective for this demo.
+
+Week 9
+I proofread the retrospective and added a few parts regarding my section to the report. I worked with Albert and Zhibo in a team of 3 to improve the quality of our frontend. I helped Albert implement the Like and Dislike function of recipes in a similar manner as the subscribe implementation. I created the footer for the website and helped test functionality of other parts of the website. I went over my code in the backend to remove unnecessary print statements and made the comments more readable.
+
+Week 10
+I finished writing up the problem statement and product description for the final report and added descriptions of the sections I completed in the functionality section. I am currently working on creating the script for the final presentation.
